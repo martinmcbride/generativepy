@@ -26,7 +26,12 @@ def save(img, filename):
     :param filename: name of file, extension indicates the format
     :return:
     """
+
     a = img * 256
+    # If the array is a monochrome image (rows, cols, 1), convert ir to a 2D array (rows, cols) otherwise pillow
+    # will give an error.
+    if len(a.shape) > 2 and a.shape[2] == 1:
+        a.shape = a.shape[:2]
     a = np.clip(a, 0, 255)
     b = a.astype(np.uint8)
     im = Image.fromarray(b)
