@@ -14,9 +14,10 @@ except ImportError:
     print(os.path.abspath(os.path.split(os.path.abspath(__file__))[0]+'/../source'))
     sys.path.insert(0, os.path.abspath(os.path.split(os.path.abspath(__file__))[0]+'/../source'))
 
+import numpy as np
 from textures.image import Img
-from textures.generate import noise
+from textures.generate import fill
 
 img = Img(256, 128)
-noise(img)
-img.save("noise.png")
+fill(img, (.5, .5, 1, 1))
+img.save("fill.png")
