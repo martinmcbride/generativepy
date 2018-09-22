@@ -1,0 +1,6 @@
+/.metadata/
+__pycache__
+.project
+.pydevproject
+/.idea/
+/scratch/
