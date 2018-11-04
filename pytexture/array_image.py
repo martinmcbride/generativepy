@@ -6,9 +6,26 @@
 import numpy as np
 from PIL import Image
 
+class array_image_scale():
+
+    def __init__(self, pixel_size, width, height, startx, starty):
+        self.pixel_size = pixel_size
+        self.width = width
+        self.height = height
+        self.startx = startx
+        self.starty = starty
+
+    def user2pixel(self, pos):
+        x = (pos[0] - self.startx) * self.pixel_size[0] / self.width
+        y = (pos[1] - self.starty) * self.pixel_size[1] / self.height
+        if 0 <= x < self.pixel_size[0] and 0 <= y < self.pixel_size[1]:
+            return int(x), int(y)
+        return None
+
+
 def save_array_image(outfile, img):
     img = np.clip(img*256, 0, 255).astype(np.uint8)
-    print(img)
+    img = img.transpose(1, 0, 2)
     image = Image.fromarray(img)
     image.save(outfile)
 
@@ -37,10 +54,10 @@ def make_array_png(outfile, draw, pixel_size, width=None, height=None,
     elif not width:
         width = height * pixel_size[0] / pixel_size[1]
 
-    print(pixel_size[1], pixel_size[0], channels)
-    img = np.zeros([pixel_size[1], pixel_size[0], channels], np.float32)
+    img = np.zeros([pixel_size[0], pixel_size[1], channels], np.float32)
     if color:
         img[:, :] = color
-    draw(img, pixel_size=pixel_size, width=width, height=height, startx=startx, starty=starty, **extras)
+    scale = array_image_scale(pixel_size, width, height, startx, starty)
+    draw(img, scale=scale, pixel_size=pixel_size, width=width, height=height, startx=startx, starty=starty, **extras)
     save_array_image(outfile, img)
 
