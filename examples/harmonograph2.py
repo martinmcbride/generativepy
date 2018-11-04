@@ -26,5 +26,5 @@ def draw(ctx, **extras):
     ctx.stroke()
 
 
-vector_image.make_vector_png("/tmp/harmonograph2.png", draw, (1000, 1000), width=4.2,
+vector_image.make_vector_png("/tmp/harmonograph3.png", draw, pixel_size=(1000, 1000), width=4.2,
                              startx=-2.1, starty=-2.1, color=(1, 1, 1))
