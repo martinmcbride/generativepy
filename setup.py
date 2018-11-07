@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
  
 setup(name='pytexture',
-      version='0.1',
+      version='0.2',
       url='https://github.com/martinmcbride/pytexture',
       license='MIT',
       author='Martin McBride',
