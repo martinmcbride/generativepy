@@ -22,6 +22,11 @@ class array_image_scale():
             return int(x), int(y)
         return None
 
+    def pixel2user(self, pos):
+        x = pos[0] * self.width /self.pixel_size[0]  +  self.startx
+        y = pos[1] * self.height /self.pixel_size[1]  +  self.starty
+        return x, y
+
 
 def save_array_image(outfile, img):
     img = np.clip(img*256, 0, 255).astype(np.uint8)
