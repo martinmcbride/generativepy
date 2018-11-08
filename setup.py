@@ -3,13 +3,13 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as fh:
     long_description = fh.read()
  
-setup(name='pytexture',
-      version='0.2',
-      url='https://github.com/martinmcbride/pytexture',
+setup(name='generativepy',
+      version='0.1',
+      url='https://github.com/martinmcbride/generativepy',
       license='MIT',
       author='Martin McBride',
       author_email='mcbride.martin@gmail.com',
-      description='Generates image textures for digital art',
+      description='Generative art library',
       long_description=long_description,
       long_description_content_type="text/markdown",
       packages=find_packages(exclude=['examples']),

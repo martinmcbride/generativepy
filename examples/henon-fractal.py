@@ -1,6 +1,4 @@
-from pytexture import array_image
-import math
-import numpy as np
+from generativepy import array_image
 
 
 LINECOLOR = (0, 0, 0.5)

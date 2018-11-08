@@ -1,4 +1,4 @@
-from pytexture import array_image
+from generativepy import array_image
 
 
 def calc(c1, c2):

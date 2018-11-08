@@ -1,4 +1,4 @@
-from pytexture import vector_image
+from generativepy import vector_image
 import math
 import numpy as np
 

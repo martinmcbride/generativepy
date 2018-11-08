@@ -1,5 +1,4 @@
-from pytexture import vector_image
-
+from generativepy import vector_image
 
 
 def draw(ctx, **extras):

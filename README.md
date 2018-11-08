@@ -1,2 +1,2 @@
-# pytexture
-Library for creating image textures
+# generativepy
+Generative art library
