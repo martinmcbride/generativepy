@@ -17,14 +17,12 @@ def harm(t):
     return x, y
 
 
-def draw(ctx, **extras):
-    ctx.move_to(*harm(0))
-    for t in np.arange(0, 100, 0.01):
-        ctx.line_to(*harm(t))
-    ctx.set_source_rgb(*LINECOLOR)
-    ctx.set_line_width(LINEWIDTH)
-    ctx.stroke()
+def draw(canvas):
+    points = [harm(t) for t in np.arange(0, 100, 0.01)]
+    canvas.stroke(LINECOLOR)
+    canvas.strokeWeight(LINEWIDTH)
+    canvas.polygon(points, False)
 
+canvas.makeImage("/tmp/harmonograph.2png", draw, pixelSize=(1000, 1000), width=4.2,
+                       startX=-2.1, startY=-2.1, color=(1, 1, 1))
 
-canvas.make_vector_png("/tmp/harmonograph3.png", draw, pixel_size=(1000, 1000), width=4.2,
-                       startx=-2.1, starty=-2.1, color=(1, 1, 1))
