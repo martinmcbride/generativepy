@@ -1,4 +1,4 @@
-from generativepy import canvas
+from generativepy import drawing
 
 
 def draw(canvas):

@@ -1,6 +1,5 @@
-from generativepy import canvas
+from generativepy import drawing
 import math
-import numpy as np
 
 
 LINECOLOR = (0, 0, 0.5)
