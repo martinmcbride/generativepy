@@ -20,5 +20,5 @@ def draw(canvas):
     canvas.polygon(points, False)
 
 
-canvas.makeImage("/tmp/harmonograph.png", draw, pixelSize=(1000, 1000), width=3,
+drawing.makeImage("/tmp/harmonograph.png", draw, pixelSize=(1000, 1000), width=3,
                        startX=-1.5, startY=-1.5, color=(1, 1, 1))

@@ -16,5 +16,5 @@ def draw(canvas):
     canvas.polygon(points)
 
 
-canvas.makeImage("/tmp/vector-origin.png", draw, pixelSize=(400, 400),
+drawing.makeImage("/tmp/vector-origin.png", draw, pixelSize=(400, 400),
                        width=4, color=(1, 1, 1), startX=-2, startY=-2)

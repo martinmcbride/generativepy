@@ -8,5 +8,5 @@ def draw(canvas):
     canvas.rect(0.5, 0.7, 2, 1)
 
 
-canvas.makeImage("/tmp/vector.png", draw, pixelSize=(300, 200),
+drawing.makeImage("/tmp/vector.png", draw, pixelSize=(300, 200),
                  width=3, color=(1, 1, 1))

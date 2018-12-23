@@ -6,6 +6,16 @@
 import cairo
 import math
 
+# Color modes
+RGB = 0
+HSB = 1
+
+#Ellipse and rectangle modes
+CENTER = 0
+RADIUS = 1
+CORNER = 2
+CORNERS = 3
+
 class Canvas:
 
     def __init__(self, ctx, pixelSize):
@@ -15,6 +25,10 @@ class Canvas:
         self.fillColor = None
         self.strokeColor = (0, 0, 0)
         self.lineWidth = 1
+        self.colorMode = RGB
+        self.colorMax = [255, 255, 255, 255]
+        self.rectMode = CENTER
+        self.ellipseMode = CENTER
 
     def setColor(self, color):
         if len(color)==4:
@@ -86,8 +100,28 @@ class Canvas:
         self.fillStroke()
         return self
 
-    def circle(self, a, b, r):
-        self.ctx.arc(a, b, r, 0, 2*math.pi)
+    def triangle(self, x0, y0, x1, y1, x2, y2):
+        self.ctx.move_to(x0, y0)
+        self.ctx.line_to(x1, y1)
+        self.ctx.line_to(x2, y2)
+        self.ctx.close_path()
+        self.fillStroke()
+        return self
+
+    def quad(self, x0, y0, x1, y1, x2, y2, x3, y3):
+        self.ctx.move_to(x0, y0)
+        self.ctx.line_to(x1, y1)
+        self.ctx.line_to(x2, y2)
+        self.ctx.line_to(x3, y3)
+        self.ctx.close_path()
+        self.fillStroke()
+        return self
+
+    def ellipse(self, a, b, c, d):
+        self.ctx.save()
+        self.ctx.scale(c, d)
+        self.ctx.arc(a, b, 1, 0, 2*math.pi)
+        self.ctx.restore()
         self.fillStroke()
         return self
 

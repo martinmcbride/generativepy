@@ -22,6 +22,6 @@ def draw(canvas):
     canvas.strokeWeight(LINEWIDTH)
     canvas.polygon(points, False)
 
-canvas.makeImage("/tmp/harmonograph.2png", draw, pixelSize=(1000, 1000), width=4.2,
+drawing.makeImage("/tmp/harmonograph.2png", draw, pixelSize=(1000, 1000), width=4.2,
                        startX=-2.1, startY=-2.1, color=(1, 1, 1))
 
