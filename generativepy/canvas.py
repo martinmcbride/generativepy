@@ -4,6 +4,7 @@
 # License: MIT
 
 import cairo
+import math
 
 class Canvas:
 
@@ -74,8 +75,19 @@ class Canvas:
         self.lineWidth = weight
         return self
 
+    def line(self, x0, y0, x1, y1):
+        self.ctx.move_to(x0, y0)
+        self.ctx.line_to(x1, y1)
+        self.fillStroke()
+        return self
+
     def rect(self, a, b, c, d):
         self.ctx.rectangle(a, b, c, d)
+        self.fillStroke()
+        return self
+
+    def circle(self, a, b, r):
+        self.ctx.arc(a, b, r, 0, 2*math.pi)
         self.fillStroke()
         return self
 
