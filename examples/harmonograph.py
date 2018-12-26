@@ -21,4 +21,4 @@ def draw(canvas):
 
 
 drawing.makeImage("/tmp/harmonograph.png", draw, pixelSize=(1000, 1000), width=3,
-                       startX=-1.5, startY=-1.5, color=(1, 1, 1))
+                  startX=-1.5, startY=-1.5, background=(1, 1, 1))

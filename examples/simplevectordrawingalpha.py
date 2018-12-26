@@ -11,4 +11,4 @@ def draw(canvas):
 
 
 drawing.makeImage("/tmp/vector-alpha.png", draw, pixelSize=(300, 200),
-                       width=3, color=(1, 1, 1, 0), channels=4)
+                  width=3, background=(1, 1, 1, 0), channels=4)

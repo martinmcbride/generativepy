@@ -16,6 +16,45 @@ RADIUS = 1
 CORNER = 2
 CORNERS = 3
 
+#Arc types
+OPEN = 0
+CHORD = 1
+PIE = 2
+
+#Line end
+ROUND = 0
+SQUARE = 1
+PROJECT = 2
+
+#Line join
+MITER = 0
+BEVEL = 1
+ROUND = 2
+
+def convertMode(mode, a, b, c, d):
+    '''
+    Convert the parameters a, b, c, d for a rectangle or ellipse based on the mode
+    :param mode:
+    :param a:
+    :param b:
+    :param c:
+    :param d:
+    :return: cx, cy, rx, ry as tuple
+    '''
+    if mode == RADIUS:
+        return a, b, c, d
+    elif mode == CENTER:
+        return a, b, c / 2, d / 2
+    elif mode == CORNERS:
+        return (a+c)/2, (b+d)/2, (c-a)/2, (d-b)/2
+    else:
+        return a+c/2, b+d/2, c/2, d/2
+
+
+def Color(*args):
+    return tuple(args)
+
+
 class Canvas:
 
     def __init__(self, ctx, pixelSize):
@@ -27,14 +66,17 @@ class Canvas:
         self.lineWidth = 1
         self.colorMode = RGB
         self.colorMax = [255, 255, 255, 255]
-        self.rectMode = CENTER
-        self.ellipseMode = CENTER
+        self.vRectMode = CORNER
+        self.vEllipseMode = CENTER
+        self.vStrokeJoin = MITER
 
     def setColor(self, color):
-        if len(color)==4:
+        if len(color) == 4:
             self.ctx.set_source_rgba(*color)
-        else:
+        elif len(color) == 3:
             self.ctx.set_source_rgb(*color)
+        else:
+            self.ctx.set_source_rgb(color[0], color[0], color[0])
 
     def fillStroke(self):
         if self.fillColor:
@@ -95,8 +137,17 @@ class Canvas:
         self.fillStroke()
         return self
 
+    def rectMode(self, mode):
+        self.vRectMode = mode
+        return self
+
+    def ellipseMode(self, mode):
+        self.vEllipseMode = mode
+        return self
+
     def rect(self, a, b, c, d):
-        self.ctx.rectangle(a, b, c, d)
+        cx, cy, rx, ry = convertMode(self.vRectMode, a, b, c, d)
+        self.ctx.rectangle(cx-rx, cy-ry, 2*rx, 2*ry)
         self.fillStroke()
         return self
 
@@ -118,9 +169,29 @@ class Canvas:
         return self
 
     def ellipse(self, a, b, c, d):
+        cx, cy, rx, ry = convertMode(self.vEllipseMode, a, b, c, d)
         self.ctx.save()
-        self.ctx.scale(c, d)
-        self.ctx.arc(a, b, 1, 0, 2*math.pi)
+        self.ctx.translate(cx, cy)
+        self.ctx.scale(rx, ry)
+        self.ctx.arc(0, 0, 1, 0, 2*math.pi)
+        self.ctx.restore()
+        self.fillStroke()
+        return self
+
+    def arc(self, a, b, c, d, start, end, mode=OPEN):
+        cx, cy, rx, ry = convertMode(self.vEllipseMode, a, b, c, d)
+        self.ctx.save()
+        self.ctx.translate(cx, cy)
+        self.ctx.scale(rx, ry)
+        if mode == OPEN:
+            self.ctx.arc(0, 0, 1, start, end)
+        elif mode == CHORD:
+            self.ctx.arc(0, 0, 1, start, end)
+            self.ctx.close_path()
+        elif mode == PIE:
+            self.ctx.move_to(0, 0)
+            self.ctx.arc(0, 0, 1, start, end)
+            self.ctx.close_path()
         self.ctx.restore()
         self.fillStroke()
         return self
@@ -141,7 +212,7 @@ class Canvas:
 
 
 def makeImage(outfile, draw, pixelSize, width=None, height=None,
-               startX=0, startY=0, color=None, channels=3):
+              startX=0, startY=0, background=None, channels=3):
     '''
     Create a PNG file using cairo
     :param outfile: Name of output file
@@ -151,7 +222,7 @@ def makeImage(outfile, draw, pixelSize, width=None, height=None,
     :param height: height in user coord
     :param startX: x value of left edge of image, user coords
     :param startY: y value of top edge of image, user coords
-    :param color: background color
+    :param background: background color
     :param channels: 3 for rgb, 4 for rgba
     :param extras: optional extra params for draw function
     :return: 
@@ -167,7 +238,7 @@ def makeImage(outfile, draw, pixelSize, width=None, height=None,
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
     surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
     ctx = cairo.Context(surface)
-    canvas = Canvas(ctx, pixelSize).background(color)
+    canvas = Canvas(ctx, pixelSize).background(background)
     canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
     draw(canvas)
     surface.write_to_png(outfile)
