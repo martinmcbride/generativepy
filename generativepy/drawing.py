@@ -22,15 +22,12 @@ OPEN = 0
 CHORD = 1
 PIE = 2
 
-#Line end
+#Line join/end
 ROUND = 0
 SQUARE = 1
 PROJECT = 2
-
-#Line join
-MITER = 0
-BEVEL = 1
-ROUND = 2
+MITER = 3
+BEVEL = 4
 
 # Current color mode (global)
 
@@ -103,6 +100,7 @@ class Canvas:
         self.vRectMode = CORNER
         self.vEllipseMode = CENTER
         self.vStrokeJoin = MITER
+        self.vStrokeCap = ROUND
 
     def setColor(self, color):
         rgb = color.getRGB()
@@ -110,6 +108,22 @@ class Canvas:
             self.ctx.set_source_rgba(*rgb)
         else:
             self.ctx.set_source_rgb(*rgb)
+
+    def setStrokeCap(self):
+        if self.vStrokeCap == SQUARE:
+            self.ctx.set_line_cap(cairo.LINE_CAP_BUTT)
+        elif self.vStrokeCap == PROJECT:
+            self.ctx.set_line_cap(cairo.LINE_CAP_SQUARE)
+        else:
+            self.ctx.set_line_cap(cairo.LINE_CAP_ROUND)
+
+    def setStrokeJoin(self):
+        if self.vStrokeJoin == BEVEL:
+            self.ctx.set_line_join(cairo.LINE_JOIN_BEVEL)
+        elif self.vStrokeJoin == ROUND:
+            self.ctx.set_line_join(cairo.LINE_JOIN_ROUND)
+        else:
+            self.ctx.set_line_join(cairo.LINE_JOIN_MITER)
 
     def fillStroke(self):
         if self.fillColor:
@@ -120,6 +134,8 @@ class Canvas:
                 self.ctx.fill()
         if self.strokeColor:
             self.ctx.set_line_width(self.lineWidth)
+            self.setStrokeCap()
+            self.setStrokeJoin()
             self.setColor(self.strokeColor)
             self.ctx.stroke()
 
@@ -162,6 +178,14 @@ class Canvas:
 
     def strokeWeight(self, weight):
         self.lineWidth = weight
+        return self
+
+    def strokeCap(self, cap):
+        self.vStrokeCap = cap
+        return self
+
+    def strokeJoin(self, join):
+        self.vStrokeJoin = join
         return self
 
     def line(self, x0, y0, x1, y1):
