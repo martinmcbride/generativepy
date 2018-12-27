@@ -5,10 +5,11 @@
 
 import cairo
 import math
+import colorsys
 
 # Color modes
-RGB = 0
-HSB = 1
+RGB = 1
+HLS = 2
 
 #Ellipse and rectangle modes
 CENTER = 0
@@ -31,6 +32,45 @@ MITER = 0
 BEVEL = 1
 ROUND = 2
 
+# Current color mode (global)
+
+gColorMode = RGB
+
+
+def colorMode(mode):
+    global gColorMode
+    gColorMode = mode
+
+
+class Color():
+
+    def __init__(self, *args, mode=0):
+        if len(args) == 1:
+            self.color = (args[0],)*3
+            self.alpha = ()
+        elif len(args) == 3:
+            self.color = tuple(args)
+            self.alpha = ()
+        elif len(args) == 4:
+            self.color = tuple(args[:3])
+            self.alpha = (args[3],)
+        else:
+            raise ValueError("Color takes 1, 3 or 4 arguments")
+        self.mode = mode if mode else gColorMode
+
+    def getRGB(self):
+        if self.mode == RGB:
+            return self.color + self.alpha
+        else:
+            return colorsys.hls_to_rgb(*self.color) + self.alpha
+
+    def getHSB(self):
+        if self.mode == HSB:
+            return self.color + self.alpha
+        else:
+            return colorsys.rgb_to_hls(*self.color) + self.alpha
+
+
 def convertMode(mode, a, b, c, d):
     '''
     Convert the parameters a, b, c, d for a rectangle or ellipse based on the mode
@@ -51,10 +91,6 @@ def convertMode(mode, a, b, c, d):
         return a+c/2, b+d/2, c/2, d/2
 
 
-def Color(*args):
-    return tuple(args)
-
-
 class Canvas:
 
     def __init__(self, ctx, pixelSize):
@@ -64,19 +100,16 @@ class Canvas:
         self.fillColor = None
         self.strokeColor = (0, 0, 0)
         self.lineWidth = 1
-        self.colorMode = RGB
-        self.colorMax = [255, 255, 255, 255]
         self.vRectMode = CORNER
         self.vEllipseMode = CENTER
         self.vStrokeJoin = MITER
 
     def setColor(self, color):
-        if len(color) == 4:
-            self.ctx.set_source_rgba(*color)
-        elif len(color) == 3:
-            self.ctx.set_source_rgb(*color)
+        rgb = color.getRGB()
+        if len(rgb) == 4:
+            self.ctx.set_source_rgba(*rgb)
         else:
-            self.ctx.set_source_rgb(color[0], color[0], color[0])
+            self.ctx.set_source_rgb(*rgb)
 
     def fillStroke(self):
         if self.fillColor:
@@ -143,6 +176,13 @@ class Canvas:
 
     def ellipseMode(self, mode):
         self.vEllipseMode = mode
+        return self
+
+    def point(self, a, b):
+        if self.strokeColor:
+            self.ctx.rectangle(a, b, 1, 1)
+            self.setColor(self.strokeColor)
+            self.ctx.fill()
         return self
 
     def rect(self, a, b, c, d):
