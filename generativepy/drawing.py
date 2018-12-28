@@ -9,7 +9,7 @@ import colorsys
 
 # Color modes
 RGB = 1
-HLS = 2
+HSL = 2
 
 #Ellipse and rectangle modes
 CENTER = 0
@@ -59,13 +59,15 @@ class Color():
         if self.mode == RGB:
             return self.color + self.alpha
         else:
-            return colorsys.hls_to_rgb(*self.color) + self.alpha
+            h, s, l = self.color
+            return colorsys.hls_to_rgb(h, l, s) + self.alpha
 
-    def getHSB(self):
+    def getHSL(self):
         if self.mode == HSB:
             return self.color + self.alpha
         else:
-            return colorsys.rgb_to_hls(*self.color) + self.alpha
+            h, l , s = colorsys.rgb_to_hls(*self.color)
+            return (h, s, l) + self.alpha
 
 
 def convertMode(mode, a, b, c, d):
