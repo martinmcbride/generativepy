@@ -281,6 +281,10 @@ class Canvas:
         self.fillStroke()
         return self
 
+    def image(self, imagepath, x, y):
+        ims = cairo.ImageSurface.create_from_png(imagepath)
+        self.ctx.set_source_surface(ims, x, y)
+        self.ctx.paint()
 
 
 def makeFrame(draw, pixelSize, width=None, height=None,
