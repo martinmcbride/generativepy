@@ -6,6 +6,7 @@
 import cairo
 import numpy as np
 from PIL import Image
+from generativepy import drawing
 
 def duplicateFrame(frame, count):
     '''
@@ -42,7 +43,7 @@ def makeFrame(draw, pixelSize, width=None, height=None,
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
     surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
     ctx = cairo.Context(surface)
-    canvas = Canvas(ctx, pixelSize).background(background)
+    canvas = drawing.Canvas(ctx, pixelSize).background(background)
     canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
     draw(canvas)
     buf = surface.get_data()
@@ -77,7 +78,7 @@ def makeFrames(draw, pixelSize, count, width=None, height=None,
     for i in range(count):
         surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
         ctx = cairo.Context(surface)
-        canvas = Canvas(ctx, pixelSize).background(background)
+        canvas = drawing.Canvas(ctx, pixelSize).background(background)
         canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
         draw(canvas, i, count)
         buf = surface.get_data()
@@ -108,5 +109,4 @@ def saveFrames(filepath, frames):
     for i, frame in enumerate(frames):
         image = Image.fromarray(frame)
         image.save(filepath + str(i).zfill(8) + '.png')
-
 
