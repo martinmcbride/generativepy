@@ -14,7 +14,7 @@ RGB = 1
 HSL = 2
 
 #Ellipse and rectangle modes
-CENTER = 0
+CENTER = 0 #Also used for text
 RADIUS = 1
 CORNER = 2
 CORNERS = 3
@@ -30,6 +30,13 @@ SQUARE = 1
 PROJECT = 2
 MITER = 3
 BEVEL = 4
+
+#Text align
+LEFT = 1
+RIGHT = 2
+TOP = 3
+BOTTOM = 4
+BASELINE = 5
 
 # Current color mode (global)
 
@@ -103,12 +110,16 @@ class Canvas:
         self.ctx = ctx
         self.initial_matrix = ctx.get_matrix()
         self.fillColor = None
-        self.strokeColor = (0, 0, 0)
+        self.strokeColor = Color(0, 0, 0)
         self.lineWidth = 1
         self.vRectMode = CORNER
         self.vEllipseMode = CENTER
         self.vStrokeJoin = MITER
         self.vStrokeCap = ROUND
+        self.vTextAlignX = LEFT
+        self.vTextAlignY = BASELINE
+        self.vTextSize = 10
+        self.font = 'Ariel'
 
     def setColor(self, color):
         rgb = color.getRGB()
@@ -285,6 +296,45 @@ class Canvas:
         ims = cairo.ImageSurface.create_from_png(imagepath)
         self.ctx.set_source_surface(ims, x, y)
         self.ctx.paint()
+        return self
+
+    def textAlign(self, alignx, aligny=BASELINE):
+        self.vTextAlignX = alignx
+        self.vTextAlignY = aligny
+        return self
+
+    def textSize(self, size):
+        self.vTextSize = size
+        return self
+
+    def textFont(self, font):
+        self.font = font
+        return self
+
+    def text(self, txt, x, y):
+        self.ctx.select_font_face(self.font, cairo.FONT_SLANT_NORMAL,
+                                  cairo.FONT_WEIGHT_BOLD)
+        self.ctx.set_font_size(self.vTextSize)
+
+        xb, yb, width, height, dx, dy = self.ctx.text_extents(txt)
+
+        x -= xb
+        if self.vTextAlignX == CENTER:
+            x -=  width/2
+        elif self.vTextAlignX == RIGHT:
+            x -=  width
+
+        if self.vTextAlignY == CENTER:
+            y -= yb/2
+        elif self.vTextAlignY == BOTTOM:
+            y -= yb + height
+        elif self.vTextAlignY == TOP:
+            y -= yb
+
+        self.ctx.move_to(x, y)
+        self.setColor(self.fillColor)
+        self.ctx.show_text(txt)
+        return self
 
 
 def makeFrame(draw, pixelSize, width=None, height=None,
