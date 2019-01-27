@@ -49,6 +49,10 @@ def makeFrame(draw, pixelSize, width=None, height=None,
     buf = surface.get_data()
     a = np.frombuffer(buf, np.uint8)
     a.shape = (pixelSize[1], pixelSize[0], 4)
+    if channels==3:
+        a[:, :, [0, 1, 2]] = a[:, :, [2, 1, 0]]
+    elif channels==4:
+        a[:, :, [0, 1, 2, 3]] = a[:, :, [2, 1, 0, 3]]
     return a
 
 def makeFrames(draw, pixelSize, count, width=None, height=None,
@@ -84,6 +88,10 @@ def makeFrames(draw, pixelSize, count, width=None, height=None,
         buf = surface.get_data()
         a = np.frombuffer(buf, np.uint8)
         a.shape = (pixelSize[1], pixelSize[0], 4)
+        if channels == 3:
+            a[:, :, [0, 1, 2]] = a[:, :, [2, 1, 0]]
+        elif channels == 4:
+            a[:, :, [0, 1, 2, 3]] = a[:, :, [2, 1, 0, 3]]
         yield a
 
 def saveFrame(filepath, frame):
