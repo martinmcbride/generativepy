@@ -8,6 +8,7 @@ class Tween():
     def __init__(self, value=0):
         self.frames = []
         self.previous = value
+        self.nextFrame = 0
         
     def wait(self, frames):
         self.frames.extend([self.previous for i in range(frames)])
@@ -29,8 +30,10 @@ class Tween():
     def __getitem__(self, key):
         return self.get(key)
 
-    def __item__(self):
-        return item(self.frames)
+    def __next__(self):
+        frame = self.get(self.nextFrame)
+        self.nextFrame += 1
+        return frame
     
     
 class TweenVector(Tween):
