@@ -1,4 +1,4 @@
 # generativepy
 Generative art library
 
-Visit [generativepy.com](http://www.genertativepy.com) for details
+Visit [generativepy.com](http://www.generativepy.com) for details
