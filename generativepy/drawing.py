@@ -36,6 +36,10 @@ TOP = 3
 BOTTOM = 4
 BASELINE = 5
 
+# Orienatation
+OR_IMAGE = 1    #Top to bottom, left to right
+OR_MATH  = 2    #Bottom to top, left to right
+
 # Current color mode (global)
 
 gColorMode = RGB
@@ -103,9 +107,13 @@ def convertMode(mode, a, b, c, d):
 
 class Canvas:
 
-    def __init__(self, ctx, pixelSize):
+    def __init__(self, ctx, pixelSize, orientation=OR_IMAGE):
         self.pixelSize = pixelSize
         self.ctx = ctx
+        self.orientation = orientation
+        if orientation == OR_MATH:
+            ctx.scale(1, -1)
+            ctx.translate(0, -pixelSize[1])
         self.initial_matrix = ctx.get_matrix()
         self.fillColor = None
         self.strokeColor = Color(0, 0, 0)
@@ -313,6 +321,7 @@ class Canvas:
         self.ctx.select_font_face(self.font, cairo.FONT_SLANT_NORMAL,
                                   cairo.FONT_WEIGHT_BOLD)
         self.ctx.set_font_size(self.vTextSize)
+        self.setColor(self.fillColor)
 
         xb, yb, width, height, dx, dy = self.ctx.text_extents(txt)
 
@@ -323,20 +332,26 @@ class Canvas:
             x -=  width
 
         if self.vTextAlignY == CENTER:
-            y -= yb/2
+            dy = -yb/2
         elif self.vTextAlignY == BOTTOM:
-            y -= yb + height
+            dy = -(yb + height)
         elif self.vTextAlignY == TOP:
-            y -= yb
+            dy = -yb
 
-        self.ctx.move_to(x, y)
-        self.setColor(self.fillColor)
-        self.ctx.show_text(txt)
+        if self.orientation == OR_MATH:
+            self.ctx.move_to(x, y - dy)
+            self.ctx.save()
+            self.ctx.scale(1, -1)
+            self.ctx.show_text(txt)
+            self.ctx.restore()
+        else:
+            self.ctx.move_to(x, y + dy)
+            self.ctx.show_text(txt)
         return self
 
 
 def makeImage(outfile, draw, pixelSize, width=None, height=None,
-              startX=0, startY=0, background=None, channels=3):
+              startX=0, startY=0, background=None, channels=3, orientation=OR_IMAGE):
     '''
     Create a PNG file using cairo
     :param outfile: Name of output file
@@ -361,14 +376,14 @@ def makeImage(outfile, draw, pixelSize, width=None, height=None,
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
     surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
     ctx = cairo.Context(surface)
-    canvas = Canvas(ctx, pixelSize).background(background)
+    canvas = Canvas(ctx, pixelSize, orientation).background(background)
     canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
     draw(canvas)
     surface.write_to_png(outfile)
 
 
 def makeImages(outfile, draw, pixelSize, count, width=None, height=None,
-              startX=0, startY=0, background=None, channels=3):
+              startX=0, startY=0, background=None, channels=3, orientation=OR_IMAGE):
     '''
     Create a sequence of PNG files using cairo
     :param outfile: Base name of output files
@@ -395,7 +410,7 @@ def makeImages(outfile, draw, pixelSize, count, width=None, height=None,
         fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
         surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
         ctx = cairo.Context(surface)
-        canvas = Canvas(ctx, pixelSize).background(background)
+        canvas = Canvas(ctx, pixelSize, orientation).background(background)
         canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
         draw(canvas, i, count)
         surface.write_to_png(outfile + str(i).zfill(8) + '.png')
