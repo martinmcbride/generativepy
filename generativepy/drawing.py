@@ -127,6 +127,11 @@ class Canvas:
         self.vTextSize = 10
         self.font = 'Ariel'
 
+    def page2user(self, x):
+        matrix = self.ctx.get_matrix()
+        scaleFactor = math.hypot(matrix[0], matrix[1])
+        return (x * self.pixelSize[0]) / (100 * scaleFactor)
+
     def setColor(self, color):
         rgb = color.getRGB()
         if len(rgb) == 4:
