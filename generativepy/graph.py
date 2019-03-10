@@ -22,7 +22,7 @@ class Axes:
             self.canvas.line(self.start[0], p, self.start[0]+self.extent[0], p)
 
         self.canvas.fill(drawing.Color(0.2, 0.2, 0.2))
-        self.canvas.textSize(self.canvas.page2user(4))
+        self.canvas.textSize(self.canvas.page2user(3.5))
         self.canvas.textFont('Arial')
 
         self.canvas.textAlign(drawing.RIGHT, drawing.TOP)
