@@ -19,7 +19,7 @@ def duplicateFrame(frame, count):
         yield frame
 
 def makeFrame(draw, pixelSize, width=None, height=None,
-              startX=0, startY=0, background=None, channels=3):
+              startX=0, startY=0, background=None, channels=3, orientation=drawing.OR_IMAGE):
     '''
     Create a numpy frame file using cairo
     :param draw: the draw function
@@ -43,7 +43,7 @@ def makeFrame(draw, pixelSize, width=None, height=None,
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
     surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
     ctx = cairo.Context(surface)
-    canvas = drawing.Canvas(ctx, pixelSize).background(background)
+    canvas = drawing.Canvas(ctx, pixelSize, orientation).background(background)
     canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
     draw(canvas)
     buf = surface.get_data()
@@ -56,7 +56,7 @@ def makeFrame(draw, pixelSize, width=None, height=None,
     return a
 
 def makeFrames(draw, pixelSize, count, width=None, height=None,
-              startX=0, startY=0, background=None, channels=3):
+              startX=0, startY=0, background=None, channels=3, orientation=drawing.OR_IMAGE):
     '''
     Create a numpy frame file using cairo
     :param draw: the draw function
@@ -82,7 +82,7 @@ def makeFrames(draw, pixelSize, count, width=None, height=None,
     for i in range(count):
         surface = cairo.ImageSurface(fmt, pixelSize[0], pixelSize[1])
         ctx = cairo.Context(surface)
-        canvas = drawing.Canvas(ctx, pixelSize).background(background)
+        canvas = drawing.Canvas(ctx, pixelSize, orientation).background(background)
         canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
         draw(canvas, i, count)
         buf = surface.get_data()
