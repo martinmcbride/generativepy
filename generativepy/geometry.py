@@ -57,3 +57,36 @@ def tick(canvas, a, b, count=1, length=4, gap=1):
         canvas.line(pos[0] + pvector[0]*length/2, pos[1] + pvector[1]*length/2, pos[0] - pvector[0]*length/2, pos[1] - pvector[1]*length/2)
         pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
         canvas.line(pos[0] + pvector[0]*length/2, pos[1] + pvector[1]*length/2, pos[0] - pvector[0]*length/2, pos[1] - pvector[1]*length/2)
+
+def paratick(canvas, a, b, count=1, length=4, gap=1):
+    length = canvas.page2user(length)
+    gap = canvas.page2user(gap)
+
+    def draw(x, y, ox1, oy1, ox2, oy2):
+        canvas.line(x, y, x + ox1, y + oy1)
+        canvas.line(x, y, x + ox2, y + oy2)
+
+    # Midpoint ofgline
+    pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
+    # Length of line
+    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    # Unit vector along line
+    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    # Unit vector perpendicular to line
+    pvector = (-vector[1], vector[0])
+
+    if count==1:
+        pos = (pmid[0], pmid[1])
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+    elif count == 2:
+        pos = (pmid[0] - vector[0] * gap / 2, pmid[1] - vector[1] * gap / 2)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+        pos = (pmid[0] + vector[0] * gap / 2, pmid[1] + vector[1] * gap / 2)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+    elif count==3:
+        pos = (pmid[0] - vector[0]*gap, pmid[1] - vector[1]*gap)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+        pos = (pmid[0], pmid[1])
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+        pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
