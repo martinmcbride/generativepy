@@ -43,16 +43,23 @@ OR_MATH  = 2    #Bottom to top, left to right
 # Current color mode (global)
 
 gColorMode = RGB
+gColorRange = 1
 
 
 def colorMode(mode):
     global gColorMode
     gColorMode = mode
 
+def colorRange(range):
+    global gColorRange
+    gColorRange = range
+
 
 class Color():
 
     def __init__(self, *args, mode=0):
+        if gColorRange != 1:
+            args = list(map(lambda x: x / gColorRange, args))
         if len(args) == 1:
             self.color = (args[0],)*3
             self.alpha = ()
