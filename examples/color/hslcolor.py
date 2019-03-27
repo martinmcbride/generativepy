@@ -3,7 +3,7 @@ from generativepy.drawing import makeImage, Color
 
 
 def draw(canvas):
-    drawing.colorMode(drawing.HSL)
+    canvas.colorMode(drawing.HSL)
     for i in range(200):
         for j in range(200):
             canvas.stroke(Color(i/200, j/200, 0.5))
@@ -14,9 +14,10 @@ def draw(canvas):
             canvas.stroke(Color(i/200, 0.5, j/200))
             canvas.point(i + 50, j + 300)
 
+    canvas.colorRange(200)
     for i in range(200):
         for j in range(200):
-            canvas.stroke(Color(0.5, i/200, j/200))
+            canvas.stroke(Color(100, i, j))
             canvas.point(i + 50, j + 550)
 
 

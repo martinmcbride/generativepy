@@ -15,9 +15,10 @@ def draw(canvas):
     canvas.fill(Color(0.25))
     canvas.rect(200, 200, 100, 100)
 
-    canvas.fill(Color(0.8, 0.8, 0))
+    canvas.colorRange(255)
+    canvas.fill(Color(200, 200, 0))
     canvas.rect(330, 180, 100, 100)
-    canvas.fill(Color(1, 0, 1, 0.5))
+    canvas.fill(Color(255, 0, 255, 128))
     canvas.rect(370, 220, 100, 100)
 
 
