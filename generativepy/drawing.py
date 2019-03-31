@@ -238,13 +238,13 @@ class Color():
     def getRGB(self, mode=RGB, scale=1):
         if not self.useRange:
             scale = 256
-        self.color = tuple(x / scale for x in self.color)
-        self.alpha = tuple(x / scale for x in self.alpha)
+        c = tuple(x / scale for x in self.color)
+        a = tuple(x / scale for x in self.alpha)
         if mode == RGB or not self.allowHSL:
-            return self.color + self.alpha
+            return c + a
         else:
-            h, s, l = self.color
-            return colorsys.hls_to_rgb(h, l, s) + self.alpha
+            h, s, l = c
+            return colorsys.hls_to_rgb(h, l, s) + a
 
     def __str__(self):
         return str(self.color) + ' ' + str(self.alpha)

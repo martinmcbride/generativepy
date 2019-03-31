@@ -1,8 +1,9 @@
 from generativepy import drawing, geometry
 
 def draw(canvas):
-    canvas.fill(drawing.Color(.5, .5, 1))
-    canvas.stroke(drawing.Color(0, 0, 1))
+    canvas.colorRange(255)
+    canvas.fill(drawing.Color(128, 128, 255))
+    canvas.stroke(drawing.Color(0, 0, 255))
     canvas.strokeWeight(canvas.page2user(0.5))
     a = (1, 1)
     b = (3, 1)
