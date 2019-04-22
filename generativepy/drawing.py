@@ -594,3 +594,32 @@ def makeImages(outfile, draw, pixelSize, count, width=None, height=None,
         surface.write_to_png(outfile + str(i).zfill(8) + '.png')
 
 
+def makeSvg(outfile, draw, pixelSize, width=None, height=None,
+              startX=0, startY=0, background=None, orientation=OR_IMAGE):
+    '''
+    Create an SVG file using cairo
+    :param outfile: Name of output file
+    :param draw: the draw function
+    :param pixelSize: size in pixels tuple (x, y)
+    :param width: width in user coords
+    :param height: height in user coord
+    :param startX: x value of left edge of image, user coords
+    :param startY: y value of top edge of image, user coords
+    :param background: background color
+    :return:
+    '''
+    if not height and not width:
+        width = pixelSize[0]
+        height = pixelSize[1]
+    elif not height:
+        height = width * pixelSize[1] / pixelSize[0]
+    elif not width:
+        width = height * pixelSize[0] / pixelSize[1]
+
+    surface = cairo.SVGSurface(outfile, pixelSize[0], pixelSize[1])
+    ctx = cairo.Context(surface)
+    canvas = Canvas(ctx, pixelSize, orientation).background(background)
+    canvas.scale(pixelSize[0] / width, pixelSize[1] / height).translate(-startX, -startY)
+    draw(canvas)
+    ctx.show_page()
+
