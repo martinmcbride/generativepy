@@ -15,7 +15,7 @@ class Axes:
     def draw(self):
         self.canvas.strokeWeight(self.canvas.page2user(0.5))
         self.canvas.noFill()
-        self.canvas.stroke(drawing.Color(0.5, 0.5, 1))
+        self.canvas.stroke(drawing.Color(0.8, 0.8, 1))
         for p in self.get_divs(self.start[0], self.extent[0], self.divisions[0]):
             self.canvas.line(p, self.start[1], p, self.start[1]+self.extent[1])
         for p in self.get_divs(self.start[1], self.extent[1], self.divisions[1]):
@@ -133,7 +133,7 @@ def plotYXCurve(axes, fn, line_color=drawing.Color(1, 0, 0), extent=None, line_w
         axes.unclip()
 
 
-def plotPolarCurve(axes, fn, line_color=(1, 0, 0), range=(0, 2*math.pi), extent=None, line_width=.7):
+def plotPolarCurve(axes, fn, line_color=drawing.Color(1, 0, 0), range=(0, 2*math.pi), extent=None, line_width=.7):
     """
     Plot an r = fn(theta)
     :param mctx: maths context
@@ -156,12 +156,3 @@ def plotPolarCurve(axes, fn, line_color=(1, 0, 0), range=(0, 2*math.pi), extent=
         canvas.strokeWeight(canvas.page2user(line_width))
         canvas.polygon(points, False)
         axes.unclip()
-
-
-def attribution(ctx, size, text, color=(0.5, 0, 0)):
-    ctx.set_source_rgb(*color)
-    ctx.select_font_face("Arial", cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_NORMAL)
-    ctx.set_font_size(20)
-    x, y, width, height, dx, dy = ctx.text_extents(text)
-    ctx.move_to(size[0]-width-4, size[1]-4)
-    ctx.show_text(text)
