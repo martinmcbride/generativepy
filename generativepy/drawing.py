@@ -283,6 +283,7 @@ class Canvas:
         self.fillColor = None
         self.strokeColor = Color(0, 0, 0)
         self.lineWidth = 1
+        self.vStrokeDash = []
         self.vRectMode = CORNER
         self.vEllipseMode = CENTER
         self.vStrokeJoin = MITER
@@ -333,6 +334,7 @@ class Canvas:
             self.ctx.set_line_width(self.lineWidth)
             self.setStrokeCap()
             self.setStrokeJoin()
+            self.ctx.set_dash(self.vStrokeDash)
             self.setColor(self.strokeColor)
             self.ctx.stroke()
 
@@ -389,6 +391,10 @@ class Canvas:
 
     def strokeJoin(self, join):
         self.vStrokeJoin = join
+        return self
+
+    def strokeDash(self, dash):
+        self.vStrokeDash = dash
         return self
 
     def line(self, x0, y0, x1, y1):
