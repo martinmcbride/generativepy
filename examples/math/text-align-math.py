@@ -1,4 +1,5 @@
 from generativepy import drawing
+from generativepy.color import Color
 
 def draw_text(canvas, txt, x, y):
     canvas.fill(drawing.Color(1, 0, 0))

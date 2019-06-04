@@ -85,12 +85,12 @@ class Axes:
         return str(round(value*1000)/1000)
 
 
-def plotCurve(axes, fn, line_color=drawing.Color(1, 0, 0), extent=None, line_width=.7):
+def plotCurve(axes, fn, lineColor=drawing.Color(1, 0, 0), extent=None, line_width=.7):
     """
     Plot an y = fn(x)
     :param axes: Axes to plt in
     :param fn: the function, a function object taking 1 number and returning a number
-    :param line_color: color of line (r, g, b) each channel in range 0.0 to 1.0
+    :param lineColor: color of line (r, g, b) each channel in range 0.0 to 1.0
     :param extent: tuple (start, end) giving extent of curve, or None for the curve to fill the x range
     :param line_width: line width in page space
     :return:
@@ -102,19 +102,19 @@ def plotCurve(axes, fn, line_color=drawing.Color(1, 0, 0), extent=None, line_wid
             points.append((x, fn(x)))
     if points:
         axes.clip()
-        canvas.stroke(line_color)
+        canvas.stroke(lineColor)
         canvas.noFill()
         canvas.strokeWeight(canvas.page2user(line_width))
         canvas.polygon(points, False)
         axes.unclip()
 
 
-def plotYXCurve(axes, fn, line_color=drawing.Color(1, 0, 0), extent=None, line_width=.7):
+def plotYXCurve(axes, fn, lineColor=drawing.Color(1, 0, 0), extent=None, line_width=.7):
     """
     Plot an x = fn(y)
     :param mctx: maths context
     :param fn: the function, a function object taking 1 number and returning a number
-    :param line_color: color of line (r, g, b) each channel in range 0.0 to 1.0
+    :param lineColor: color of line (r, g, b) each channel in range 0.0 to 1.0
     :param extent: tuple (start, end) giving extent of curve, or None for the curve to fill the y range
     :param line_width: line width in page space
     :return:
@@ -126,19 +126,19 @@ def plotYXCurve(axes, fn, line_color=drawing.Color(1, 0, 0), extent=None, line_w
             points.append((fn(y), y))
     if points:
         axes.clip()
-        canvas.stroke(line_color)
+        canvas.stroke(lineColor)
         canvas.noFill()
         canvas.strokeWeight(canvas.page2user(line_width))
         canvas.polygon(points, False)
         axes.unclip()
 
 
-def plotPolarCurve(axes, fn, line_color=drawing.Color(1, 0, 0), range=(0, 2*math.pi), extent=None, line_width=.7):
+def plotPolarCurve(axes, fn, lineColor=drawing.Color(1, 0, 0), range=(0, 2*math.pi), extent=None, line_width=.7):
     """
     Plot an r = fn(theta)
     :param mctx: maths context
     :param fn: the function, a function object taking 1 number and returning a number
-    :param line_color: color of line (r, g, b) each channel in range 0.0 to 1.0
+    :param lineColor: color of line (r, g, b) each channel in range 0.0 to 1.0
     :param extent: tuple (start, end) giving extent of curve, or None for the curve to fill the y range
     :param line_width: line width in page space
     :return:
@@ -151,7 +151,7 @@ def plotPolarCurve(axes, fn, line_color=drawing.Color(1, 0, 0), range=(0, 2*math
             points.append((r*math.cos(theta), r*math.sin(theta)))
     if points:
         axes.clip()
-        canvas.stroke(line_color)
+        canvas.stroke(lineColor)
         canvas.noFill()
         canvas.strokeWeight(canvas.page2user(line_width))
         canvas.polygon(points, False)

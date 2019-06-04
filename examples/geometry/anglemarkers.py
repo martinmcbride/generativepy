@@ -1,9 +1,10 @@
 from generativepy import drawing, geometry
+from generativepy.color import Color
 
 def draw(canvas):
     canvas.colorRange(255)
-    canvas.fill(drawing.Color(128, 128, 255))
-    canvas.stroke(drawing.Color(0, 0, 255))
+    canvas.fill(Color(128, 128, 255))
+    canvas.stroke(Color(0, 0, 255))
     canvas.strokeWeight(canvas.page2user(0.5))
     a = (1, 1)
     b = (3, 1)
@@ -22,4 +23,4 @@ def draw(canvas):
     geometry.tick(canvas, a, d, 3)
 
 
-drawing.makeImage("/tmp/anglemarkers.png", draw, pixelSize=(500, 500), width=6, background=drawing.Color(1, 1, 1), orientation=drawing.OR_MATH)
+drawing.makeImage("/tmp/anglemarkers.png", draw, pixelSize=(500, 500), width=6, background=Color(1, 1, 1), orientation=drawing.OR_MATH)

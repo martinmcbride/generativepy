@@ -1,9 +1,10 @@
 from generativepy import drawing
-from generativepy.drawing import makeImage, Color
+from generativepy.drawing import makeImage
+from generativepy.color import Color, HSL
 
 
 def draw(canvas):
-    canvas.colorMode(drawing.HSL)
+    canvas.colorMode(HSL)
     for i in range(200):
         for j in range(50):
             canvas.stroke(Color(i/200, 1, 0.5))

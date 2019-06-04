@@ -1,11 +1,12 @@
 from generativepy import drawing
+from generativepy.color import Color
 
 def draw_text(canvas, txt, x, y):
-    canvas.fill(drawing.Color(1, 0, 0))
+    canvas.fill(Color(1, 0, 0))
     canvas.noStroke()
     canvas.ellipseMode(drawing.RADIUS)
     canvas.ellipse(x, y, 5, 5)
-    canvas.fill(drawing.Color(0, 0, 0))
+    canvas.fill(Color(0, 0, 0))
     canvas.text(txt, x, y)
 
 def draw(canvas):
@@ -22,4 +23,4 @@ def draw(canvas):
     canvas.textAlign(drawing.LEFT, drawing.TOP)
     draw_text(canvas, "gTop", 250, 450)
 
-drawing.makeImage("/tmp/text-align.png", draw, pixelSize=(500, 500), background=drawing.Color(1, 1, 1))
+drawing.makeImage("/tmp/text-align.png", draw, pixelSize=(500, 500), background=Color(1, 1, 1))

@@ -1,4 +1,5 @@
-from generativepy.drawing import makeImage, Color, HSL
+from generativepy.drawing import makeImage
+from generativepy.color import Color, HSL
 
 
 def draw(canvas):
