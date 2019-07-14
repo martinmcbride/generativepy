@@ -260,5 +260,5 @@ class Gradient():
             if self.stops[i][0] < position <= self.stops[i+1][0]:
                 ratio = (position - self.stops[i][0]) / (self.stops[i+1][0] - self.stops[i][0])
                 return self.stops[i][1].lerp(self.stops[i+1][1], ratio)
-        self.stops[1][1]
+        return self.stops[-1][1]
 
