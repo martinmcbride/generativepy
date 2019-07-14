@@ -215,7 +215,50 @@ class Color():
             h, s, l = c
             return colorsys.hls_to_rgb(h, l, s) + a
 
+    def lerp(self, other, ratio):
+        ratio = min(1, max(0, ratio)) #Clamp ratio between 0 and 1
+        col1 = self.getRGB()
+        col2 = other.getRGB()
+        col = [x*(1-ratio) + y*ratio for x, y in zip(col1, col2)]
+        return Color(*col)
+
     def __str__(self):
         return str(self.color) + ' ' + str(self.alpha)
 
+class Gradient():
+    '''
+    Create a colour gradient
+    The gradient is defined by a set of stops - each stop has a positon and color
+    The gradienr colour at a particular position is found by interpolating between the stop
+    below and teh stop above.
+    '''
+
+    def __init__(self):
+        self.stops = []
+
+    def add(self, position, color):
+        '''
+        Add a new stop. Stops must be added in order of increasing position value
+        :param position: Position of stop
+        :param color: colour od stop
+        :return: self
+        '''
+        self.stops.append((position, color))
+        return self
+
+    def getColor(self, position):
+        '''
+        Get colour at a position
+        :param position:
+        :return:
+        '''
+        if not self.stops:
+            return Color(0)
+        if position<=self.stops[0][0]:
+            return self.stops[0][1]
+        for i in range(len(self.stops)-1):
+            if self.stops[i][0] < position <= self.stops[i+1][0]:
+                ratio = (position - self.stops[i][0]) / (self.stops[i+1][0] - self.stops[i][0])
+                return self.stops[i][1].lerp(self.stops[i+1][1], ratio)
+        self.stops[1][1]
 
