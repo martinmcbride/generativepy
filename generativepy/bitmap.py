@@ -30,12 +30,12 @@ class BitmapScaling():
         elif not width:
             self.width = height * pixelSize[0] / pixelSize[1]
 
-    def p2u(self, pos):
+    def page2user(self, pos):
         x = self.startX + pos[0]*self.width/self.pixelSize[0]
         y = self.startY + pos[1]*self.height/self.pixelSize[1]
         return x, y
 
-    def u2p(self, pos):
+    def user2page(self, pos):
         x = (pos[0] - self.startX)*self.pixelSize[0]/self.width
         y = (pos[1] - self.startY)*self.pixelSize[1]/self.height
         if 0 <= x < self.pixelSize[0] and 0 <= y < self.pixelSize[1]:
