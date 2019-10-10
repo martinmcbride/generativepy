@@ -141,6 +141,18 @@ class Canvas:
         self.ctx.translate(x, y)
         return self
 
+    def rotate(self, x):
+        self.ctx.rotate(x)
+        return self
+
+    def save(self):
+        self.ctx.save()
+        return self
+
+    def restore(self):
+        self.ctx.restore()
+        return self
+
     def background(self, color):
         if color:
             self.ctx.save()
