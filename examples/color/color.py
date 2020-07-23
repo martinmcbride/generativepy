@@ -2,25 +2,36 @@ from generativepy.drawing import makeImage
 from generativepy.color import Color
 
 
-def draw(canvas):
-    canvas.noStroke()
-    canvas.fill(Color(0.5, 0, 0))
-    canvas.rect(50, 50, 100, 100)
-    canvas.fill(Color(0, 0, 0.5))
-    canvas.rect(200, 50, 100, 100)
-    canvas.fill(Color(0.8, 0.8, 0))
-    canvas.rect(350, 50, 100, 100)
+def draw(ctx, width, height, frame_no, frame_count):
+    ctx.set_source_rgba(*Color(1).get_rgba())
+    ctx.paint()
 
-    canvas.fill(Color(0.5))
-    canvas.rect(50, 200, 100, 100)
-    canvas.fill(Color(0.25))
-    canvas.rect(200, 200, 100, 100)
+    ctx.set_source_rgba(*Color(0.5, 0, 0).get_rgba())
+    ctx.rectangle(50, 50, 100, 100)
+    ctx.fill()
 
-    canvas.colorRange(255)
-    canvas.fill(Color(200, 200, 0))
-    canvas.rect(330, 180, 100, 100)
-    canvas.fill(Color(255, 0, 255, 128))
-    canvas.rect(370, 220, 100, 100)
+    ctx.set_source_rgba(*Color(0, 0, 0.5).get_rgba())
+    ctx.rectangle(200, 50, 100, 100)
+    ctx.fill()
 
+    ctx.set_source_rgba(*Color(0.8, 0.8, 0).get_rgba())
+    ctx.rectangle(350, 50, 100, 100)
+    ctx.fill()
 
-makeImage("/tmp/color.png", draw, pixelSize=(500, 350), background=Color(1))
+    ctx.set_source_rgba(*Color(0.5).get_rgba())
+    ctx.rectangle(50, 200, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color(0.25).get_rgba())
+    ctx.rectangle(200, 200, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgb(*Color(0.8, 0.8, 0).get_rgb())
+    ctx.rectangle(330, 180, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color(1, 0, 1, 0.5).get_rgba())
+    ctx.rectangle(370, 220, 100, 100)
+    ctx.fill()
+
+makeImage("/tmp/color.png", draw, 500, 350)

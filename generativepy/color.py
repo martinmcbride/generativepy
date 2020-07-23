@@ -5,10 +5,6 @@
 
 import colorsys
 
-# Color modes
-RGB = 1
-HSL = 2
-
 cssColors = {
 "purple":(128,0,128),
 "fuchsia":(255,0,255),
@@ -174,91 +170,35 @@ cssColors = {
 class Color():
 
     def __init__(self, *args):
-        global cssColors
-        self.useRange = True
-        self.allowHSL = True
         if len(args) == 1:
             if args[0] in cssColors:
-                self.color = cssColors[args[0]]
-                self.useRange = False
-                self.allowHSL = False
+                self.color = tuple([x/255 for x in cssColors[args[0]]]) + (1,)
             else:
-                self.color = (args[0],)*3
-            self.alpha = ()
-            self.allowHSB = False
+                self.color = (args[0],)*3 + (1,)
         elif len(args) == 2:
             if args[0] in cssColors:
-                self.color = cssColors[args[0]]
-                self.useRange = False
-                self.allowHSL = False
+                self.color = tuple([x/255 for x in cssColors[args[0]]]) + (args[1],)
             else:
-                self.color = (args[0],) * 3
-            self.alpha = (args[1],)
-            self.allowHSB = False
+                self.color = (args[0],) * 3 + (args[1],)
         elif len(args) == 3:
-            self.color = tuple(args)
-            self.alpha = ()
+            self.color = tuple(args) + (1,)
         elif len(args) == 4:
-            self.color = tuple(args[:3])
-            self.alpha = (args[3],)
+            self.color = tuple(args)
         else:
             raise ValueError("Color takes 1, 2, 3 or 4 arguments")
 
-    def getRGB(self, mode=RGB, scale=1):
-        if not self.useRange:
-            scale = 256
-        c = tuple(x / scale for x in self.color)
-        a = tuple(x / scale for x in self.alpha)
-        if mode == RGB or not self.allowHSL:
-            return c + a
-        else:
-            h, s, l = c
-            return colorsys.hls_to_rgb(h, l, s) + a
+    def get_rgb(self):
+        return self.color[:3]
+
+    def get_rgba(self):
+        return self.color
 
     def lerp(self, other, ratio):
         ratio = min(1, max(0, ratio)) #Clamp ratio between 0 and 1
-        col1 = self.getRGB()
-        col2 = other.getRGB()
+        col1 = self.get_rgba()
+        col2 = other.get_rgba()
         col = [x*(1-ratio) + y*ratio for x, y in zip(col1, col2)]
         return Color(*col)
 
     def __str__(self):
-        return str(self.color) + ' ' + str(self.alpha)
-
-class Gradient():
-    '''
-    Create a colour gradient
-    The gradient is defined by a set of stops - each stop has a positon and color
-    The gradienr colour at a particular position is found by interpolating between the stop
-    below and teh stop above.
-    '''
-
-    def __init__(self):
-        self.stops = []
-
-    def add(self, position, color):
-        '''
-        Add a new stop. Stops must be added in order of increasing position value
-        :param position: Position of stop
-        :param color: colour od stop
-        :return: self
-        '''
-        self.stops.append((position, color))
-        return self
-
-    def getColor(self, position):
-        '''
-        Get colour at a position
-        :param position:
-        :return:
-        '''
-        if not self.stops:
-            return Color(0)
-        if position<=self.stops[0][0]:
-            return self.stops[0][1]
-        for i in range(len(self.stops)-1):
-            if self.stops[i][0] < position <= self.stops[i+1][0]:
-                ratio = (position - self.stops[i][0]) / (self.stops[i+1][0] - self.stops[i][0])
-                return self.stops[i][1].lerp(self.stops[i+1][1], ratio)
-        return self.stops[-1][1]
-
+        return 'rgba' + str(self.color)

@@ -1,28 +1,38 @@
 from generativepy.drawing import makeImage
-from generativepy.color import Color, HSL
+from generativepy.color import Color
 
 
-def draw(canvas):
-    canvas.noStroke()
-    canvas.colorMode(HSL)
-    canvas.colorRange(255)
-    canvas.fill(Color('salmon'))
-    canvas.rect(50, 50, 100, 100)
-    canvas.fill(Color('firebrick'))
-    canvas.rect(200, 50, 100, 100)
-    canvas.fill(Color('fuchsia'))
-    canvas.rect(350, 50, 100, 100)
+def draw(ctx, width, height, frame_no, frame_count):
+    ctx.set_source_rgba(*Color(1).get_rgba())
+    ctx.paint()
 
-    canvas.fill(Color('deepskyblue'))
-    canvas.rect(50, 200, 100, 100)
-    canvas.fill(Color('hotpink'))
-    canvas.rect(200, 200, 100, 100)
+    ctx.set_source_rgba(*Color('salmon').get_rgba())
+    ctx.rectangle(50, 50, 100, 100)
+    ctx.fill()
 
-    canvas.colorRange(255)
-    canvas.fill(Color('lawngreen'))
-    canvas.rect(330, 180, 100, 100)
-    canvas.fill(Color('navy', 128))
-    canvas.rect(370, 220, 100, 100)
+    ctx.set_source_rgba(*Color('firebrick').get_rgba())
+    ctx.rectangle(200, 50, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color('fuchsia').get_rgba())
+    ctx.rectangle(350, 50, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color('deepskyblue').get_rgba())
+    ctx.rectangle(50, 200, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color('hotpink').get_rgba())
+    ctx.rectangle(200, 200, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgb(*Color('lawngreen').get_rgb())
+    ctx.rectangle(330, 180, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color('navy', 0.5).get_rgba())
+    ctx.rectangle(370, 220, 100, 100)
+    ctx.fill()
 
 
-makeImage("/tmp/csscolor.png", draw, pixelSize=(500, 350), background=Color(1))
+makeImage("/tmp/csscolor.png", draw, 500, 350)
