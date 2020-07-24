@@ -1,25 +1,37 @@
-from generativepy import drawing
 from generativepy.drawing import makeImage
-from generativepy.color import Color, HSL
+from generativepy.color import Color
 
 
-def draw(canvas):
-    canvas.colorMode(HSL)
-    for i in range(200):
-        for j in range(200):
-            canvas.stroke(Color(i/200, j/200, 0.5))
-            canvas.point(i + 50, j + 50)
+def draw(ctx, width, height, frame_no, frame_count):
+    ctx.set_source_rgba(*Color(1).get_rgba())
+    ctx.paint()
 
-    for i in range(200):
-        for j in range(200):
-            canvas.stroke(Color(i/200, 0.5, j/200))
-            canvas.point(i + 50, j + 300)
+    ctx.set_source_rgba(*Color.of_hsl(0, 0.5, 0.5).get_rgba())
+    ctx.rectangle(50, 50, 100, 100)
+    ctx.fill()
 
-    canvas.colorRange(200)
-    for i in range(200):
-        for j in range(200):
-            canvas.stroke(Color(100, i, j))
-            canvas.point(i + 50, j + 550)
+    ctx.set_source_rgba(*Color.of_hsl(0.33, 0.5, 0.5).get_rgba())
+    ctx.rectangle(200, 50, 100, 100)
+    ctx.fill()
 
+    ctx.set_source_rgba(*Color.of_hsl(0.66, 0.5, 0.5).get_rgba())
+    ctx.rectangle(350, 50, 100, 100)
+    ctx.fill()
 
-makeImage("/tmp/hslcolor.png", draw, pixelSize=(300, 800), background=Color(1))
+    ctx.set_source_rgba(*Color.of_hsl(0, 0.25, 0.5).get_rgba())
+    ctx.rectangle(50, 200, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color.of_hsl(0, 0.5, 0.25).get_rgba())
+    ctx.rectangle(200, 200, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color.of_hsl(0, 0.5, 0.5).get_rgba())
+    ctx.rectangle(330, 180, 100, 100)
+    ctx.fill()
+
+    ctx.set_source_rgba(*Color.of_hsla(0.5, 0.5, 0.5, 0.5).get_rgba())
+    ctx.rectangle(370, 220, 100, 100)
+    ctx.fill()
+
+makeImage("/tmp/hslcolor.png", draw, 500, 350)

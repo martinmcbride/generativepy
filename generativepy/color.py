@@ -187,6 +187,14 @@ class Color():
         else:
             raise ValueError("Color takes 1, 2, 3 or 4 arguments")
 
+    def of_hsl(h, s, l):
+        r, g, b = colorsys.hls_to_rgb(h, l, s)
+        return Color(r, g, b)
+
+    def of_hsla(h, s, l, a):
+        r, g, b = colorsys.hls_to_rgb(h, l, s)
+        return Color(r, g, b, a)
+
     def get_rgb(self):
         return self.color[:3]
 
