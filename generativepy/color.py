@@ -174,24 +174,36 @@ class Color():
             if args[0] in cssColors:
                 self.color = tuple([x/255 for x in cssColors[args[0]]]) + (1,)
             else:
-                self.color = (args[0],)*3 + (1,)
+                g = Color.clamp(args[0])
+                self.color = (g,)*3 + (1,)
         elif len(args) == 2:
             if args[0] in cssColors:
                 self.color = tuple([x/255 for x in cssColors[args[0]]]) + (args[1],)
             else:
-                self.color = (args[0],) * 3 + (args[1],)
+                g = Color.clamp(args[0])
+                a = Color.clamp(args[1])
+                self.color = (g,) * 3 + (a,)
         elif len(args) == 3:
-            self.color = tuple(args) + (1,)
+            self.color = tuple([Color.clamp(x) for x in args]) + (1,)
         elif len(args) == 4:
-            self.color = tuple(args)
+            self.color = tuple([Color.clamp(x) for x in args])
         else:
             raise ValueError("Color takes 1, 2, 3 or 4 arguments")
 
+    @staticmethod
     def of_hsl(h, s, l):
+        h = Color.clamp(h)
+        s = Color.clamp(s)
+        l = Color.clamp(l)
         r, g, b = colorsys.hls_to_rgb(h, l, s)
         return Color(r, g, b)
 
+    @staticmethod
     def of_hsla(h, s, l, a):
+        h = Color.clamp(h)
+        s = Color.clamp(s)
+        l = Color.clamp(l)
+        a = Color.clamp(a)
         r, g, b = colorsys.hls_to_rgb(h, l, s)
         return Color(r, g, b, a)
 
@@ -201,12 +213,108 @@ class Color():
     def get_rgba(self):
         return self.color
 
+    def get_r(self):
+        return self.color[0]
+
+    def with_r(self, newval):
+        newval = Color.clamp(newval)
+        return Color(newval, self.color[1], self.color[2], self.color[3])
+
+    def with_r_factor(self, factor):
+        factor = Color.clamp(factor)
+        return Color(self.color[0]*factor, self.color[1], self.color[2], self.color[3])
+
+    def get_g(self):
+        return self.color[1]
+
+    def with_g(self, newval):
+        newval = Color.clamp(newval)
+        return Color(self.color[0], newval, self.color[2], self.color[3])
+
+    def with_g_factor(self, factor):
+        factor = Color.clamp(factor)
+        return Color(self.color[0], self.color[1]*factor, self.color[2], self.color[3])
+
+    def get_b(self):
+        return self.color[2]
+
+    def with_b(self, newval):
+        newval = Color.clamp(newval)
+        return Color(self.color[0], self.color[1], newval, self.color[3])
+
+    def with_b_factor(self, factor):
+        factor = Color.clamp(factor)
+        return Color(self.color[0], self.color[1], self.color[2]*factor, self.color[3])
+
+    def get_a(self):
+        return self.color[3]
+
+    def with_a(self, newval):
+        newval = Color.clamp(newval)
+        return Color(self.color[0], self.color[1], self.color[2], newval)
+
+    def with_a_factor(self, factor):
+        factor = Color.clamp(factor)
+        return Color(self.color[0], self.color[1], self.color[2], self.color[3]*factor)
+
+    def get_h(self):
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        return h
+
+    def with_h(self, newval):
+        newval = Color.clamp(newval)
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        r, g, b = colorsys.hls_to_rgb(newval, l, s)
+        return Color(r, g, b, self.color[3])
+
+    def with_h_factor(self, factor):
+        factor = Color.clamp(factor)
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        r, g, b = colorsys.hls_to_rgb(h*factor, l, s)
+        return Color(r, g, b, self.color[3])
+
+    def get_s(self):
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        return s
+
+    def with_s(self, newval):
+        newval = Color.clamp(newval)
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        r, g, b = colorsys.hls_to_rgb(h, l, newval)
+        return Color(r, g, b, self.color[3])
+
+    def with_s_factor(self, factor):
+        factor = Color.clamp(factor)
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        r, g, b = colorsys.hls_to_rgb(h, l, s*factor)
+        return Color(r, g, b, self.color[3])
+
+    def get_l(self):
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        return l
+
+    def with_l(self, newval):
+        newval = Color.clamp(newval)
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        r, g, b = colorsys.hls_to_rgb(h, newval, s)
+        return Color(r, g, b, self.color[3])
+
+    def with_l_factor(self, factor):
+        factor = Color.clamp(factor)
+        h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
+        r, g, b = colorsys.hls_to_rgb(h, l*factor, s)
+        return Color(r, g, b, self.color[3])
+
     def lerp(self, other, ratio):
-        ratio = min(1, max(0, ratio)) #Clamp ratio between 0 and 1
+        ratio = Color.clamp(ratio)
         col1 = self.get_rgba()
         col2 = other.get_rgba()
         col = [x*(1-ratio) + y*ratio for x, y in zip(col1, col2)]
         return Color(*col)
+
+    @staticmethod
+    def clamp(v):
+        return min(1, max(0, v)) #Clamp v between 0 and 1
 
     def __str__(self):
         return 'rgba' + str(self.color)
