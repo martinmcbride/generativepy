@@ -168,6 +168,34 @@ cssColors = {
 }
 
 class Color():
+    '''
+    Holds a color value.
+
+    Color is stored as a tuple (r, g, b, a), where each channel has a value between 0 and 1.
+
+    Colour can be initialised with:
+    - a grey value
+    - a grey value + an alpha
+    - r, g and b values (alpha defaults to 1)
+    - r, g, b and a values
+    - a CSS color name as a string (alpha defaults to 1)
+    - a CSS color name as a string plus an alpha value (0 to 1)
+
+    Color objects are immutable.
+
+    get_rgb, get_rgba gets the colour values as a 3- or 4-tuple
+
+    of_hsl, of_hsla creates a new Color from hsl values (color values are stored as RGB)
+
+    get_r gets the red value (similar for b, g, a, h, s, l). h, s and l values are obtained by converting from rgb
+
+    with_r creates a new Color from an existing colour by setting the r value (similar for b, g, a, h, s, l). For
+    h, s, l values, the color is converted to hsl, modified, then converted back to rgb.
+
+    with_r_factor creates a new Color from an existing colour by multiplying the r value by a factor. It is
+    equivalent to with_r(get_r()*factor). Similar for b, g, a, h, s, l
+
+    '''
 
     def __init__(self, *args):
         if len(args) == 1:
@@ -208,7 +236,7 @@ class Color():
         return Color(r, g, b, a)
 
     def get_rgb(self):
-        return self.color[:3]
+        return tuple(self.color[:3])
 
     def get_rgba(self):
         return self.color
@@ -221,7 +249,6 @@ class Color():
         return Color(newval, self.color[1], self.color[2], self.color[3])
 
     def with_r_factor(self, factor):
-        factor = Color.clamp(factor)
         return Color(self.color[0]*factor, self.color[1], self.color[2], self.color[3])
 
     def get_g(self):
@@ -232,7 +259,6 @@ class Color():
         return Color(self.color[0], newval, self.color[2], self.color[3])
 
     def with_g_factor(self, factor):
-        factor = Color.clamp(factor)
         return Color(self.color[0], self.color[1]*factor, self.color[2], self.color[3])
 
     def get_b(self):
@@ -243,7 +269,6 @@ class Color():
         return Color(self.color[0], self.color[1], newval, self.color[3])
 
     def with_b_factor(self, factor):
-        factor = Color.clamp(factor)
         return Color(self.color[0], self.color[1], self.color[2]*factor, self.color[3])
 
     def get_a(self):
@@ -254,7 +279,6 @@ class Color():
         return Color(self.color[0], self.color[1], self.color[2], newval)
 
     def with_a_factor(self, factor):
-        factor = Color.clamp(factor)
         return Color(self.color[0], self.color[1], self.color[2], self.color[3]*factor)
 
     def get_h(self):
@@ -268,9 +292,8 @@ class Color():
         return Color(r, g, b, self.color[3])
 
     def with_h_factor(self, factor):
-        factor = Color.clamp(factor)
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
-        r, g, b = colorsys.hls_to_rgb(h*factor, l, s)
+        r, g, b = colorsys.hls_to_rgb(Color.clamp(h*factor), l, s)
         return Color(r, g, b, self.color[3])
 
     def get_s(self):
@@ -284,9 +307,8 @@ class Color():
         return Color(r, g, b, self.color[3])
 
     def with_s_factor(self, factor):
-        factor = Color.clamp(factor)
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
-        r, g, b = colorsys.hls_to_rgb(h, l, s*factor)
+        r, g, b = colorsys.hls_to_rgb(h, l, Color.clamp(s*factor))
         return Color(r, g, b, self.color[3])
 
     def get_l(self):
@@ -300,9 +322,8 @@ class Color():
         return Color(r, g, b, self.color[3])
 
     def with_l_factor(self, factor):
-        factor = Color.clamp(factor)
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
-        r, g, b = colorsys.hls_to_rgb(h, l*factor, s)
+        r, g, b = colorsys.hls_to_rgb(h, Color.clamp(l*factor), s)
         return Color(r, g, b, self.color[3])
 
     def lerp(self, other, ratio):
@@ -314,7 +335,11 @@ class Color():
 
     @staticmethod
     def clamp(v):
-        return min(1, max(0, v)) #Clamp v between 0 and 1
+        try:
+            v = min(1, max(0, v)) #Clamp v between 0 and 1
+        except:
+            raise ValueError('Numerical value required')
+        return v
 
     def __str__(self):
         return 'rgba' + str(self.color)
