@@ -235,13 +235,16 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(h, l, s)
         return Color(r, g, b, a)
 
-    def get_rgb(self):
+    @property
+    def rgb(self):
         return tuple(self.color[:3])
 
-    def get_rgba(self):
+    @property
+    def rgba(self):
         return self.color
 
-    def get_r(self):
+    @property
+    def r(self):
         return self.color[0]
 
     def with_r(self, newval):
@@ -251,7 +254,8 @@ class Color():
     def with_r_factor(self, factor):
         return Color(self.color[0]*factor, self.color[1], self.color[2], self.color[3])
 
-    def get_g(self):
+    @property
+    def g(self):
         return self.color[1]
 
     def with_g(self, newval):
@@ -261,6 +265,7 @@ class Color():
     def with_g_factor(self, factor):
         return Color(self.color[0], self.color[1]*factor, self.color[2], self.color[3])
 
+    @property
     def get_b(self):
         return self.color[2]
 
@@ -271,6 +276,7 @@ class Color():
     def with_b_factor(self, factor):
         return Color(self.color[0], self.color[1], self.color[2]*factor, self.color[3])
 
+    @property
     def get_a(self):
         return self.color[3]
 
@@ -281,7 +287,8 @@ class Color():
     def with_a_factor(self, factor):
         return Color(self.color[0], self.color[1], self.color[2], self.color[3]*factor)
 
-    def get_h(self):
+    @property
+    def h(self):
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return h
 
@@ -296,7 +303,8 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(Color.clamp(h*factor), l, s)
         return Color(r, g, b, self.color[3])
 
-    def get_s(self):
+    @property
+    def s(self):
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return s
 
@@ -311,7 +319,8 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(h, l, Color.clamp(s*factor))
         return Color(r, g, b, self.color[3])
 
-    def get_l(self):
+    @property
+    def l(self):
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return l
 
@@ -328,8 +337,8 @@ class Color():
 
     def lerp(self, other, ratio):
         ratio = Color.clamp(ratio)
-        col1 = self.get_rgba()
-        col2 = other.get_rgba()
+        col1 = self.rgba
+        col2 = other.rgba
         col = [x*(1-ratio) + y*ratio for x, y in zip(col1, col2)]
         return Color(*col)
 
