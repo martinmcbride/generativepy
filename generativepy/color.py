@@ -343,3 +343,9 @@ class Color():
 
     def __str__(self):
         return 'rgba' + str(self.color)
+
+    def __getitem__(self, i):
+        if i < 4:
+            return self.color[i]
+        else:
+            raise IndexError()
