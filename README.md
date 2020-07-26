@@ -19,3 +19,5 @@ Main functionality:
 ## Website
 
 Visit [generativepy.com](http://www.generativepy.com) for details.
+
+For detailed information of pycairo see the [Computer graphics in Python](https://leanpub.com/computergraphicsinpython) ebook.
