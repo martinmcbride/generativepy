@@ -1,5 +1,5 @@
 from generativepy import drawing
-from generativepy.drawing import makeImage
+from generativepy.drawing import make_image
 from generativepy.color import Color
 
 
@@ -23,4 +23,4 @@ def draw(ctx, width, height, frame_no, frame_count):
         ctx.fill()
 
 
-makeImage("/tmp/hslbars.png", draw, 300, 350)
+make_image("/tmp/hslbars.png", draw, 300, 350)

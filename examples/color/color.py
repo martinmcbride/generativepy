@@ -1,4 +1,4 @@
-from generativepy.drawing import makeImage
+from generativepy.drawing import make_image
 from generativepy.color import Color
 
 
@@ -34,4 +34,4 @@ def draw(ctx, width, height, frame_no, frame_count):
     ctx.rectangle(370, 220, 100, 100)
     ctx.fill()
 
-makeImage("/tmp/color.png", draw, 500, 350)
+make_image("/tmp/color.png", draw, 500, 350)

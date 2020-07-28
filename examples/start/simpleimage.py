@@ -1,4 +1,5 @@
-from generativepy.drawing import makeImage, setup, text
+from generativepy.drawing import make_image, setup
+from generativepy.geometry import text
 from generativepy.color import Color
 
 
@@ -17,4 +18,4 @@ def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
     text(ctx, "Simple Image", 1, 3, size=0.5, color=Color('cadetblue'), font='Arial')
 
 
-makeImage("/tmp/simpleimage.png", draw, 500, 400)
+make_image("/tmp/simpleimage.png", draw, 500, 400)

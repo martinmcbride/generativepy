@@ -6,6 +6,8 @@
 import cairo
 import math
 import numpy as np
+
+import generativepy.geometry
 from generativepy.color import Color
 from generativepy import drawing
 
@@ -38,14 +40,14 @@ class Axes:
         for p in self.get_divs(self.start[0], self.extent[0], self.divisions[0]):
            if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
-                drawing.text(self.ctx, pstr, p - xoffset, -yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
+                generativepy.geometry.text(self.ctx, pstr, p - xoffset, -yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
 
         xoffset = self.pts2pixels(1)
         yoffset = self.pts2pixels(1)
         for p in self.get_divs(self.start[1], self.extent[1], self.divisions[1]):
            if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
-                drawing.text(self.ctx, pstr, -xoffset, p - yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
+                generativepy.geometry.text(self.ctx, pstr, -xoffset, p - yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
 
         self.ctx.set_line_width(self.pts2pixels(0.5))
         self.ctx.new_path()
@@ -110,7 +112,7 @@ def plot_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7):
         ctx.set_line_width(axes.pts2pixels(line_width))
         ctx.set_source_rgba(*line_color)
 
-        drawing.polygon(ctx, points, False)
+        generativepy.geometry.polygon(ctx, points, False)
         ctx.stroke()
         axes.unclip()
 
@@ -135,7 +137,7 @@ def plot_xy_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.
         ctx.set_line_width(axes.pts2pixels(line_width))
         ctx.set_source_rgba(*line_color)
 
-        drawing.polygon(ctx, points, False)
+        generativepy.geometry.polygon(ctx, points, False)
         ctx.stroke()
         axes.unclip()
 
@@ -160,7 +162,7 @@ def plot_polar_curve(axes, fn, line_color=Color(1, 0, 0), extent=(0, 2*math.pi),
         ctx.set_line_width(axes.pts2pixels(line_width))
         ctx.set_source_rgba(*line_color)
 
-        drawing.polygon(ctx, points, False)
+        generativepy.geometry.polygon(ctx, points, False)
         ctx.stroke()
         axes.unclip()
 

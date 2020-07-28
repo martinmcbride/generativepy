@@ -1,5 +1,5 @@
 from generativepy import graph
-from generativepy.drawing import makeImage, setup
+from generativepy.drawing import make_image, setup
 from generativepy.color import Color
 from generativepy.graph import Axes
 
@@ -16,4 +16,4 @@ def draw(ctx, width, height, frame_no, frame_count):
     graph.plot_polar_curve(axes, lambda x: 2*x, line_color=Color(0, 0.5, 0))
 
 
-makeImage("/tmp/simplegraph.png", draw, 500, 500)
+make_image("/tmp/simplegraph.png", draw, 500, 500)

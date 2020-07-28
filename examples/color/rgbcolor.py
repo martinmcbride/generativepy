@@ -1,4 +1,4 @@
-from generativepy.drawing import makeImage
+from generativepy.drawing import make_image
 from generativepy.color import Color
 
 
@@ -25,4 +25,4 @@ def draw(ctx, width, height, frame_no, frame_count):
             ctx.fill()
 
 
-makeImage("/tmp/rgbcolor.png", draw, 300, 800)
+make_image("/tmp/rgbcolor.png", draw, 300, 800)

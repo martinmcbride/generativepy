@@ -11,7 +11,7 @@ from PIL import Image
 The movie functions operate pn lazy sequences of images. The images are stored as numpy arrays.
 '''
 
-def duplicateFrame(frame, count):
+def duplicate_frame(frame, count):
     '''
     Duplicate a single frame, multiple times
     :param frame: the frame, a numpy array
@@ -21,7 +21,7 @@ def duplicateFrame(frame, count):
     for i in range(count):
         yield frame
 
-def makeFrame(draw, width, height, channels=3):
+def make_frame(draw, width, height, channels=3):
     '''
     Create a numpy frame file using cairo
     :param draw: the draw function
@@ -43,7 +43,7 @@ def makeFrame(draw, width, height, channels=3):
         a[:, :, [0, 1, 2, 3]] = a[:, :, [2, 1, 0, 3]]
     return a
 
-def makeFrames(draw, width, height, count, channels=3):
+def make_frames(draw, width, height, count, channels=3):
     '''
     Create a numpy frame file using cairo
     :param draw: the draw function
@@ -67,7 +67,7 @@ def makeFrames(draw, width, height, count, channels=3):
             a[:, :, [0, 1, 2, 3]] = a[:, :, [2, 1, 0, 3]]
         yield a
 
-def saveFrame(filepath, frame):
+def save_frame(filepath, frame):
     """
     Save a frame as a png image
     :param filepath: Full name and path of the file (.png extension optional)
@@ -79,7 +79,7 @@ def saveFrame(filepath, frame):
     image = Image.fromarray(frame)
     image.save(filepath)
 
-def saveFrames(filepath, frames):
+def save_frames(filepath, frames):
     """
     Save a sequence of frame as a sequence of png images
     :param filepath: Base name and path of the file

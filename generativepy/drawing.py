@@ -4,8 +4,6 @@
 # License: MIT
 
 import cairo
-import math
-from generativepy.color import Color
 
 # Text align
 CENTER = 0
@@ -50,7 +48,7 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
 
 
 
-def makeImage(outfile, draw, width, height, channels=3):
+def make_image(outfile, draw, width, height, channels=3):
     '''
     Create a PNG file using cairo
     :param outfile: Name of output file
@@ -67,7 +65,7 @@ def makeImage(outfile, draw, width, height, channels=3):
     surface.write_to_png(outfile)
 
 
-def makeImages(outfile, draw, width, height, count, channels=3):
+def make_images(outfile, draw, width, height, count, channels=3):
     '''
     Create a sequence of PNG files using cairo
     :param outfile: Base name of output files
@@ -86,7 +84,7 @@ def makeImages(outfile, draw, width, height, count, channels=3):
         surface.write_to_png(outfile + str(i).zfill(8) + '.png')
 
 
-def makeSvg(outfile, draw, width, height):
+def make_svg(outfile, draw, width, height):
     '''
     Create an SVG file using cairo
     :param outfile: Name of output file
@@ -100,71 +98,4 @@ def makeSvg(outfile, draw, width, height):
     draw(ctx, width, height, 0, 1)
     ctx.show_page()
 
-def polygon(ctx, points, close=True):
-    '''
-    Create a polygon in ths ctx
-    :param ctx:
-    :param points:
-    :param close:
-    :return:
-    '''
-    first = True
-    for p in points:
-        if first:
-            ctx.move_to(*p)
-            first = False
-        else:
-            ctx.line_to(*p)
-    if close:
-        ctx.close_path()
-
-
-def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
-    '''
-    Draw text using ths supplied ctx
-    :param ctx: The context
-    :param txt: The text, string
-    :param x: x position
-    :param y: y position
-    :param font: font name, string
-    :param size: text size
-    :param color: text colour, Color
-    :param alignx: x alignment
-    :param aligny: y alignemen
-    :param flip: True to flip the text (for maths drawing)
-    :return:
-    '''
-    if font:
-        ctx.select_font_face(font, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
-    if size:
-        ctx.set_font_size(size)
-
-    if color:
-        ctx.set_source_rgba(*color)
-
-    xb, yb, width, height, dx, dy = ctx.text_extents(txt)
-
-    x -= xb
-    if alignx == CENTER:
-        x -= width / 2
-    elif alignx == RIGHT:
-        x -= width
-
-    if aligny == CENTER:
-        dy = -yb / 2
-    elif aligny == BOTTOM:
-        dy = -(yb + height)
-    elif aligny == TOP:
-        dy = -yb
-
-    if flip:
-        ctx.move_to(x, y - dy)
-        ctx.save()
-        ctx.scale(1, -1)
-        ctx.show_text(txt)
-        ctx.restore()
-    else:
-        ctx.move_to(x, y + dy)
-        ctx.show_text(txt)
 
