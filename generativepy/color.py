@@ -241,7 +241,7 @@ class Color():
 
     @property
     def rgba(self):
-        return self.color
+        return tuple(self.color)
 
     @property
     def r(self):
@@ -335,11 +335,11 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(h, Color.clamp(l*factor), s)
         return Color(r, g, b, self.color[3])
 
-    def lerp(self, other, ratio):
-        ratio = Color.clamp(ratio)
+    def lerp(self, other, factor):
+        factor = Color.clamp(factor)
         col1 = self.rgba
         col2 = other.rgba
-        col = [x*(1-ratio) + y*ratio for x, y in zip(col1, col2)]
+        col = [x*(1-factor) + y*factor for x, y in zip(col1, col2)]
         return Color(*col)
 
     @staticmethod

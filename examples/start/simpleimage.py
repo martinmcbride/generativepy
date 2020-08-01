@@ -2,6 +2,9 @@ from generativepy.drawing import make_image, setup
 from generativepy.geometry import text
 from generativepy.color import Color
 
+'''
+Create a very simple image
+'''
 
 def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
 

@@ -15,18 +15,20 @@ class Shape():
     def add(self):
         raise NotImplementedError()
 
-    def fill(self, color):
+    def fill(self, color=None):
         self.ctx.new_path()
         self.add()
-        self.ctx.set_source_rgba(*color)
+        if color:
+            self.ctx.set_source_rgba(*color)
         self.ctx.fill()
         return self
 
-    def stroke(self, color, line_width=1):
+    def stroke(self, color=None, line_width=1):
         self.ctx.new_path()
         self.add()
-        self.ctx.set_source_rgba(*color)
-        self.ctx.set_line_width(line_width)
+        if color:
+            self.ctx.set_source_rgba(*color)
+            self.ctx.set_line_width(line_width)
         self.ctx.stroke()
         return self
 

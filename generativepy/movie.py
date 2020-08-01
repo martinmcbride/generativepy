@@ -67,27 +67,27 @@ def make_frames(draw, width, height, count, channels=3):
             a[:, :, [0, 1, 2, 3]] = a[:, :, [2, 1, 0, 3]]
         yield a
 
-def save_frame(filepath, frame):
+def save_frame(outfile, frame):
     """
     Save a frame as a png image
-    :param filepath: Full name and path of the file (.png extension optional)
+    :param outfile: Full name and path of the file (.png extension optional)
     :param frame: The sequence of frames
     :return:
     """
-    if not filepath.lower().endswith('.png'):
-        filepath += '.png'
+    if not outfile.lower().endswith('.png'):
+        outfile += '.png'
     image = Image.fromarray(frame)
-    image.save(filepath)
+    image.save(outfile)
 
-def save_frames(filepath, frames):
+def save_frames(outfile, frames):
     """
     Save a sequence of frame as a sequence of png images
-    :param filepath: Base name and path of the file
+    :param outfile: Base name and path of the file
     :param frames: The sequence of frames
     :return:
     """
 
     for i, frame in enumerate(frames):
         image = Image.fromarray(frame)
-        image.save(filepath + str(i).zfill(8) + '.png')
+        image.save(outfile + str(i).zfill(8) + '.png')
 
