@@ -14,7 +14,7 @@ class Tween():
     set() sets a new current values, and adds it for the requested number of frames (which can be zero)
 
     to() moves linearly from the current value to the supplied value. The first frame added will have the current value,
-    the last frame added will hev ethe new value, with values spaced evenly in between. The final value will be set as
+    the last frame added will have the new value, with values spaced evenly in between. The final value will be set as
     the new current value.
 
     You can use get(n) to get the nth frame, or alternatively you can use tween[n]. The built in len() function can be
@@ -32,7 +32,7 @@ class Tween():
         self.frames.extend([self.previous for i in range(count)])
         return self
         
-    def set(self, value, count):
+    def set(self, value, count=0):
         self.check_value(value, self.previous)
         self.check_index(count)
         self.frames.extend([value for i in range(count)])
