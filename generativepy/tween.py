@@ -28,20 +28,20 @@ class Tween():
         self.nextFrame = 0
         
     def wait(self, count):
-        self.check_index(count)
+        self.check_count(count)
         self.frames.extend([self.previous for i in range(count)])
         return self
         
     def set(self, value, count=0):
         self.check_value(value, self.previous)
-        self.check_index(count)
+        self.check_count(count)
         self.frames.extend([value for i in range(count)])
         self.previous = value
         return self
         
     def to(self, value, count):
         self.check_value(value, self.previous)
-        self.check_index(count)
+        self.check_count(count)
         self.frames.extend([self.previous + i*(value - self.previous)/(count-1) for i in range(count)])
         self.previous = value
         return self
@@ -72,6 +72,10 @@ class Tween():
         if not isinstance(value, int):
             raise ValueError('Integer value required')
 
+    def check_count(self, value):
+        if not isinstance(value, int) or value < 0:
+            raise ValueError('Non-negative integer value required')
+
     def __len__(self):
         return len(self.frames)
     
@@ -92,7 +96,7 @@ class TweenVector(Tween):
         
     def to(self, value, count):
         self.check_value(value, self.previous)
-        self.check_index(count)
+        self.check_count(count)
         for i in range(count):
             nextvalue = []
             for a, b in zip(self.previous, value):
@@ -108,4 +112,4 @@ class TweenVector(Tween):
             if previous and len(value) != len(self.previous):
                 raise ValueError('All values must be vectors of equal rank')
         except:
-            ValueError('Iterable value required')
+            ValueError('Sequence value required')

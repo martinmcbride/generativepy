@@ -33,13 +33,13 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
     elif not height:
         height = width * pixel_height / pixel_width
     elif not width:
-        width = height * pixel_width / pixel_width
+        width = height * pixel_width / pixel_height
 
     if flip:
         ctx.scale(1, -1)
         ctx.translate(0, -pixel_height)
 
-    ctx.scale(pixel_width / width, pixel_width / height)
+    ctx.scale(pixel_width / width, pixel_height / height)
     ctx.translate(-startx, -starty)
 
     if background:
