@@ -3,6 +3,7 @@
 # Copyright (C) 2018, Martin McBride
 # License: MIT
 import cairo
+import math
 
 from generativepy.drawing import LEFT, BASELINE, CENTER, RIGHT, BOTTOM, TOP
 
@@ -117,13 +118,25 @@ def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=B
         ctx.show_text(txt)
 
 
+# TODO create Line object
+def line(ctx, a, b):
+    '''
+    Create a line segment in the ctx
+    :param ctx:
+    :param a: start point
+    :param b: end point
+    :return:
+    '''
+    ctx.move_to(*a)
+    ctx.line_to(*b)
+
 # TODO create Polygon object
-def polygon(ctx, points, close=True):
+def polygon(ctx, points, closed=True):
     '''
     Create a polygon in ths ctx
     :param ctx:
     :param points:
-    :param close:
+    :param closed:
     :return:
     '''
     first = True
@@ -133,5 +146,102 @@ def polygon(ctx, points, close=True):
             first = False
         else:
             ctx.line_to(*p)
-    if close:
+    if closed:
         ctx.close_path()
+
+
+def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
+    '''
+    Draw an angle marker
+    :param ctx: Context
+    :param a:
+    :param b:
+    :param c:
+    :param count:
+    :param radius:
+    :param gap:
+    :param rightangle:
+    :return:
+    '''
+    ang1 = math.atan2(a[1] - b[1], a[0] - b[0])
+    ang2 = math.atan2(c[1] - b[1], c[0] - b[0])
+    ctx.new_path()
+    if right_angle:
+        radius /= 2
+        v = (math.cos(ang1), math.sin(ang1));
+        pv = (math.cos(ang2), math.sin(ang2));
+        polygon(ctx, [(b[0] + v[0] * radius, b[1] + v[1] * radius),
+                      (b[0] + (v[0] + pv[0])*radius, b[1] + (v[1]+pv[1])*radius),
+                      (b[0] + pv[0]*radius, b[1] + pv[1]*radius)], False)
+    elif count==2:
+        ctx.arc(b[0], b[1], radius - gap / 2, ang1, ang2)
+        ctx.new_sub_path()
+        ctx.arc(b[0], b[1], radius + gap / 2, ang1, ang2)
+    elif count == 3:
+        ctx.arc(b[0], b[1], radius - gap, ang1, ang2)
+        ctx.new_sub_path()
+        ctx.arc(b[0], b[1], radius, ang1, ang2)
+        ctx.new_sub_path()
+        ctx.arc(b[0], b[1], radius + gap, ang1, ang2)
+    else:
+        ctx.arc(b[0], b[1], radius, ang1, ang2)
+
+def tick(ctx, a, b, count=1, length=4, gap=1):
+
+    # Midpoint of line
+    pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
+    # Length of line
+    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    # Unit vector along line
+    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    # Unit vector perpendicular to line
+    pvector = (-vector[1], vector[0])
+
+    if count==1:
+        pos = (pmid[0], pmid[1])
+        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+    elif count == 2:
+        pos = (pmid[0] - vector[0] * gap / 2, pmid[1] - vector[1] * gap / 2)
+        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
+             (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        pos = (pmid[0] + vector[0] * gap / 2, pmid[1] + vector[1] * gap / 2)
+        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
+             (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+    elif count==3:
+        pos = (pmid[0] - vector[0]*gap, pmid[1] - vector[1]*gap)
+        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        pos = (pmid[0], pmid[1])
+        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
+        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+
+def paratick(ctx, a, b, count=1, length=4, gap=1):
+
+    def draw(x, y, ox1, oy1, ox2, oy2):
+        line(ctx, (x, y), (x + ox1, y + oy1))
+        line(ctx, (x, y), (x + ox2, y + oy2))
+
+    # Midpoint ofgline
+    pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
+    # Length of line
+    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    # Unit vector along line
+    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    # Unit vector perpendicular to line
+    pvector = (-vector[1], vector[0])
+
+    if count==1:
+        pos = (pmid[0], pmid[1])
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+    elif count == 2:
+        pos = (pmid[0] - vector[0] * gap / 2, pmid[1] - vector[1] * gap / 2)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+        pos = (pmid[0] + vector[0] * gap / 2, pmid[1] + vector[1] * gap / 2)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+    elif count==3:
+        pos = (pmid[0] - vector[0]*gap, pmid[1] - vector[1]*gap)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+        pos = (pmid[0], pmid[1])
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+        pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
+        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
