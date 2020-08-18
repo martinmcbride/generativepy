@@ -12,29 +12,41 @@ class Shape():
 
     def __init__(self, ctx):
         self.ctx = ctx
+        self.new_path = True
+        self.new_sub_path = True
+
+    def extend_path(self):
+        self.new_path = False
+
+    def as_sub_path(self):
+        self.new_sub_path = False
+
+    def _do_path_(self):
+        if self.new_path:
+            self.ctx.new_path()
+        elif self.new_sub_path:
+            self.ctx.new_sub_path()
 
     def add(self):
         raise NotImplementedError()
 
     def fill(self, color=None):
-        self.ctx.new_path()
         self.add()
         if color:
             self.ctx.set_source_rgba(*color)
         self.ctx.fill()
         return self
 
-    def stroke(self, color=None, line_width=1):
-        self.ctx.new_path()
+    def stroke(self, color=None, line_width=None):
         self.add()
         if color:
             self.ctx.set_source_rgba(*color)
+        if line_width != None:
             self.ctx.set_line_width(line_width)
         self.ctx.stroke()
         return self
 
     def fill_stroke(self, fill_color, stroke_colour, line_width=1):
-        self.ctx.new_path()
         self.add()
         self.ctx.set_source_rgba(*fill_color)
         self.ctx.fill_preserve()
@@ -53,6 +65,7 @@ class Rectangle(Shape):
         self.height = 0
 
     def add(self):
+        self._do_path_()
         self.ctx.rectangle(self.x, self.y, self.width, self.height)
         return self
 
@@ -118,19 +131,65 @@ def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=B
         ctx.show_text(txt)
 
 
-# TODO create Line object
-def line(ctx, a, b):
+class Line(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.start = (0, 0)
+        self.end = (0, 0)
+
+    def add(self):
+        self._do_path_()
+        self.ctx.move_to(*self.start)
+        self.ctx.line_to(*self.end)
+        return self
+
+    def of_start_end(self, start, end):
+        self.start = start
+        self.end = end
+        return self
+
+
+def line(ctx, start, end):
     '''
     Create a line segment in the ctx
     :param ctx:
-    :param a: start point
-    :param b: end point
+    :param start: start point
+    :param end: end point
     :return:
     '''
-    ctx.move_to(*a)
-    ctx.line_to(*b)
+    Line(ctx).of_start_end(start, end).add()
 
-# TODO create Polygon object
+
+class Polygon(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.points = []
+        self.closed = True
+
+    def add(self):
+        self._do_path_()
+        first = True
+        for p in self.points:
+            if first:
+                self.ctx.move_to(*p)
+                first = False
+            else:
+                self.ctx.line_to(*p)
+        if self.closed:
+            self.ctx.close_path()
+        return self
+
+    def of_points(self, points):
+        self.points = points
+        return self
+
+    def open(self):
+        self.closed = False
+        return self
+
+
 def polygon(ctx, points, closed=True):
     '''
     Create a polygon in ths ctx
@@ -139,15 +198,10 @@ def polygon(ctx, points, closed=True):
     :param closed:
     :return:
     '''
-    first = True
-    for p in points:
-        if first:
-            ctx.move_to(*p)
-            first = False
-        else:
-            ctx.line_to(*p)
-    if closed:
-        ctx.close_path()
+    shape = Polygon(ctx).of_points(points)
+    if not closed:
+        shape.open()
+    shape.add()
 
 
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):

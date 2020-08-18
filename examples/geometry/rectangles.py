@@ -9,7 +9,7 @@ Create rectangles using the geometry module.
 def draw(ctx, width, height, frame_no, frame_count):
     setup(ctx, width, height, width=5, background=Color(0.8))
 
-    # The rectangle function is a convenience function that adds a rectangle to the path.
+    # The rectangle function is a convenience function that adds a rectangle as a new the path.
     # You can fill or stroke it as you wish.
     rectangle(ctx, 1, 1, 1, 1)
     ctx.set_source_rgba(*Color(1, 0, 0))
