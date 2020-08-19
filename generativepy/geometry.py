@@ -204,6 +204,67 @@ def polygon(ctx, points, closed=True):
     shape.add()
 
 
+class Circle(Shape):
+
+    arc = 1
+    sector = 2
+    segment = 3
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.centre = (0, 0)
+        self.radius = 0
+        self.start_angle = 0
+        self.end_angle = 2*math.pi
+        self.type = Circle.arc
+
+    def add(self):
+        self._do_path_()
+        if self.type == Circle.sector:
+            self.ctx.move_to(*self.centre)
+            self.ctx.arc(*self.centre, self.radius, self.start_angle, self.end_angle)
+            self.ctx.close_path()
+        elif self.type == Circle.segment:
+            self.ctx.arc(*self.centre, self.radius, self.start_angle, self.end_angle)
+            self.ctx.close_path()
+        else:
+            self.ctx.arc(*self.centre, self.radius, self.start_angle, self.end_angle)
+        return self
+
+    def of_centre_radius(self, centre, radius):
+        self.centre = centre
+        self.radius = radius
+        return self
+
+    def as_arc(self, start_angle, end_angle):
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.type = Circle.arc
+        return self
+
+    def as_sector(self, start_angle, end_angle):
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.type = Circle.sector
+        return self
+
+    def as_segment(self, start_angle, end_angle):
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.type = Circle.segment
+        return self
+
+def circle(ctx, centre, radius):
+    '''
+    Create a circle in ths ctx
+    :param ctx:
+    :param centre:
+    :param radius:
+    :return:
+    '''
+    Circle(ctx).of_centre_radius(centre, radius).add()
+
+
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
     '''
     Draw an angle marker

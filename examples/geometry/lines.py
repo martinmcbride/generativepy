@@ -3,7 +3,7 @@ from generativepy.color import Color
 from generativepy.geometry import Line, line
 
 '''
-Create rectangles using the geometry module.
+Create lines using the geometry module.
 '''
 
 def draw(ctx, width, height, frame_no, frame_count):
