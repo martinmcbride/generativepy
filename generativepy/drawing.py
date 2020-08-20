@@ -7,6 +7,7 @@ import cairo
 
 # Text align
 CENTER = 0
+MIDDLE = 0
 LEFT = 1
 RIGHT = 2
 TOP = 3

@@ -5,7 +5,7 @@
 import cairo
 import math
 
-from generativepy.drawing import LEFT, BASELINE, CENTER, RIGHT, BOTTOM, TOP
+from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
 
 
 class Shape():
@@ -80,7 +80,108 @@ class Rectangle(Shape):
 def rectangle(ctx, x, y, width, height):
     Rectangle(ctx).of_corner_size(x, y, width, height).add()
 
-# TODO create Text object
+class Text(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.text = 'text'
+        self.position = (0, 0)
+        self._size = None
+        self._font = None
+        self.alignx = LEFT
+        self.aligny = BASELINE
+        self._flip = False
+
+    def add(self):
+        self._do_path_()
+        if self._font:
+            self.ctx.select_font_face(self._font, cairo.FONT_SLANT_NORMAL,
+                                 cairo.FONT_WEIGHT_BOLD)
+        if self._size:
+            self.ctx.set_font_size(self._size)
+
+        x, y = self.position
+        xb, yb, width, height, dx, dy = self.ctx.text_extents(self.text)
+
+        x -= xb
+        if self.alignx == CENTER:
+            x -= width / 2
+        elif self.alignx == RIGHT:
+            x -= width
+
+        if self.aligny == CENTER:
+            dy = -yb / 2
+        elif self.aligny == BOTTOM:
+            dy = -(yb + height)
+        elif self.aligny == TOP:
+            dy = -yb
+
+        if self._flip:
+            self.ctx.move_to(x, y - dy)
+            self.ctx.save()
+            self.ctx.scale(1, -1)
+            self.ctx.text_path(self.text)
+            self.ctx.restore()
+        else:
+            self.ctx.move_to(x, y + dy)
+            self.ctx.text_path(self.text)
+        return self
+
+    def of(self, text, position):
+        self.text = text
+        self.position = position
+        return self
+
+    def font(self, font):
+        self._font = font
+        return self
+
+    def size(self, size):
+        self._size = size
+        return self
+
+    def align(self, alignx, aligny):
+        self.alignx = alignx
+        self.aligny = aligny
+        return self
+
+    def align_left(self):
+        self.alignx = LEFT
+        return self
+
+    def align_center(self):
+        self.alignx = CENTER
+        return self
+
+    def align_right(self):
+        self.alignx = RIGHT
+        return self
+
+    def align_right(self):
+        self.alignx = RIGHT
+        return self
+
+    def align_bottom(self):
+        self.aligny = BOTTOM
+        return self
+
+    def align_baseline(self):
+        self.aligny = BASELINE
+        return self
+
+    def align_middle(self):
+        self.aligny = MIDDLE
+        return self
+
+    def align_top(self):
+        self.aligny = TOP
+        return self
+
+    def flip(self):
+        self._flip = True
+        return self
+
+
 def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
     '''
     Draw text using ths supplied ctx
@@ -96,39 +197,20 @@ def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=B
     :param flip: True to flip the text (for maths drawing)
     :return:
     '''
+
+    shape = Text(ctx).of(txt, (x, y)).align(alignx, aligny)
     if font:
-        ctx.select_font_face(font, cairo.FONT_SLANT_NORMAL,
-                              cairo.FONT_WEIGHT_BOLD)
+        shape = shape.font(font)
     if size:
-        ctx.set_font_size(size)
+        shape = shape.flip()
+    if flip:
+        shape = shape.flip()
 
     if color:
         ctx.set_source_rgba(*color)
 
-    xb, yb, width, height, dx, dy = ctx.text_extents(txt)
-
-    x -= xb
-    if alignx == CENTER:
-        x -= width / 2
-    elif alignx == RIGHT:
-        x -= width
-
-    if aligny == CENTER:
-        dy = -yb / 2
-    elif aligny == BOTTOM:
-        dy = -(yb + height)
-    elif aligny == TOP:
-        dy = -yb
-
-    if flip:
-        ctx.move_to(x, y - dy)
-        ctx.save()
-        ctx.scale(1, -1)
-        ctx.show_text(txt)
-        ctx.restore()
-    else:
-        ctx.move_to(x, y + dy)
-        ctx.show_text(txt)
+    shape.add()
+    ctx.fill()
 
 
 class Line(Shape):
@@ -212,7 +294,7 @@ class Circle(Shape):
 
     def __init__(self, ctx):
         super().__init__(ctx)
-        self.centre = (0, 0)
+        self.center = (0, 0)
         self.radius = 0
         self.start_angle = 0
         self.end_angle = 2*math.pi
@@ -221,18 +303,18 @@ class Circle(Shape):
     def add(self):
         self._do_path_()
         if self.type == Circle.sector:
-            self.ctx.move_to(*self.centre)
-            self.ctx.arc(*self.centre, self.radius, self.start_angle, self.end_angle)
+            self.ctx.move_to(*self.center)
+            self.ctx.arc(*self.center, self.radius, self.start_angle, self.end_angle)
             self.ctx.close_path()
         elif self.type == Circle.segment:
-            self.ctx.arc(*self.centre, self.radius, self.start_angle, self.end_angle)
+            self.ctx.arc(*self.center, self.radius, self.start_angle, self.end_angle)
             self.ctx.close_path()
         else:
-            self.ctx.arc(*self.centre, self.radius, self.start_angle, self.end_angle)
+            self.ctx.arc(*self.center, self.radius, self.start_angle, self.end_angle)
         return self
 
-    def of_centre_radius(self, centre, radius):
-        self.centre = centre
+    def of_center_radius(self, center, radius):
+        self.center = center
         self.radius = radius
         return self
 
@@ -254,15 +336,15 @@ class Circle(Shape):
         self.type = Circle.segment
         return self
 
-def circle(ctx, centre, radius):
+def circle(ctx, center, radius):
     '''
     Create a circle in ths ctx
     :param ctx:
-    :param centre:
+    :param center:
     :param radius:
     :return:
     '''
-    Circle(ctx).of_centre_radius(centre, radius).add()
+    Circle(ctx).of_center_radius(center, radius).add()
 
 
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
