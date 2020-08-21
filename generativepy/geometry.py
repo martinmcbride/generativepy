@@ -91,6 +91,7 @@ class Text(Shape):
         self.alignx = LEFT
         self.aligny = BASELINE
         self._flip = False
+        self._offset = (0, 0)
 
     def add(self):
         self._do_path_()
@@ -101,6 +102,8 @@ class Text(Shape):
             self.ctx.set_font_size(self._size)
 
         x, y = self.position
+        x += self._offset[0]
+        y += self._offset[1]
         xb, yb, width, height, dx, dy = self.ctx.text_extents(self.text)
 
         x -= xb
@@ -180,6 +183,11 @@ class Text(Shape):
     def flip(self):
         self._flip = True
         return self
+
+    def offset(self, x=0, y=0):
+        self._offset = (x, y)
+        return self
+
 
 
 def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
