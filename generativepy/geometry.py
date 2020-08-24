@@ -393,6 +393,10 @@ def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
 
 def tick(ctx, a, b, count=1, length=4, gap=1):
 
+    def do_line(ctx, a, b):
+        ctx.move_to(*a)
+        ctx.line_to(*b)
+
     # Midpoint of line
     pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
     # Length of line
@@ -402,29 +406,32 @@ def tick(ctx, a, b, count=1, length=4, gap=1):
     # Unit vector perpendicular to line
     pvector = (-vector[1], vector[0])
 
+    ctx.new_path()
     if count==1:
         pos = (pmid[0], pmid[1])
-        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
     elif count == 2:
         pos = (pmid[0] - vector[0] * gap / 2, pmid[1] - vector[1] * gap / 2)
-        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
+        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
              (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
         pos = (pmid[0] + vector[0] * gap / 2, pmid[1] + vector[1] * gap / 2)
-        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
+        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
              (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
     elif count==3:
         pos = (pmid[0] - vector[0]*gap, pmid[1] - vector[1]*gap)
-        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
         pos = (pmid[0], pmid[1])
-        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
         pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
-        line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
 
 def paratick(ctx, a, b, count=1, length=4, gap=1):
 
     def draw(x, y, ox1, oy1, ox2, oy2):
-        line(ctx, (x, y), (x + ox1, y + oy1))
-        line(ctx, (x, y), (x + ox2, y + oy2))
+        ctx.move_to(x, y)
+        ctx.line_to(x + ox1, y + oy1)
+        ctx.move_to(x, y)
+        ctx.line_to(x + ox2, y + oy2)
 
     # Midpoint ofgline
     pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
@@ -435,6 +442,7 @@ def paratick(ctx, a, b, count=1, length=4, gap=1):
     # Unit vector perpendicular to line
     pvector = (-vector[1], vector[0])
 
+    ctx.new_path()
     if count==1:
         pos = (pmid[0], pmid[1])
         draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
