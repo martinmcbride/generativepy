@@ -3,7 +3,7 @@ from generativepy.color import Color
 from generativepy.geometry import line, polygon, angle_marker, tick, paratick
 
 '''
-Create rectangles using the geometry module.
+Create markers using the geometry module.
 '''
 
 def draw(ctx, width, height, frame_no, frame_count):

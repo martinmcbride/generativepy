@@ -3,7 +3,7 @@ from generativepy.color import Color
 from generativepy.geometry import Text, Circle
 
 '''
-Create lines using the geometry module.
+Create text using the geometry module.
 '''
 
 def draw(ctx, width, height, frame_no, frame_count):
