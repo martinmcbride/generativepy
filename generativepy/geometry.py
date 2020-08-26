@@ -69,16 +69,16 @@ class Rectangle(Shape):
         self.ctx.rectangle(self.x, self.y, self.width, self.height)
         return self
 
-    def of_corner_size(self, x, y, width, height):
-        self.x = x
-        self.y = y
+    def of_corner_size(self, corner, width, height):
+        self.x = corner[0]
+        self.y = corner[1]
         self.width = width
         self.height = height
         return self
 
 
-def rectangle(ctx, x, y, width, height):
-    Rectangle(ctx).of_corner_size(x, y, width, height).add()
+def rectangle(ctx, corner, width, height):
+    Rectangle(ctx).of_corner_size(corner, width, height).add()
 
 
 class Square(Shape):
@@ -101,8 +101,8 @@ class Square(Shape):
         return self
 
 
-def square(ctx, x, y, width):
-    Square(ctx).of_corner_size(x, y, width).add()
+def square(ctx, corner, width):
+    Square(ctx).of_corner_size(corner, width).add()
 
 
 class Triangle(Shape):
