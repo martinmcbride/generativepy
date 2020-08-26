@@ -1,6 +1,6 @@
 from generativepy.drawing import make_image, setup
 from generativepy.color import Color
-from generativepy.geometry import line, polygon, angle_marker, tick, paratick
+from generativepy.geometry import line, polygon, angle_marker, tick, paratick, arrowhead
 
 '''
 Illustrations of markers for project documentations
@@ -110,6 +110,24 @@ def paratick_illustration():
 
     make_image("/tmp/paratick-illustration.png", draw, 500, 300)
 
+def arrowhead_illustration():
+    def draw(ctx, width, height, frame_no, frame_count):
+        setup(ctx, width, height, background=Color(1))
+
+        ctx.set_source_rgba(*Color('black'))
+        ctx.set_line_width(3)
+
+        ## Draw lines with arrowhead
+        a = (50, 50)
+        b = (150, 250)
+        polygon(ctx, (a, b), closed=False)
+        ctx.stroke()
+        arrowhead(ctx, a, b, length=12)
+        ctx.stroke()
+
+    make_image("/tmp/arrowhead-illustration.png", draw, 200, 300)
+
 angle_illustration()
 tick_illustration()
 paratick_illustration()
+arrowhead_illustration()

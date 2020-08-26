@@ -80,6 +80,58 @@ class Rectangle(Shape):
 def rectangle(ctx, x, y, width, height):
     Rectangle(ctx).of_corner_size(x, y, width, height).add()
 
+
+class Square(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.x = 0
+        self.y = 0
+        self.width = 0
+
+    def add(self):
+        self._do_path_()
+        self.ctx.rectangle(self.x, self.y, self.width, self.width)
+        return self
+
+    def of_corner_size(self, corner, width):
+        self.x = corner[0]
+        self.y = corner[1]
+        self.width = width
+        return self
+
+
+def square(ctx, x, y, width):
+    Square(ctx).of_corner_size(x, y, width).add()
+
+
+class Triangle(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.a = (0, 0)
+        self.b = (0, 0)
+        self.c = (0, 0)
+
+    def add(self):
+        self._do_path_()
+        self.ctx.move_to(*self.a)
+        self.ctx.line_to(*self.b)
+        self.ctx.line_to(*self.c)
+        self.ctx.close_path()
+        return self
+
+    def of_corners(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
+        return self
+
+
+def triangle(ctx, a, b, c):
+    Triangle(ctx).of_corners(a, b, c).add()
+
+
 class Text(Shape):
 
     def __init__(self, ctx):
@@ -355,6 +407,74 @@ def circle(ctx, center, radius):
     Circle(ctx).of_center_radius(center, radius).add()
 
 
+class Ellipse(Shape):
+
+    arc = 1
+    sector = 2
+    segment = 3
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.center = (0, 0)
+        self.radius_x = 0
+        self.radius_y = 0
+        self.start_angle = 0
+        self.end_angle = 2*math.pi
+        self.type = Circle.arc
+
+    def add(self):
+        self._do_path_()
+        scale_factor = self.radius_y/self.radius_x
+        self.ctx.save()
+        self.ctx.translate(*self.center)
+        self.ctx.scale(1, scale_factor)
+        if self.type == Circle.sector:
+            self.ctx.move_to(0, 0)
+            self.ctx.arc(0, 0, self.radius_x, self.start_angle, self.end_angle)
+            self.ctx.close_path()
+        elif self.type == Circle.segment:
+            self.ctx.arc(0, 0, self.radius_x, self.start_angle, self.end_angle)
+            self.ctx.close_path()
+        else:
+            self.ctx.arc(0, 0, self.radius_x, self.start_angle, self.end_angle)
+        self.ctx.restore()
+        return self
+
+    def of_center_radius(self, center, radius_x, radius_y):
+        self.center = center
+        self.radius_x = radius_x
+        self.radius_y = radius_y
+        return self
+
+    def as_arc(self, start_angle, end_angle):
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.type = Circle.arc
+        return self
+
+    def as_sector(self, start_angle, end_angle):
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.type = Circle.sector
+        return self
+
+    def as_segment(self, start_angle, end_angle):
+        self.start_angle = start_angle
+        self.end_angle = end_angle
+        self.type = Circle.segment
+        return self
+
+def ellipse(ctx, center, radius_x, radius_y):
+    '''
+    Create a circle in ths ctx
+    :param ctx:
+    :param center:
+    :param radius:
+    :return:
+    '''
+    Ellipse(ctx).of_center_radius(center, radius_x, radius_y).add()
+
+
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
     '''
     Draw an angle marker
@@ -458,3 +578,21 @@ def paratick(ctx, a, b, count=1, length=4, gap=1):
         draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
         pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
         draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+
+def arrowhead(ctx, a, b, length=4):
+
+    def draw(x, y, ox1, oy1, ox2, oy2):
+        ctx.move_to(x + ox1, y + oy1)
+        ctx.line_to(x, y)
+        ctx.line_to(x + ox2, y + oy2)
+
+    # Length of line
+    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    # Unit vector along line
+    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    # Unit vector perpendicular to line
+    pvector = (-vector[1], vector[0])
+
+    ctx.new_path()
+    draw(b[0], b[1], (-vector[0] + pvector[0]) * length / 2, (-vector[1] + pvector[1]) * length / 2,
+         (-vector[0] - pvector[0]) * length / 2, (-vector[1] - pvector[1]) * length / 2)

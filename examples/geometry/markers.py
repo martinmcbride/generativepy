@@ -1,6 +1,6 @@
 from generativepy.drawing import make_image, setup
 from generativepy.color import Color
-from generativepy.geometry import line, polygon, angle_marker, tick, paratick
+from generativepy.geometry import line, polygon, angle_marker, tick, paratick, arrowhead
 
 '''
 Create markers using the geometry module.
@@ -12,12 +12,14 @@ def draw(ctx, width, height, frame_no, frame_count):
     ctx.set_source_rgba(*Color(0, 0, 0.5))
     ctx.set_line_width(3)
 
-    ## Draw lines with ticks and paraticks
+    ## Draw lines with ticks, paraticks and arrowheads
     a = (50, 50)
     b = (50, 150)
     line(ctx, a, b)
     ctx.stroke()
     tick(ctx, a, b, length=12, gap=6)
+    ctx.stroke()
+    arrowhead(ctx, a, b, length=24)
     ctx.stroke()
 
     a = (100, 50)
