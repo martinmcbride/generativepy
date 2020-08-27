@@ -4,7 +4,8 @@ Generative art and graphing library for creating images and animations.
 
 ## Usage
 
-generativepy is a library, not an application. It provides useful functions that allow you to create images and videos by writing simple Python scripts.
+generativepy is a library rather an application. It provides useful functions and example code that allow you to
+create images and videos by writing simple Python scripts.
 
 The library uses [pycairo](https://pycairo.readthedocs.io/en/latest/index.html) for drawing graphics.
 
