@@ -342,6 +342,11 @@ class Color():
         col = [x*(1-factor) + y*factor for x, y in zip(col1, col2)]
         return Color(*col)
 
+    def as_rgbstr(self):
+        return 'rgb({}, {}, {})'.format(int(self.color[0] * 255),
+                                       int(self.color[1] * 255),
+                                       int(self.color[2] * 255))
+
     @staticmethod
     def clamp(v):
         try:
