@@ -266,7 +266,7 @@ class Color():
         return Color(self.color[0], self.color[1]*factor, self.color[2], self.color[3])
 
     @property
-    def get_b(self):
+    def b(self):
         return self.color[2]
 
     def with_b(self, newval):
@@ -277,7 +277,7 @@ class Color():
         return Color(self.color[0], self.color[1], self.color[2]*factor, self.color[3])
 
     @property
-    def get_a(self):
+    def a(self):
         return self.color[3]
 
     def with_a(self, newval):
