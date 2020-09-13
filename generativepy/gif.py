@@ -21,4 +21,4 @@ def save_animated_gif(filepath, frames, delay, loop=0):
         filepath += '.gif'
     images = list(frames)
     imageio.mimsave(filepath, images, duration=delay)
-    subprocess.run(['gifsicle', '-b', '--colors', '256', filepath])
+    subprocess.run(['gifsicle', '-b', '--colors', '256', '--optimize=3', filepath])
