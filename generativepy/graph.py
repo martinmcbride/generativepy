@@ -13,11 +13,12 @@ from generativepy import drawing
 
 
 class Axes:
-    def __init__(self, ctx, start=(0, 0), extent=(10, 10), divisions=(1, 1)):
+    def __init__(self, ctx, start=(0, 0), extent=(10, 10), divisions=(1, 1), pixel_divider=10):
         self.ctx = ctx
         self.start = start
         self.extent = extent
         self.divisions = divisions
+        self.pixel_divider = pixel_divider
 
 
     def draw(self):
@@ -88,7 +89,7 @@ class Axes:
         return str(round(value*1000)/1000)
 
     def pts2pixels(self, points):
-        return points/10
+        return points/self.pixel_divider
 
 
 def plot_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7):
