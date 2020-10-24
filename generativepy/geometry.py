@@ -4,8 +4,10 @@
 # License: MIT
 import cairo
 import math
-
 from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
+from generativepy.drawing import EVEN_ODD, WINDING
+from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
+from generativepy.color import Color
 
 
 class Shape():
@@ -30,19 +32,45 @@ class Shape():
     def add(self):
         raise NotImplementedError()
 
-    def fill(self, color=None):
+    def fill(self, color=Color(0), fill_rule=EVEN_ODD):
         self.add()
-        if color:
+        if color != None:
             self.ctx.set_source_rgba(*color)
+
+        if fill_rule == WINDING:
+            self.ctx.set_fill_rule(cairo.FillRule.WINDING)
+        else:
+            self.ctx.set_fill_rule(cairo.FillRule.EVEN_ODD)
+
         self.ctx.fill()
         return self
 
-    def stroke(self, color=None, line_width=None):
+    def stroke(self, color=Color(0), line_width=1, dash=[], cap=SQUARE, join=MITER, miter_limit=None):
         self.add()
-        if color:
+        if color != None:
             self.ctx.set_source_rgba(*color)
-        if line_width != None:
-            self.ctx.set_line_width(line_width)
+
+        self.ctx.set_line_width(line_width)
+
+        self.ctx.set_dash(dash)
+
+        if cap == ROUND:
+            self.ctx.set_line_cap(cairo.LineCap.ROUND)
+        elif cap == BUTT:
+            self.ctx.set_line_cap(cairo.LineCap.BUTT)
+        else:
+            self.ctx.set_line_cap(cairo.LineCap.SQUARE)
+
+        if join == ROUND:
+            self.ctx.set_line_join(cairo.LineJoin.ROUND)
+        elif join == BEVEL:
+            self.ctx.set_line_join(cairo.LineJoin.BEVEL)
+        else:
+            self.ctx.set_line_join(cairo.LineJoin.MITER)
+
+        if miter_limit != None:
+            self.ctx.set_miter_limit(miter_limit)
+
         self.ctx.stroke()
         return self
 
