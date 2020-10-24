@@ -14,41 +14,48 @@ class Shape():
 
     def __init__(self, ctx):
         self.ctx = ctx
-        self.new_path = True
-        self.new_sub_path = True
+        self.extend = False
+        self.sub_path = False
+        self.final_close = False
+        self.added = False
 
-    def extend_path(self):
-        self.new_path = False
+    def extend_path(self, close=False):
+        self.sub_path = True
+        self.extend = True
+        self.final_close = close
+        return self
 
     def as_sub_path(self):
-        self.new_sub_path = False
+        self.sub_path = True
+        return self
 
     def _do_path_(self):
-        if self.new_path:
+        if not self.sub_path:
             self.ctx.new_path()
-        elif self.new_sub_path:
-            self.ctx.new_sub_path()
 
     def add(self):
         raise NotImplementedError()
 
-    def fill(self, color=Color(0), fill_rule=EVEN_ODD):
-        self.add()
-        if color != None:
-            self.ctx.set_source_rgba(*color)
+    def fill(self, color=Color(0), fill_rule=WINDING):
+        if not self.added:
+            self.add()
+            self.added = True
+        self.ctx.set_source_rgba(*color)
 
         if fill_rule == WINDING:
             self.ctx.set_fill_rule(cairo.FillRule.WINDING)
         else:
             self.ctx.set_fill_rule(cairo.FillRule.EVEN_ODD)
 
-        self.ctx.fill()
+        self.ctx.fill_preserve()
         return self
 
     def stroke(self, color=Color(0), line_width=1, dash=[], cap=SQUARE, join=MITER, miter_limit=None):
-        self.add()
-        if color != None:
-            self.ctx.set_source_rgba(*color)
+        if not self.added:
+            self.add()
+            self.added = True
+
+        self.ctx.set_source_rgba(*color)
 
         self.ctx.set_line_width(line_width)
 
@@ -71,16 +78,12 @@ class Shape():
         if miter_limit != None:
             self.ctx.set_miter_limit(miter_limit)
 
-        self.ctx.stroke()
+        self.ctx.stroke_preserve()
         return self
 
     def fill_stroke(self, fill_color, stroke_colour, line_width=1):
-        self.add()
-        self.ctx.set_source_rgba(*fill_color)
-        self.ctx.fill_preserve()
-        self.ctx.set_source_rgba(*stroke_colour)
-        self.ctx.set_line_width(line_width)
-        self.ctx.stroke()
+        self.fill(fill_color)
+        self.stroke(stroke_color, line_width)
         return self
 
 class Rectangle(Shape):
@@ -310,12 +313,20 @@ class Line(Shape):
 
     def add(self):
         self._do_path_()
-        self.ctx.move_to(*self.start)
+        if not self.extend:
+            self.ctx.move_to(*self.start)
         self.ctx.line_to(*self.end)
+        if self.final_close:
+            self.ctx.close_path()
         return self
 
     def of_start_end(self, start, end):
         self.start = start
+        self.end = end
+        return self
+
+    def of_end(self, end):
+        self.start = (0, 0)
         self.end = end
         return self
 
@@ -343,11 +354,12 @@ class Polygon(Shape):
         first = True
         for p in self.points:
             if first:
-                self.ctx.move_to(*p)
+                if not self.extend:
+                    self.ctx.move_to(*p)
                 first = False
             else:
                 self.ctx.line_to(*p)
-        if self.closed:
+        if self.closed or self.final_close:
             self.ctx.close_path()
         return self
 
@@ -399,6 +411,8 @@ class Circle(Shape):
             self.ctx.close_path()
         else:
             self.ctx.arc(*self.center, self.radius, self.start_angle, self.end_angle)
+            if self.final_close:
+                self.ctx.close_path()
         return self
 
     def of_center_radius(self, center, radius):
@@ -465,6 +479,8 @@ class Ellipse(Shape):
             self.ctx.close_path()
         else:
             self.ctx.arc(0, 0, self.radius_x, self.start_angle, self.end_angle)
+            if self.final_close:
+                self.ctx.close_path()
         self.ctx.restore()
         return self
 
