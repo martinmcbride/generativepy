@@ -342,6 +342,39 @@ def line(ctx, start, end):
     Line(ctx).of_start_end(start, end).add()
 
 
+class Bezier(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.a = (0, 0)
+        self.b = (0, 0)
+        self.c = (0, 0)
+        self.d = (0, 0)
+
+    def add(self):
+        self._do_path_()
+        if not self.extend:
+            self.ctx.move_to(*self.a)
+        self.ctx.curve_to(*self.b, *self.c, *self.d)
+        if self.final_close:
+            self.ctx.close_path()
+        return self
+
+    def of_abcd(self, a, b, c, d):
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+        return self
+
+    def of_bcd(self, b, c, d):
+        self.a = (0, 0)
+        self.b = b
+        self.c = c
+        self.d = d
+        return self
+
+
 class Polygon(Shape):
 
     def __init__(self, ctx):
@@ -358,7 +391,10 @@ class Polygon(Shape):
                     self.ctx.move_to(*p)
                 first = False
             else:
-                self.ctx.line_to(*p)
+                if len(p) == 6:
+                    self.ctx.curve_to(*p)
+                else:
+                    self.ctx.line_to(*p)
         if self.closed or self.final_close:
             self.ctx.close_path()
         return self
