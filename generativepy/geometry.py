@@ -86,6 +86,12 @@ class Shape():
         self.stroke(stroke_color, line_width)
         return self
 
+    def clip(self):
+        if not self.added:
+            self.add()
+            self.added = True
+        return self.ctx.clip_preserve()
+
     def path(self):
         if not self.added:
             self.add()
