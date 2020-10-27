@@ -86,6 +86,31 @@ class Shape():
         self.stroke(stroke_color, line_width)
         return self
 
+    def path(self):
+        if not self.added:
+            self.add()
+            self.added = True
+        return self.ctx.copy_path_flat()
+
+
+class Path(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.path = None
+        self.height = 0
+
+    def add(self):
+        self._do_path_()
+        if self.path:
+            self.ctx.append_path(self.path)
+        return self
+
+    def of(self, path):
+        self.path = path
+        return self
+
+
 class Rectangle(Shape):
 
     def __init__(self, ctx):
