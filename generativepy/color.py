@@ -347,6 +347,17 @@ class Color():
                                        int(self.color[1] * 255),
                                        int(self.color[2] * 255))
 
+    def as_rgb_bytes(self):
+        return (int(self.color[0] * 255),
+                int(self.color[1] * 255),
+                int(self.color[2] * 255))
+
+    def as_rgba_bytes(self):
+        return (int(self.color[0] * 255),
+                int(self.color[1] * 255),
+                int(self.color[2] * 255),
+                int(self.color[3] * 255))
+
     @staticmethod
     def clamp(v):
         try:
