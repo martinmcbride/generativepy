@@ -3,7 +3,7 @@ from generativepy.color import Color
 from generativepy.geometry import Polygon, Text, Path
 
 '''
-Create bezier curve using the geometry module.
+Demonstrate paths in  the geometry module.
 '''
 
 def draw(ctx, width, height, frame_no, frame_count):
