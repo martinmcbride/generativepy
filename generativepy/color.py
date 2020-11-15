@@ -4,6 +4,7 @@
 # License: MIT
 
 import colorsys
+import itertools
 
 cssColors = {
 "purple":(128,0,128),
@@ -374,3 +375,45 @@ class Color():
             return self.color[i]
         else:
             raise IndexError()
+
+
+def make_colormap(length, colors, bands):
+    '''
+    Create a colormap, a list of varying colors.
+    :param length: Total size of list
+    :param colors: List of colors, must be at least 2 long.
+    :param bands: Relative size of each band. bands[i] gives the size of teh band between color[i] and color[i+1].
+                  len(bands) must be exactly 1 less than len(colors)
+    :return:
+    '''
+
+    # Check parameters
+    if length <= 0:
+        raise ValueError('length must be > 0')
+    if len(colors) < 2:
+        raise ValueError('colors list must have at least 2 elements')
+    if len(colors) != len(bands) + 1:
+        raise ValueError('colors list must be exactly 1 longer than bands list')
+
+
+    band_total = sum(bands)
+    band_breakpoints = [int(x*length/band_total) for x in itertools.accumulate(bands)]
+
+    current_colour = 0
+    band_index = 0
+    colormap = [None]*length
+    band_size = []
+    for i in range(length):
+        while band_breakpoints[current_colour] <= i:
+            band_size.append(band_index)
+            current_colour += 1
+            band_index = 0
+        colormap[i] = (current_colour, band_index)
+        band_index += 1
+    band_size.append(band_index)
+
+    colormap = [colors[col].lerp(colors[col+1], band/(band_size[col]-1))
+                 for col, band in colormap ]
+
+    return colormap
+

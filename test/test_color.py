@@ -1,5 +1,5 @@
 import unittest
-from generativepy.color import Color
+from generativepy.color import Color, make_colormap
 
 
 class TestColour(unittest.TestCase):
@@ -92,11 +92,11 @@ class TestColour(unittest.TestCase):
         self.assertEqual(val, 0.2)
 
     def test_get_b(self):
-        val = Color(0.1, 0.2, 0.3, 0.4).get_b
+        val = Color(0.1, 0.2, 0.3, 0.4).b
         self.assertEqual(val, 0.3)
 
     def test_get_a(self):
-        val = Color(0.1, 0.2, 0.3, 0.4).get_a
+        val = Color(0.1, 0.2, 0.3, 0.4).a
         self.assertEqual(val, 0.4)
 
     def test_get_h(self):
@@ -202,6 +202,46 @@ class TestColour(unittest.TestCase):
         self.assertAlmostEqual(color.rgba[1], 0.5)
         self.assertAlmostEqual(color.rgba[2], 0.6)
         self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    ## Test make_colormap
+
+    def test_make_colormap_invalid_length(self):
+        with self.assertRaises(ValueError) as context:
+            make_colormap(0, [Color(0), Color(1)], [1])
+
+        self.assertEqual('length must be > 0', str(context.exception))
+
+    def test_make_colormap_invalid_colors(self):
+        with self.assertRaises(ValueError) as context:
+            make_colormap(3, [Color(0)], [1])
+
+        self.assertEqual('colors list must have at least 2 elements', str(context.exception))
+
+    def test_make_colormap_invalid_bands(self):
+        with self.assertRaises(ValueError) as context:
+            make_colormap(3, [Color(0), Color(1)], [1, 2])
+
+        self.assertEqual('colors list must be exactly 1 longer than bands list', str(context.exception))
+
+    def test_make_colormap_1_band(self):
+        colormap = make_colormap(10, [Color(0), Color(1)], [1])
+        color_str = ' '.join(map(str, colormap))
+        self.assertEqual(color_str,
+                         'rgba(0, 0, 0, 1) rgba(0.1111111111111111, 0.1111111111111111, 0.1111111111111111, 1) rgba(0.2222222222222222, 0.2222222222222222, 0.2222222222222222, 1) rgba(0.3333333333333333, 0.3333333333333333, 0.3333333333333333, 1) rgba(0.4444444444444444, 0.4444444444444444, 0.4444444444444444, 1) rgba(0.5555555555555556, 0.5555555555555556, 0.5555555555555556, 1) rgba(0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 1) rgba(0.7777777777777778, 0.7777777777777778, 0.7777777777777778, 1) rgba(0.8888888888888888, 0.8888888888888888, 0.8888888888888888, 1) rgba(1, 1, 1, 1)')
+
+    def test_make_colormap_2_band(self):
+        colormap = make_colormap(9, [Color(0), Color(1, 0, 0), Color(1)], [.5, .25])
+        color_str = ' '.join(map(str, colormap))
+        self.assertEqual(color_str,
+                         'rgba(0, 0, 0, 1) rgba(0.2, 0, 0, 1) rgba(0.4, 0, 0, 1) rgba(0.6, 0, 0, 1) rgba(0.8, 0, 0, 1) rgba(1, 0, 0, 1) rgba(1, 0, 0, 1) rgba(1, 0.5, 0.5, 1) rgba(1, 1, 1, 1)')
+
+    def test_make_colormap_5_band(self):
+        colormap = make_colormap(9,
+                                 [Color(0), Color(1, 0, 0), Color(1, 1, 0), Color(1, 1, 1), Color(0, 1, 0)],
+                                 [2, 2, 0, 4])
+        color_str = ' '.join(map(str, colormap))
+        self.assertEqual(color_str,
+                         'rgba(0, 0, 0, 1) rgba(1, 0, 0, 1) rgba(1, 0, 0, 1) rgba(1, 1, 0, 1) rgba(1, 1, 1, 1) rgba(0.75, 1, 0.75, 1) rgba(0.5, 1, 0.5, 1) rgba(0.25, 1, 0.25, 1) rgba(0, 1, 0, 1)')
 
 
 if __name__ == '__main__':
