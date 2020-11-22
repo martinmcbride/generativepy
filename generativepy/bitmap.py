@@ -65,7 +65,7 @@ def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
 
 def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
     '''
-    Create a PNG file using PIL
+    Create a set of PNG files using PIL
     :param outfile: Name of output file
     :param paint: the paint function
     :param pixel_width: width in pixels, int
@@ -83,7 +83,7 @@ def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
 
 def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
     '''
-    Create a PNG file using PIL
+    Create frame using PIL
     :param paint: the paint function
     :param pixel_width: width in pixels, int
     :param pixel_height: height in pixels, int
@@ -97,7 +97,7 @@ def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
 
 def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
     '''
-    Create a PNG file using PIL
+    Create frame sequence using PIL
     :param paint: the paint function
     :param pixel_width: width in pixels, int
     :param pixel_height: height in pixels, int
