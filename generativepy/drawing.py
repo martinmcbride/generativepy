@@ -93,7 +93,7 @@ def make_images(outfile, draw, width, height, count, channels=3):
     :param height: height in pixels, int
     :param count: number of frames to create
     :param channels: 3 for rgb, 4 for rgba
-    :return:
+    :return: a frame buffer
     '''
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
