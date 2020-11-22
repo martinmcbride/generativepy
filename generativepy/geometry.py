@@ -324,7 +324,7 @@ def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=B
     if font:
         shape = shape.font(font)
     if size:
-        shape = shape.flip()
+        shape = shape.size(size)
     if flip:
         shape = shape.flip()
 
