@@ -64,3 +64,21 @@ def make_nparrays(outfile, paint, pixel_width, pixel_height, count, channels=3):
     frames = make_nparray_frames(paint, pixel_width, pixel_height, channels)
     save_frames(outfile, frames)
 
+def save_nparray(outfile, array):
+    '''
+    Save an arrays to file
+    :param outfile: file path including extension
+    :param array: numpy array to be saved
+    :return:
+    '''
+    with open(outfile, 'wb') as f:
+        np.save(f, array)
+
+def load_nparray(infile):
+    '''
+    Load a numpy array from file
+    :param infile: file path including extension
+    :return: a numpy array, no checking is done on the array
+    '''
+    with open(infile, 'rb') as f:
+        return np.load(f)
