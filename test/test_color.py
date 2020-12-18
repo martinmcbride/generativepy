@@ -243,6 +243,20 @@ class TestColour(unittest.TestCase):
         self.assertEqual(color_str,
                          'rgba(0, 0, 0, 1) rgba(1, 0, 0, 1) rgba(1, 0, 0, 1) rgba(1, 1, 0, 1) rgba(1, 1, 1, 1) rgba(0.75, 1, 0.75, 1) rgba(0.5, 1, 0.5, 1) rgba(0.25, 1, 0.25, 1) rgba(0, 1, 0, 1)')
 
+    def test_make_colormap_1_band_equal(self):
+        # Test with no bands parameter
+        colormap = make_colormap(10, [Color(0), Color(1)])
+        color_str = ' '.join(map(str, colormap))
+        self.assertEqual(color_str,
+                         'rgba(0, 0, 0, 1) rgba(0.1111111111111111, 0.1111111111111111, 0.1111111111111111, 1) rgba(0.2222222222222222, 0.2222222222222222, 0.2222222222222222, 1) rgba(0.3333333333333333, 0.3333333333333333, 0.3333333333333333, 1) rgba(0.4444444444444444, 0.4444444444444444, 0.4444444444444444, 1) rgba(0.5555555555555556, 0.5555555555555556, 0.5555555555555556, 1) rgba(0.6666666666666666, 0.6666666666666666, 0.6666666666666666, 1) rgba(0.7777777777777778, 0.7777777777777778, 0.7777777777777778, 1) rgba(0.8888888888888888, 0.8888888888888888, 0.8888888888888888, 1) rgba(1, 1, 1, 1)')
+
+    def test_make_colormap_2_band_equal(self):
+        # Test with no bands parameter
+        colormap = make_colormap(10, [Color(0), Color(1), Color(0.5, 1, 1)])
+        color_str = ' '.join(map(str, colormap))
+        self.assertEqual(color_str,
+                         'rgba(0, 0, 0, 1) rgba(0.25, 0.25, 0.25, 1) rgba(0.5, 0.5, 0.5, 1) rgba(0.75, 0.75, 0.75, 1) rgba(1, 1, 1, 1) rgba(1, 1, 1, 1) rgba(0.875, 1, 1, 1) rgba(0.75, 1, 1, 1) rgba(0.625, 1, 1, 1) rgba(0.5, 1, 1, 1)')
+
 
 if __name__ == '__main__':
     unittest.main()

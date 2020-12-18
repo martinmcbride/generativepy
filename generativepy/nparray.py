@@ -5,6 +5,7 @@
 
 import numpy as np
 from generativepy.movie import save_frame, save_frames
+from generativepy.color import make_colormap
 
 def make_nparray_frame(paint, pixel_width, pixel_height, channels=3):
     '''
@@ -66,7 +67,7 @@ def make_nparrays(outfile, paint, pixel_width, pixel_height, count, channels=3):
 
 def save_nparray(outfile, array):
     '''
-    Save an arrays to file
+    Save an array to file
     :param outfile: file path including extension
     :param array: numpy array to be saved
     :return:
@@ -82,3 +83,44 @@ def load_nparray(infile):
     '''
     with open(infile, 'rb') as f:
         return np.load(f)
+
+def make_npcolormap(length, colors, bands=None, channels=3):
+    '''
+    Create a colormap, a list of varying colors, as a numpy array
+    :param length: Total size of list
+    :param colors: List of colors, must be at least 2 long.
+    :param bands: Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
+                  len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
+    :param channels: 3 for RGB, 4 for RGBA
+    :return: an array of shape (length, channels) containing the RGB(A) values for each entry, as integers from 0-255
+    '''
+
+    colors = make_colormap(length, colors, bands)
+
+    npcolormap = np.zeros((length, channels), dtype=np.uint8)
+    for i in range(length):
+        rgba = colors[i].as_rgba_bytes()
+        npcolormap[i, 0] = rgba[0]
+        npcolormap[i, 1] = rgba[1]
+        npcolormap[i, 2] = rgba[2]
+        if channels==4:
+            npcolormap[i, 3] = rgba[3]
+
+    return npcolormap
+
+def apply_npcolormap(out, counts, npcolormap):
+    '''
+    Apply a color map to an array of counts, filling an existing output array
+    :param out: The output array, height x width x channels (channels is 3 or 4)
+    :param counts: The counts array, height x width, count range 0 to max_count
+    :param npcolormap: A numpy color map, must have at least maxcount+1 elements
+    :return:
+    '''
+
+    if out.shape[0] != counts.shape[0] or out.shape[1] != counts.shape[1]:
+        raise ValueError('out and counts are incompatible shapes')
+
+    if np.max(counts) > npcolormap.shape[0]:
+        raise ValueError('npcolormap too small for maximum value in counts array')
+
+    out[:, :, :] = npcolormap[counts]

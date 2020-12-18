@@ -377,22 +377,26 @@ class Color():
             raise IndexError()
 
 
-def make_colormap(length, colors, bands):
+def make_colormap(length, colors, bands=None):
     '''
     Create a colormap, a list of varying colors.
     :param length: Total size of list
     :param colors: List of colors, must be at least 2 long.
-    :param bands: Relative size of each band. bands[i] gives the size of teh band between color[i] and color[i+1].
-                  len(bands) must be exactly 1 less than len(colors)
-    :return:
+    :param bands: Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
+                  len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
+    :return: a list of Color objects
     '''
+
+    color_count = len(colors)
 
     # Check parameters
     if length <= 0:
         raise ValueError('length must be > 0')
-    if len(colors) < 2:
+    if color_count < 2:
         raise ValueError('colors list must have at least 2 elements')
-    if len(colors) != len(bands) + 1:
+    if not bands:
+        bands = [1]*(color_count - 1)
+    if color_count != len(bands) + 1:
         raise ValueError('colors list must be exactly 1 longer than bands list')
 
 
@@ -416,4 +420,3 @@ def make_colormap(length, colors, bands):
                  for col, band in colormap ]
 
     return colormap
-
