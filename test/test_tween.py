@@ -32,12 +32,26 @@ class TestTween(unittest.TestCase):
 
     def test_to_tween(self):
         tween = Tween(3)
-        tween.to(9, 11)
-        self.assertEqual(len(tween), 11)
-        expected = [3, 3.6, 4.2, 4.8, 5.4, 6.0, 6.6, 7.2, 7.8, 8.4, 9]
+        tween.to(9, 10)
+        self.assertEqual(len(tween), 10)
+        expected = [3.6, 4.2, 4.8, 5.4, 6.0, 6.6, 7.2, 7.8, 8.4, 9]
         for i, v in enumerate(tween):
             self.assertEqual(v, expected[i])
-        self.assertEqual(i, 10)
+        self.assertEqual(i, 9)
+
+    def test_to_tween_length_1(self):
+        tween = Tween(3)
+        tween.to(9, 1)
+        self.assertEqual(len(tween), 1)
+        expected = [9]
+        for i, v in enumerate(tween):
+            self.assertEqual(v, expected[i])
+        self.assertEqual(i, 0)
+
+    def test_to_tween_length_0(self):
+        tween = Tween(3)
+        tween.to(9, 0)
+        self.assertEqual(len(tween), 0)
 
     def test_empty_tweenvector(self):
         tween = TweenVector((.1, .2, .3))
@@ -59,10 +73,24 @@ class TestTween(unittest.TestCase):
 
     def test_to_tweenvector(self):
         tween = TweenVector((0, 0, 0))
-        tween.to((5, 10, 15), 6)
-        self.assertEqual(len(tween), 6)
-        expected = [[0, 0, 0], [1, 2, 3], [2, 4, 6], [3, 6, 9], [4, 8, 12], [5, 10, 15]]
+        tween.to((5, 10, 15), 5)
+        self.assertEqual(len(tween), 5)
+        expected = [[1, 2, 3], [2, 4, 6], [3, 6, 9], [4, 8, 12], [5, 10, 15]]
         for i, v in enumerate(tween):
             self.assertEqual(v, expected[i])
-        self.assertEqual(i, 5)
+        self.assertEqual(i, 4)
+
+    def test_to_tweenvector_length_1(self):
+        tween = TweenVector((0, 0, 0))
+        tween.to((5, 10, 15), 1)
+        self.assertEqual(len(tween), 1)
+        expected = [[5, 10, 15]]
+        for i, v in enumerate(tween):
+            self.assertEqual(v, expected[i])
+        self.assertEqual(i, 0)
+
+    def test_to_tweenvector_length_0(self):
+        tween = TweenVector((0, 0, 0))
+        tween.to((5, 10, 15), 0)
+        self.assertEqual(len(tween), 0)
 

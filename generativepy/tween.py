@@ -51,7 +51,7 @@ class Tween():
     def to(self, value, count):
         self.check_value(value, self.previous)
         self.check_count(count)
-        self.frames.extend([self.previous + i*(value - self.previous)/(count-1) for i in range(count)])
+        self.frames.extend([self.previous + (i+1)*(value - self.previous)/count for i in range(count)])
         self.previous = value
         return self
         
@@ -109,7 +109,7 @@ class TweenVector(Tween):
         for i in range(count):
             nextvalue = []
             for a, b in zip(self.previous, value):
-                nextvalue.append(a + i*(b - a)/(count-1))
+                nextvalue.append(a + (i+1)*(b - a)/count)
             self.frames.append(nextvalue)
         self.previous = value
         return self
