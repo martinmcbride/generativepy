@@ -11,6 +11,8 @@ class Tween():
 
     wait() maintains the current value for the requested number of frames
 
+    pad() similar to wait, but pads until the total length of the tween is the required size.
+
     set() sets a new current values, and adds it for the requested number of frames (which can be zero)
 
     to() moves linearly from the current value to the supplied value. The first frame added will have the current value,
@@ -26,12 +28,19 @@ class Tween():
         self.frames = []
         self.previous = value
         self.nextFrame = 0
-        
+
     def wait(self, count):
         self.check_count(count)
         self.frames.extend([self.previous for i in range(count)])
         return self
-        
+
+    def pad(self, final_length):
+        self.check_count(final_length)
+        required = final_length - len(self.frames)
+        if required > 0:
+            self.frames.extend([self.previous for i in range(required)])
+        return self
+
     def set(self, value, count=0):
         self.check_value(value, self.previous)
         self.check_count(count)
