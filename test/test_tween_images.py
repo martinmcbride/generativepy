@@ -38,4 +38,4 @@ class TestTweenImages(unittest.TestCase):
             plot_easing_function(ctx, 450, 450, generativepy.tween.ease_out_bounce())
             plot_easing_function(ctx, 560, 450, generativepy.tween.ease_in_out_bounce())
 
-        run_image_test('test_easing_graphs.png', draw, 700, 600)
+        self.assertTrue(run_image_test('test_easing_graphs.png', draw, 700, 600))
