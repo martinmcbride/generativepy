@@ -3,6 +3,8 @@
 # Copyright (C) 2018, Martin McBride
 # License: MIT
 
+import math
+
 class Tween():
     '''
     Tweening class for scalar values
@@ -47,14 +49,26 @@ class Tween():
         self.frames.extend([value for i in range(count)])
         self.previous = value
         return self
-        
+
     def to(self, value, count):
         self.check_value(value, self.previous)
         self.check_count(count)
-        self.frames.extend([self.previous + (i+1)*(value - self.previous)/count for i in range(count)])
+        for i in range(count):
+            factor = (i+1)/count
+            self.frames.append(self.previous + factor * (value - self.previous))
         self.previous = value
         return self
-        
+
+    def ease(self, value, count, ease_function):
+        self.check_value(value, self.previous)
+        self.check_count(count)
+        input_range = value - self.previous
+        for i in range(count):
+            factor = ease_function((i+1)/count)
+            self.frames.append(self.previous + factor * (value - self.previous))
+        self.previous = value
+        return self
+
     def get(self, frame):
         if frame >= len(self.frames):
             raise IndexError()
@@ -108,8 +122,21 @@ class TweenVector(Tween):
         self.check_count(count)
         for i in range(count):
             nextvalue = []
+            factor = (i+1)/count
             for a, b in zip(self.previous, value):
-                nextvalue.append(a + (i+1)*(b - a)/count)
+                nextvalue.append(a + factor*(b - a))
+            self.frames.append(nextvalue)
+        self.previous = value
+        return self
+
+    def ease(self, value, count, ease_function):
+        self.check_value(value, self.previous)
+        self.check_count(count)
+        for i in range(count):
+            nextvalue = []
+            factor = ease_function((i+1)/count)
+            for a, b in zip(self.previous, value):
+                nextvalue.append(a + factor*(b - a))
             self.frames.append(nextvalue)
         self.previous = value
         return self
@@ -122,3 +149,89 @@ class TweenVector(Tween):
                 raise ValueError('All values must be vectors of equal rank')
         except:
             ValueError('Sequence value required')
+
+
+def ease_linear():
+    return lambda x: x
+
+
+def ease_in_harm():
+    return lambda x: 1 + math.sin(math.pi*(x/2 - 0.5))
+
+
+def ease_out_harm():
+    return lambda x: math.sin(math.pi*x/2)
+
+
+def ease_in_out_harm():
+    return lambda x: 0.5 + 0.5*math.sin(math.pi*(x - 0.5))
+
+
+def ease_in_elastic():
+    return lambda x: math.sin(13 * 2 * math.pi * x) * pow(2, 10 * (x - 1))
+
+
+def ease_out_elastic():
+    return lambda x: math.sin(-13 * 2 * math.pi * (x + 1)) * pow(2, -10 * x) + 1
+
+
+def ease_in_out_elastic():
+    def fn(x):
+        if x < 0.5:
+            return 0.5 * math.sin(13 * 2 * math.pi * (2 * x)) * pow(2, 10 * ((2 * x) - 1))
+        else:
+            return 0.5 * (math.sin(-13 * 2 * math.pi * ((2 * x - 1) + 1)) * pow(2, -10 * (2 * x - 1)) + 2)
+    return fn
+
+
+def ease_in_back():
+    return lambda x: x * x * x - x * math.sin(x * math.pi)
+
+
+def ease_out_back():
+    def fn(x):
+        f = (1 - x)
+        return 1 - (f * f * f - f * math.sin(f * math.pi))
+    return fn
+
+
+def ease_in_out_back():
+    def fn(x):
+        if x < 0.5:
+            f = 2 * x
+            return 0.5 * (f * f * f - f * math.sin(f * math.pi))
+        else:
+            f = (1 - (2*x - 1))
+            return 0.5 * (1 - (f * f * f - f * math.sin(f * math.pi))) + 0.5
+    return fn
+
+
+# Basic bounce function used by the bounce easing functions.
+# Don't use this function directly, use the ease_*_bounce functions instead.
+def _bounce(x):
+    if x < 4 / 11.0:
+        return (121 * x * x) / 16.0
+    elif x < 8 / 11.0:
+        return (363 / 40.0 * x * x) - (99 / 10.0 * x) + 17 / 5.0
+    elif x < 9 / 10.0:
+        return (4356 / 361.0 * x * x) - (35442 / 1805.0 * x) + 16061 / 1805.0
+    else:
+        return (54 / 5.0 * x * x) - (513 / 25.0 * x) + 268 / 25.0
+
+
+def ease_in_bounce():
+    return lambda x: 1 - _bounce(x)
+
+
+def ease_out_bounce():
+    return lambda x: _bounce(x)
+
+
+def ease_in_out_bounce():
+    def fn(x):
+        if x < 0.5:
+            return 0.5 * (1 - _bounce(x * 2))
+        else:
+            return 0.5 * _bounce(x * 2 - 1) + 0.5
+    return fn
+
