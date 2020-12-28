@@ -2,6 +2,7 @@ import unittest
 from generativepy.tween import Tween, TweenVector
 import generativepy.tween
 
+
 def test_linear():
     def f(x):
         if x < -0.0001:
@@ -10,7 +11,9 @@ def test_linear():
             return 1000
         else:
             return x
+
     return f
+
 
 class TestTween(unittest.TestCase):
 
@@ -155,7 +158,7 @@ class TestTween(unittest.TestCase):
         ease_function = generativepy.tween.ease_linear()
         result = []
         for i in range(11):
-            x = i/10
+            x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0), (0.1, 0.1), (0.2, 0.2), (0.3, 0.3), (0.4, 0.4), (0.5, 0.5),
                                   (0.6, 0.6), (0.7, 0.7), (0.8, 0.8), (0.9, 0.9), (1.0, 1.0)])
@@ -164,7 +167,7 @@ class TestTween(unittest.TestCase):
         ease_function = generativepy.tween.ease_in_harm()
         result = []
         for i in range(11):
-            x = i/10
+            x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0),
                                   (0.1, 0.01231165940486223),
@@ -182,7 +185,7 @@ class TestTween(unittest.TestCase):
         ease_function = generativepy.tween.ease_out_harm()
         result = []
         for i in range(11):
-            x = i/10
+            x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0),
                                   (0.1, 0.15643446504023087),
@@ -200,7 +203,7 @@ class TestTween(unittest.TestCase):
         ease_function = generativepy.tween.ease_in_out_harm()
         result = []
         for i in range(11):
-            x = i/10
+            x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0),
                                   (0.1, 0.024471741852423234),
@@ -221,16 +224,16 @@ class TestTween(unittest.TestCase):
             x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0),
-                                  (0.1, 0.0018575322583889709),
-                                  (0.2, -0.0022960361417674823),
-                                  (0.3, -0.0045920722835349525),
-                                  (0.4, 0.014860258067111803),
-                                  (0.5, -6.127102624715443e-17),
-                                  (0.6, -0.05944103226844714),
-                                  (0.7, 0.07347315653655925),
-                                  (0.8, 0.14694631307311595),
-                                  (0.9, -0.475528258147577),
-                                  (1.0, 3.921345679817883e-15)])
+                                  (0.1, 0.0019290787902248785),
+                                  (0.2, 0.0012070976342771387),
+                                  (0.3, -0.006960988470221623),
+                                  (0.4, -0.009184144567069896),
+                                  (0.5, 0.022097086912079605),
+                                  (0.6, 0.05056356214843423),
+                                  (0.7, -0.056748812467443184),
+                                  (0.8, -0.2377641290737885),
+                                  (0.9, 0.07821723252011564),
+                                  (1.0, 1.0)])
 
     def test_ease_out_elastic(self):
         ease_function = generativepy.tween.ease_out_elastic()
@@ -238,41 +241,41 @@ class TestTween(unittest.TestCase):
         for i in range(11):
             x = i / 10
             result.append((x, ease_function(x)))
-        self.assertEqual(result, [(0.0, 0.9999999999999961),
-                                  (0.1, 0.5244717418524243),
-                                  (0.2, 1.1469463130731175),
-                                  (0.3, 1.0734731565365578),
-                                  (0.4, 0.9405589677315529),
-                                  (0.5, 1.0000000000000002),
-                                  (0.6, 1.0148602580671116),
-                                  (0.7, 0.995407927716465),
-                                  (0.8, 0.9977039638582326),
-                                  (0.9, 1.001857532258389),
+        self.assertEqual(result, [(0.0, 0.0),
+                                  (0.1, 0.9217827674798844),
+                                  (0.2, 1.2377641290737884),
+                                  (0.3, 1.0567488124674431),
+                                  (0.4, 0.9494364378515657),
+                                  (0.5, 0.9779029130879204),
+                                  (0.6, 1.00918414456707),
+                                  (0.7, 1.0069609884702215),
+                                  (0.8, 0.9987929023657228),
+                                  (0.9, 0.9980709212097751),
                                   (1.0, 1.0)])
 
     def test_ease_in_out_elastic(self):
         ease_function = generativepy.tween.ease_in_out_elastic()
         result = []
         for i in range(11):
-            x = i/10
+            x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0),
-                                  (0.1, -0.0011480180708837411),
-                                  (0.2, 0.007430129033555902),
-                                  (0.3, -0.02972051613422357),
-                                  (0.4, 0.07347315653655798),
-                                  (0.5, 0.999999999999998),
-                                  (0.6, 1.0734731565365587),
-                                  (0.7, 0.9702794838657764),
-                                  (0.8, 1.0074301290335559),
-                                  (0.9, 0.9988519819291163),
+                                  (0.1, 0.0006035488171385693),
+                                  (0.2, -0.004592072283534948),
+                                  (0.3, 0.025281781074217115),
+                                  (0.4, -0.11888206453689425),
+                                  (0.5, 0.5),
+                                  (0.6, 1.1188820645368942),
+                                  (0.7, 0.9747182189257829),
+                                  (0.8, 1.0045920722835349),
+                                  (0.9, 0.9993964511828615),
                                   (1.0, 1.0)])
 
     def test_ease_in_back(self):
         ease_function = generativepy.tween.ease_in_back()
         result = []
         for i in range(11):
-            x = i/10
+            x = i / 10
             result.append((x, ease_function(x)))
         self.assertEqual(result, [(0.0, 0.0),
                                   (0.1, -0.02990169943749474),
@@ -328,17 +331,17 @@ class TestTween(unittest.TestCase):
         for i in range(11):
             x = i / 10
             result.append((x, ease_function(x)))
-        self.assertEqual(result, [(0.0, 1.0),
-                                  (0.1, 0.924375),
-                                  (0.2, 0.6975),
-                                  (0.3, 0.3193750000000001),
-                                  (0.4, 0.10800000000000054),
+        self.assertEqual(result, [(0.0, -1.7763568394002505e-15),
+                                  (0.1, -1.7763568394002505e-15),
+                                  (0.2, 0.08775623268697963),
+                                  (0.3, 0.08325000000000093),
+                                  (0.4, 0.273000000000001),
                                   (0.5, 0.28125000000000044),
-                                  (0.6, 0.273000000000001),
-                                  (0.7, 0.08325000000000093),
-                                  (0.8, 0.08775623268697963),
-                                  (0.9, -1.7763568394002505e-15),
-                                  (1.0, -1.7763568394002505e-15)])
+                                  (0.6, 0.10800000000000054),
+                                  (0.7, 0.31937499999999985),
+                                  (0.8, 0.6975000000000001),
+                                  (0.9, 0.9243750000000001),
+                                  (1.0, 1.0)])
 
     def test_ease_out_bounce(self):
         ease_function = generativepy.tween.ease_out_bounce()
@@ -364,11 +367,11 @@ class TestTween(unittest.TestCase):
         for i in range(11):
             x = i / 10
             result.append((x, ease_function(x)))
-        self.assertEqual(result, [(0.0, 0.5),
-                                  (0.1, 0.34875),
-                                  (0.2, 0.05400000000000027),
-                                  (0.3, 0.1365000000000005),
-                                  (0.4, 0.043878116343489815),
+        self.assertEqual(result, [(0.0, -8.881784197001252e-16),
+                                  (0.1, 0.043878116343489815),
+                                  (0.2, 0.1365000000000005),
+                                  (0.3, 0.05400000000000027),
+                                  (0.4, 0.34875000000000006),
                                   (0.5, 0.5),
                                   (0.6, 0.6512499999999999),
                                   (0.7, 0.946),

@@ -168,19 +168,21 @@ def ease_in_out_harm():
 
 
 def ease_in_elastic():
-    return lambda x: math.sin(13 * 2 * math.pi * x) * pow(2, 10 * (x - 1))
+    return lambda x: math.sin(2.25 * 2 * math.pi * (x)) * pow(2, 10 * (x - 1))
 
 
 def ease_out_elastic():
-    return lambda x: math.sin(-13 * 2 * math.pi * (x + 1)) * pow(2, -10 * x) + 1
+    return lambda x: 1 - math.sin(2.25 * 2 * math.pi * (1-x)) * pow(2, -10 * x)
 
 
 def ease_in_out_elastic():
     def fn(x):
         if x < 0.5:
-            return 0.5 * math.sin(13 * 2 * math.pi * (2 * x)) * pow(2, 10 * ((2 * x) - 1))
+            f = 2 * x
+            return 0.5 * (math.sin(2.25 * 2 * math.pi * f) * pow(2, 10 * (f - 1)))
         else:
-            return 0.5 * (math.sin(-13 * 2 * math.pi * ((2 * x - 1) + 1)) * pow(2, -10 * (2 * x - 1)) + 2)
+            f = (2*x - 1)
+            return 0.5 * (1 - math.sin(2.25 * 2 * math.pi * (1-f)) * pow(2, -10 * f)) + 0.5
     return fn
 
 
@@ -220,7 +222,7 @@ def _bounce(x):
 
 
 def ease_in_bounce():
-    return lambda x: 1 - _bounce(x)
+    return lambda x: 1 - _bounce(1 - x)
 
 
 def ease_out_bounce():
@@ -230,7 +232,7 @@ def ease_out_bounce():
 def ease_in_out_bounce():
     def fn(x):
         if x < 0.5:
-            return 0.5 * (1 - _bounce(x * 2))
+            return 0.5 * (1 - _bounce(1 - x * 2))
         else:
             return 0.5 * _bounce(x * 2 - 1) + 0.5
     return fn
