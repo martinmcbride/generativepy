@@ -81,7 +81,7 @@ class Shape():
         self.ctx.stroke_preserve()
         return self
 
-    def fill_stroke(self, fill_color, stroke_colour, line_width=1):
+    def fill_stroke(self, fill_color, stroke_color, line_width=1):
         self.fill(fill_color)
         self.stroke(stroke_color, line_width)
         return self
@@ -707,3 +707,32 @@ def arrowhead(ctx, a, b, length=4):
     ctx.new_path()
     draw(b[0], b[1], (-vector[0] + pvector[0]) * length / 2, (-vector[1] + pvector[1]) * length / 2,
          (-vector[0] - pvector[0]) * length / 2, (-vector[1] - pvector[1]) * length / 2)
+
+class Image():
+
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.filename = ''
+        self.position = (0, 0)
+        self.scale_factor = 1
+
+    def of_file_position(self, filename, position):
+        self.filename = filename
+        self.position = position
+        return self
+
+    def scale(self, scale_factor):
+        self.scale_factor = scale_factor
+        return self
+
+    def paint(self):
+        image = cairo.ImageSurface.create_from_png(self.filename)
+        self.ctx.save()
+        self.ctx.translate(*self.position)
+        self.ctx.scale(self.scale_factor, self.scale_factor)
+        pattern = cairo.SurfacePattern(image)
+        self.ctx.set_source(pattern)
+        self.ctx.rectangle(0, 0, image.get_width(), image.get_height())
+        self.ctx.fill()
+        self.ctx.restore()
+        return self

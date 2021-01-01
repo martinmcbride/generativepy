@@ -13,6 +13,8 @@ import os
 def compare_images(path1, path2):
     with Image.open(path1) as im1:
         with Image.open(path2) as im2:
+            if im1.size != im2.size:
+                return False
             diff = ImageChops.difference(im1, im2)
             if diff.getbbox():
                 return False
