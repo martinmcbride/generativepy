@@ -6,7 +6,7 @@ from generativepy.geometry import Image
 
 class TestDrawingImageImages(unittest.TestCase):
 
-    def test_simple_image(self):
+    def test_geometry_image(self):
 
         def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
             setup(ctx, pixel_width, pixel_height, background=Color(1))
