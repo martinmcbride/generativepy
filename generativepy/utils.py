@@ -6,6 +6,7 @@
 import sys
 import tempfile
 import os.path
+import math
 
 def correct_pycairo_byte_order(array, channels):
     '''
@@ -36,6 +37,53 @@ def temp_file(*names):
 
     folder = tempfile.gettempdir()
     return os.path.join(folder, *names)
+
+def vector_add(a, b):
+    '''
+    Add two vectors a and b
+    :param a: 2-tuple vector x, y
+    :param b: 2-tuple vector x, y
+    :return: sum
+    '''
+    return a[0]+b[0], a[1]+b[1]
+
+def vector_mul(a, n):
+    '''
+    Nultiply a vector by a factor
+    :param a: 2-tuple vector x, y
+    :param n: factor
+    :return: multiplies vecotr
+    '''
+    return a[0]*n, a[1]*n
+
+def vector_midpoint(a, b):
+    '''
+    Return the midpoint between points a and b
+    :param a: 2-tuple point x, y
+    :param b: 2-tuple point x, y
+    :return: 2-tuple midpoint
+    '''
+    return (a[0]+b[0])/2, (a[1]+b[1])/2
+
+def vector_a_b(a, b):
+    '''
+    Return vector from point a to point b
+    :param a: 2-tuple point x, y
+    :param b: 2-tuple point x, y
+    :return: 2-tuple vector
+    '''
+    return b[0]-a[0], b[1]-a[1]
+
+def vector_unit(a):
+    '''
+    Return unit vector for a
+    :param a: 2-tuple vector x, y
+    :return: 2-tuple vector
+    '''
+    length = math.sqrt(a[0]*a[0] + a[1]*a[1])
+    return a[0]/length, a[1]/length
+
+
 
 
 

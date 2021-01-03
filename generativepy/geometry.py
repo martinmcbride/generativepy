@@ -8,7 +8,7 @@ from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, 
 from generativepy.drawing import EVEN_ODD, WINDING
 from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
 from generativepy.color import Color
-
+from generativepy.utils import vector_unit, vector_a_b
 
 class Shape():
 
@@ -299,6 +299,19 @@ class Text(Shape):
         return self
 
     def offset(self, x=0, y=0):
+        self._offset = (x, y)
+        return self
+
+    def offset_angle(self, angle, distance):
+        x = distance*math.cos(angle)
+        y = distance*math.sin(angle)
+        self._offset = (x, y)
+        return self
+
+    def offset_towards(self, point, distance):
+        unit = vector_unit(vector_a_b(self.position, point))
+        x = distance*unit[0]
+        y = distance*unit[1]
         self._offset = (x, y)
         return self
 
