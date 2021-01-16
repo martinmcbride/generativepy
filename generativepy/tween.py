@@ -5,6 +5,7 @@
 
 import math
 
+
 class Tween():
     '''
     Tweening class for scalar values
@@ -24,7 +25,7 @@ class Tween():
     You can use get(n) to get the nth frame, or alternatively you can use tween[n]. The built in len() function can be
     used to find the sequence length. Tween are iterable, so they can be used with for loops etc.
     '''
-    
+
     def __init__(self, value=0):
         self.check_value(value, None)
         self.frames = []
@@ -54,7 +55,7 @@ class Tween():
         self.check_value(value, self.previous)
         self.check_count(count)
         for i in range(count):
-            factor = (i+1)/count
+            factor = (i + 1) / count
             self.frames.append(self.previous + factor * (value - self.previous))
         self.previous = value
         return self
@@ -64,16 +65,16 @@ class Tween():
         self.check_count(count)
         input_range = value - self.previous
         for i in range(count):
-            factor = ease_function((i+1)/count)
+            factor = ease_function((i + 1) / count)
             self.frames.append(self.previous + factor * (value - self.previous))
         self.previous = value
         return self
 
     def get(self, frame):
         if frame >= len(self.frames):
-            self.previous
+            return self.previous
         return self.frames[frame]
-    
+
     def __getitem__(self, key):
         return self.get(key)
 
@@ -101,8 +102,8 @@ class Tween():
 
     def __len__(self):
         return len(self.frames)
-    
-    
+
+
 class TweenVector(Tween):
     '''
     Tweening class for vector quantities.
@@ -114,17 +115,18 @@ class TweenVector(Tween):
     the same length as the initial value, for example if you start with an (x, y) value, every new value must also
     have 2 dimansions.
     '''
+
     def __init__(self, value=(0, 0)):
         Tween.__init__(self, value)
-        
+
     def to(self, value, count):
         self.check_value(value, self.previous)
         self.check_count(count)
         for i in range(count):
             nextvalue = []
-            factor = (i+1)/count
+            factor = (i + 1) / count
             for a, b in zip(self.previous, value):
-                nextvalue.append(a + factor*(b - a))
+                nextvalue.append(a + factor * (b - a))
             self.frames.append(nextvalue)
         self.previous = value
         return self
@@ -134,9 +136,9 @@ class TweenVector(Tween):
         self.check_count(count)
         for i in range(count):
             nextvalue = []
-            factor = ease_function((i+1)/count)
+            factor = ease_function((i + 1) / count)
             for a, b in zip(self.previous, value):
-                nextvalue.append(a + factor*(b - a))
+                nextvalue.append(a + factor * (b - a))
             self.frames.append(nextvalue)
         self.previous = value
         return self
@@ -156,15 +158,15 @@ def ease_linear():
 
 
 def ease_in_harm():
-    return lambda x: 1 + math.sin(math.pi*(x/2 - 0.5))
+    return lambda x: 1 + math.sin(math.pi * (x / 2 - 0.5))
 
 
 def ease_out_harm():
-    return lambda x: math.sin(math.pi*x/2)
+    return lambda x: math.sin(math.pi * x / 2)
 
 
 def ease_in_out_harm():
-    return lambda x: 0.5 + 0.5*math.sin(math.pi*(x - 0.5))
+    return lambda x: 0.5 + 0.5 * math.sin(math.pi * (x - 0.5))
 
 
 def ease_in_elastic():
@@ -172,7 +174,7 @@ def ease_in_elastic():
 
 
 def ease_out_elastic():
-    return lambda x: 1 - math.sin(2.25 * 2 * math.pi * (1-x)) * pow(2, -10 * x)
+    return lambda x: 1 - math.sin(2.25 * 2 * math.pi * (1 - x)) * pow(2, -10 * x)
 
 
 def ease_in_out_elastic():
@@ -181,8 +183,9 @@ def ease_in_out_elastic():
             f = 2 * x
             return 0.5 * (math.sin(2.25 * 2 * math.pi * f) * pow(2, 10 * (f - 1)))
         else:
-            f = (2*x - 1)
-            return 0.5 * (1 - math.sin(2.25 * 2 * math.pi * (1-f)) * pow(2, -10 * f)) + 0.5
+            f = (2 * x - 1)
+            return 0.5 * (1 - math.sin(2.25 * 2 * math.pi * (1 - f)) * pow(2, -10 * f)) + 0.5
+
     return fn
 
 
@@ -194,6 +197,7 @@ def ease_out_back():
     def fn(x):
         f = (1 - x)
         return 1 - (f * f * f - f * math.sin(f * math.pi))
+
     return fn
 
 
@@ -203,8 +207,9 @@ def ease_in_out_back():
             f = 2 * x
             return 0.5 * (f * f * f - f * math.sin(f * math.pi))
         else:
-            f = (1 - (2*x - 1))
+            f = (1 - (2 * x - 1))
             return 0.5 * (1 - (f * f * f - f * math.sin(f * math.pi))) + 0.5
+
     return fn
 
 
@@ -235,5 +240,6 @@ def ease_in_out_bounce():
             return 0.5 * (1 - _bounce(1 - x * 2))
         else:
             return 0.5 * _bounce(x * 2 - 1) + 0.5
+
     return fn
 
