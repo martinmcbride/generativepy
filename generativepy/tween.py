@@ -71,7 +71,7 @@ class Tween():
 
     def get(self, frame):
         if frame >= len(self.frames):
-            raise IndexError()
+            self.previous
         return self.frames[frame]
     
     def __getitem__(self, key):
