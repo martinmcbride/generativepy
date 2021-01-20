@@ -6,6 +6,7 @@
 from generativepy.utils import temp_file
 from pathlib import Path
 from generativepy.drawing import make_image
+from generativepy.drawing3d import make_image3d
 from PIL import Image
 from PIL import ImageChops
 import os
@@ -39,4 +40,23 @@ def run_image_test(name, draw, pixel_width, pixel_height, channels=3):
 
     # Create the test image file
     make_image(out_file, draw, pixel_width, pixel_height, channels)
+    return compare_images(out_file, ref_file)
+
+def run_image3d_test(name, draw, pixel_width, pixel_height, channels=3):
+    # Create test output folder
+    out_folder_name = 'genpy-test-images'
+    ref_folder_name = 'images'
+    out_folder = temp_file(out_folder_name)
+    Path(out_folder).mkdir(exist_ok=True)
+
+    # Warn if output file exists, or if reference file doesn't exist
+    out_file = temp_file(out_folder_name, name)
+    ref_file = os.path.join(ref_folder_name, name)
+    if Path(out_file).exists():
+        print("WARNING temp file {} already exists".format(out_file))
+    if not Path(ref_file).exists():
+        print("WARNING reference file {} doesn't exist".format(ref_file))
+
+    # Create the test image file
+    make_image3d(out_file, draw, pixel_width, pixel_height, channels)
     return compare_images(out_file, ref_file)
