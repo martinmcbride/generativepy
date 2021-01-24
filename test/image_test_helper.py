@@ -6,7 +6,7 @@
 from generativepy.utils import temp_file
 from pathlib import Path
 from generativepy.drawing import make_image
-from generativepy.drawing3d import make_image3d
+from generativepy.drawing3d import make_3dimage
 from generativepy.color import Color
 from PIL import Image
 from PIL import ImageChops
@@ -59,5 +59,5 @@ def run_image3d_test(name, draw, pixel_width, pixel_height, background=Color(0),
         print("WARNING reference file {} doesn't exist".format(ref_file))
 
     # Create the test image file
-    make_image3d(out_file, draw, pixel_width, pixel_height, background, channels)
+    make_3dimage(out_file, draw, pixel_width, pixel_height, background, channels)
     return compare_images(out_file, ref_file)
