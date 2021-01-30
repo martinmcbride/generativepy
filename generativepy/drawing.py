@@ -160,7 +160,7 @@ def make_svg(outfile, draw, width, height):
     '''
     if outfile.lower().endswith('.svg'):
         outfile = outfile[:-4]
-    surface = cairo.SVGSurface(outfile, width, height)
+    surface = cairo.SVGSurface(outfile + '.svg', width, height)
     ctx = cairo.Context(surface)
     draw(ctx, width, height, 0, 1)
     ctx.show_page()
