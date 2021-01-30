@@ -8,6 +8,8 @@ from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, 
 from generativepy.drawing import EVEN_ODD, WINDING
 from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
 from generativepy.color import Color
+
+# DEPRECATED - replace with easy_vector, then remove from utils
 from generativepy.utils import vector_unit, vector_a_b
 
 class Shape():

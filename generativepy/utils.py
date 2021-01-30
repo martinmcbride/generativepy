@@ -38,6 +38,26 @@ def temp_file(*names):
     folder = tempfile.gettempdir()
     return os.path.join(folder, *names)
 
+def vector_a_b(a, b):
+    '''
+    DEPRECATED - remove after fixing geometry usage
+    Return vector from point a to point b
+    :param a: 2-tuple point x, y
+    :param b: 2-tuple point x, y
+    :return: 2-tuple vector
+    '''
+    return b[0]-a[0], b[1]-a[1]
+
+def vector_unit(a):
+    '''
+    DEPRECATED - remove after fixing geometry usage
+    Return unit vector for a
+    :param a: 2-tuple vector x, y
+    :return: 2-tuple vector
+    '''
+    length = math.sqrt(a[0]*a[0] + a[1]*a[1])
+    return a[0]/length, a[1]/length
+
 
 
 
