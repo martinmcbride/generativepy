@@ -52,10 +52,13 @@ class Shape():
         self.ctx.fill_preserve()
         return self
 
-    def stroke(self, color=Color(0), line_width=1, dash=[], cap=SQUARE, join=MITER, miter_limit=None):
+    def stroke(self, color=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
         if not self.added:
             self.add()
             self.added = True
+
+        if not dash:
+            dash = []
 
         self.ctx.set_source_rgba(*color)
 

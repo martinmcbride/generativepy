@@ -7,7 +7,7 @@ import cairo
 import math
 import numpy as np
 
-import generativepy.geometry
+from generativepy.geometry import text, Polygon
 from generativepy.color import Color
 from generativepy import drawing
 
@@ -41,14 +41,14 @@ class Axes:
         for p in self.get_divs(self.start[0], self.extent[0], self.divisions[0]):
            if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
-                generativepy.geometry.text(self.ctx, pstr, p - xoffset, -yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
+                text(self.ctx, pstr, p - xoffset, -yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
 
         xoffset = self.pts2pixels(1)
         yoffset = self.pts2pixels(1)
         for p in self.get_divs(self.start[1], self.extent[1], self.divisions[1]):
            if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
-                generativepy.geometry.text(self.ctx, pstr, -xoffset, p - yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
+                text(self.ctx, pstr, -xoffset, p - yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
 
         self.ctx.set_line_width(self.pts2pixels(0.5))
         self.ctx.new_path()
@@ -92,7 +92,8 @@ class Axes:
         return points/self.pixel_divider
 
 
-def plot_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7):
+def plot_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7, dash=None, cap=drawing.SQUARE,
+               join=drawing.MITER, miter_limit=None):
     """
     Plot a curve y = fn(x)
     :param axes: Axes to plt in
@@ -100,6 +101,10 @@ def plot_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7):
     :param lineColor: color of line, Color
     :param extent: tuple (start, end) giving extent of curve, or None for the curve to fill the x range
     :param line_width: line width in page space
+    :param dash: line dash style, as per PyCairo stroke
+    :param caps: line caps style, as per PyCairo stroke
+    :param join: line join style, as per PyCairo stroke
+    :param miter_limit: line miter_limit, as per PyCairo stroke
     :return:
     """
     ctx = axes.ctx
@@ -109,15 +114,16 @@ def plot_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7):
             points.append((x, fn(x)))
     if points:
         ctx.new_path()
+        if dash:
+            dash = [axes.pts2pixels(x) for x in dash] # TODO handle line width scaling better
         axes.clip()
-        ctx.set_line_width(axes.pts2pixels(line_width))
-        ctx.set_source_rgba(*line_color)
-
-        generativepy.geometry.polygon(ctx, points, False)
+        Polygon(ctx).of_points(points).open().stroke(line_color, axes.pts2pixels(line_width),
+                                                     dash, cap, join, miter_limit)
         ctx.stroke()
         axes.unclip()
 
-def plot_xy_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7):
+def plot_xy_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.7, dash=None, cap=drawing.SQUARE,
+                  join=drawing.MITER, miter_limit=None):
     """
     Plot a curve x = fn(y)
     :param axes: Axes to plt in
@@ -125,6 +131,10 @@ def plot_xy_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.
     :param lineColor: color of line, Color
     :param extent: tuple (start, end) giving extent of curve, or None for the curve to fill the y range
     :param line_width: line width in page space
+    :param dash: line dash style, as per PyCairo stroke
+    :param caps: line caps style, as per PyCairo stroke
+    :param join: line join style, as per PyCairo stroke
+    :param miter_limit: line miter_limit, as per PyCairo stroke
     :return:
     """
     ctx = axes.ctx
@@ -135,14 +145,15 @@ def plot_xy_curve(axes, fn, line_color=Color(1, 0, 0), extent=None, line_width=.
     if points:
         ctx.new_path()
         axes.clip()
-        ctx.set_line_width(axes.pts2pixels(line_width))
-        ctx.set_source_rgba(*line_color)
-
-        generativepy.geometry.polygon(ctx, points, False)
+        if dash:
+            dash = [axes.pts2pixels(x) for x in dash] # TODO handle line width scaling better
+        Polygon(ctx).of_points(points).open().stroke(line_color, axes.pts2pixels(line_width),
+                                                     dash, cap, join, miter_limit)
         ctx.stroke()
         axes.unclip()
 
-def plot_polar_curve(axes, fn, line_color=Color(1, 0, 0), extent=(0, 2*math.pi), line_width=.7):
+def plot_polar_curve(axes, fn, line_color=Color(1, 0, 0), extent=(0, 2*math.pi), line_width=.7, dash=None,
+                     cap=drawing.SQUARE, join=drawing.MITER, miter_limit=None):
     """
     Plot a curve x = fn(y)
     :param axes: Axes to plt in
@@ -150,6 +161,10 @@ def plot_polar_curve(axes, fn, line_color=Color(1, 0, 0), extent=(0, 2*math.pi),
     :param lineColor: color of line, Color
     :param extent: tuple (start, end) giving angular extent of curve, default 0 to 2*pi
     :param line_width: line width in page space
+    :param dash: line dash style, as per PyCairo stroke
+    :param caps: line caps style, as per PyCairo stroke
+    :param join: line join style, as per PyCairo stroke
+    :param miter_limit: line miter_limit, as per PyCairo stroke
     :return:
     """
     ctx = axes.ctx
@@ -160,9 +175,9 @@ def plot_polar_curve(axes, fn, line_color=Color(1, 0, 0), extent=(0, 2*math.pi),
     if points:
         ctx.new_path()
         axes.clip()
-        ctx.set_line_width(axes.pts2pixels(line_width))
-        ctx.set_source_rgba(*line_color)
-
-        generativepy.geometry.polygon(ctx, points, False)
+        if dash:
+            dash = [axes.pts2pixels(x) for x in dash] # TODO handle line width scaling better
+        Polygon(ctx).of_points(points).open().stroke(line_color, axes.pts2pixels(line_width),
+                                                     dash, cap, join, miter_limit)
         ctx.stroke()
         axes.unclip()
