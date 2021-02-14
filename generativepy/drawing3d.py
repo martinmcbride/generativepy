@@ -47,6 +47,7 @@ def make_3dimage_frame(draw, width, height, background=Color(0), channels=3):
     frame = np.frombuffer(data, dtype=np.uint8)
     frame = frame.reshape((height, width, 3))
     frame = frame[::-1]
+    ctx.release()
 
     return frame
 
@@ -73,6 +74,7 @@ def make_3dimage_frames(draw, width, height, count, background=Color(0), channel
         frame = np.frombuffer(data, dtype=np.uint8)
         frame = frame.reshape((height, width, 3))
         frame = frame[::-1]
+        ctx.release()
 
         yield frame
 
