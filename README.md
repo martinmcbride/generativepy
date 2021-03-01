@@ -20,10 +20,11 @@ Main functionality:
 
 ## Website
 
-Visit [tenminutetutor.com](http://www.tenminutetutor.com/generative-art/generativepy/) for details:
+Visit [pythoninformer.com](http://www.pythoninformer.com/generative-art/) for details:
 
-* [generativepy reference](http://www.tenminutetutor.com/generative-art/generativepy/).
-* [generativepy tutorials](http://www.tenminutetutor.com/generative-art/generativepy-tutorial/).
-* [Generative art examples](http://www.tenminutetutor.com/generative-art/generativepy-art/).
+* [generativepy reference](http://www.pythoninformer.com/generative-art/generativepy/).
+* [generativepy tutorials](http://www.pythoninformer.com/generative-art/generativepy-tutorial/).
+* [Generative art examples](http://www.pythoninformer.com/generative-art/generativepy-art/).
+* [Fractal examples](http://www.pythoninformer.com/generative-art/iterated-function-systems/).
 
 For detailed information of pycairo see the [Computer graphics in Python](https://leanpub.com/computergraphicsinpython) ebook.
