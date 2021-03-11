@@ -1,5 +1,6 @@
 import unittest
-from image_test_helper import run_image3d_test
+from image_test_helper import run_image_test
+from generativepy.drawing3d import make_3dimage
 import moderngl
 import numpy as np
 from generativepy.color import Color
@@ -52,4 +53,7 @@ class TestDrawing3dImages(unittest.TestCase):
 
             vao.render(moderngl.TRIANGLES)
 
-        self.assertTrue(run_image3d_test('test_simple_drawing3d.png', draw, 700, 600, Color('grey')))
+        def creator(file):
+            make_3dimage(file, draw, 700, 600, Color('grey'))
+
+        self.assertTrue(run_image_test('test_simple_drawing3d.png', creator))

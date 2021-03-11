@@ -1,5 +1,5 @@
 import unittest
-from generativepy.drawing import setup
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.geometry import Image
@@ -16,4 +16,7 @@ class TestDrawingImageImages(unittest.TestCase):
             Image(ctx).of_file_position('formula.png', (50, 600)).paint()
             Image(ctx).of_file_position('formula.png', (350, 200)).scale(0.5).paint()
 
-        self.assertTrue(run_image_test('test_geometry_image.png', draw, 800, 800))
+        def creator(file):
+            make_image(file, draw, 800, 800)
+
+        self.assertTrue(run_image_test('test_geometry_image.png', creator))

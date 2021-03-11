@@ -1,5 +1,5 @@
 import unittest
-from generativepy.drawing import setup
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.tween import Tween
@@ -38,4 +38,8 @@ class TestTweenImages(unittest.TestCase):
             plot_easing_function(ctx, 450, 450, generativepy.tween.ease_out_bounce())
             plot_easing_function(ctx, 560, 450, generativepy.tween.ease_in_out_bounce())
 
-        self.assertTrue(run_image_test('test_easing_graphs.png', draw, 700, 600))
+        def creator(file):
+            make_image(file, draw, 700, 600, channels=3)
+
+
+        self.assertTrue(run_image_test('test_easing_graphs.png', creator))

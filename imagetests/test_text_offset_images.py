@@ -1,5 +1,5 @@
 import unittest
-from generativepy.drawing import setup
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.geometry import Text
@@ -16,5 +16,7 @@ class TestTextOffsetImages(unittest.TestCase):
             Text(ctx).of('C', (200, 200)).offset_angle(1, 150).size(40).fill(Color(0))
             Text(ctx).of('D', (200, 200)).offset_towards((100, 150), 50).size(40).fill(Color(0))
 
+        def creator(file):
+            make_image(file, draw, 400, 400)
 
-        self.assertTrue(run_image_test('test_text_offset.png', draw, 400, 400))
+        self.assertTrue(run_image_test('test_text_offset.png', creator))
