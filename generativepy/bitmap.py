@@ -47,6 +47,20 @@ def get_mode(channels):
         mode = 'RGB'
     return mode
 
+def get_background(channels):
+    '''
+    Get a suitable background colour for the given channel
+    :param channels:
+    :return:
+    '''
+    if channels == 1:
+        color = 'white'
+    elif channels == 4:
+        color = (255, 255, 255, 0)
+    else:
+        color = 'white'
+    return color
+
 def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
     '''
     Create a PNG file using PIL
@@ -59,7 +73,7 @@ def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
     '''
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
-    image = Image.new(get_mode(channels), (pixel_width, pixel_height), 'white')
+    image = Image.new(get_mode(channels), (pixel_width, pixel_height), get_background(channels))
     paint(image, pixel_width, pixel_height, 0, 1)
     image.save(outfile + '.png')
 
@@ -77,7 +91,7 @@ def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
     for i in range(count):
-        image = Image.new(get_mode(channels), (pixel_width, pixel_height), 'white')
+        image = Image.new(get_mode(channels), (pixel_width, pixel_height), get_background(channels))
         paint(image, pixel_width, pixel_height, i, count)
         image.save(outfile + str(i).zfill(8) + '.png')
 
@@ -90,7 +104,7 @@ def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
     :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
     :return: a frame buffer
     '''
-    image = Image.new(get_mode(channels), (pixel_width, pixel_height), 'white')
+    image = Image.new(get_mode(channels), (pixel_width, pixel_height), get_background(channels))
     paint(image, pixel_width, pixel_height, 0, 1)
     frame = np.copy(np.asarray(image))
     return frame
@@ -106,7 +120,7 @@ def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
     :return: a lazy sequence of frame buffers
     '''
     for i in range(count):
-        image = Image.new(get_mode(channels), (pixel_width, pixel_height), 'white')
+        image = Image.new(get_mode(channels), (pixel_width, pixel_height), get_background(channels))
         paint(image, pixel_width, pixel_height, i, count)
         frame = np.copy(np.asarray(image))
         yield frame
