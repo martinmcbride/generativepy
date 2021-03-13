@@ -5,9 +5,6 @@
 
 from generativepy.utils import temp_file
 from pathlib import Path
-from generativepy.drawing import make_image
-from generativepy.drawing3d import make_3dimage
-from generativepy.color import Color
 from PIL import Image
 from PIL import ImageChops
 import os

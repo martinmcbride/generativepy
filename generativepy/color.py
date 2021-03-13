@@ -7,17 +7,6 @@ import colorsys
 import itertools
 
 cssColors = {
-"purple":(128,0,128),
-"fuchsia":(255,0,255),
-"lime":(0,255,0),
-"teal":(0,128,128),
-"aqua":(0,255,255),
-"blue":(0,0,255),
-"navy":(0,0,128),
-"black":(0,0,0),
-"gray":(128,128,128),
-"silver":(192,192,192),
-"white":(255,255,255),
 "indianred":(205,92,92),
 "lightcoral":(240,128,128),
 "salmon":(250,128,114),
@@ -363,8 +352,8 @@ class Color():
     def clamp(v):
         try:
             v = min(1, max(0, v)) #Clamp v between 0 and 1
-        except:
-            raise ValueError('Numerical value required')
+        except e:
+            raise ValueError('Numerical value required') from e
         return v
 
     def __str__(self):

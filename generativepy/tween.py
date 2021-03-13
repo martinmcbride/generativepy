@@ -63,7 +63,6 @@ class Tween():
     def ease(self, value, count, ease_function):
         self.check_value(value, self.previous)
         self.check_count(count)
-        input_range = value - self.previous
         for i in range(count):
             factor = ease_function((i + 1) / count)
             self.frames.append(self.previous + factor * (value - self.previous))

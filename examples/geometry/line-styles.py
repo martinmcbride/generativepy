@@ -1,7 +1,7 @@
 from generativepy.drawing import make_image, setup
 from generativepy.color import Color
-from generativepy.geometry import Rectangle, rectangle
-from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
+from generativepy.geometry import Rectangle
+from generativepy.drawing import ROUND, BEVEL, BUTT
 
 '''
 Create rectangles using the geometry module.

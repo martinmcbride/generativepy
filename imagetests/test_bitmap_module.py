@@ -20,8 +20,8 @@ def draw(image, pixel_width, pixel_height, frame_no, frame_count):
     :param frame_count: 
     :return: 
     """
-    draw = ImageDraw.Draw(image)
-    draw.rectangle((60, 10, 300, 150), fill=Color("tomato").as_rgbstr())
+    imagedraw = ImageDraw.Draw(image)
+    imagedraw.rectangle((60, 10, 300, 150), fill=Color("tomato").as_rgbstr())
 
 
 class TestBitmapModule(unittest.TestCase):

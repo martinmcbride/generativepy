@@ -4,9 +4,9 @@ from generativepy.color import Color
 from PIL import ImageDraw
 from generativepy.utils import temp_file
 
-'''
+"""
 Create a simple bitmap image
-'''
+"""
 
 def paint(image, pixel_width, pixel_height, frame_no, frame_count):
     draw = ImageDraw.Draw(image)

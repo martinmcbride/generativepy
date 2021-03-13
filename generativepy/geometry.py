@@ -5,7 +5,7 @@
 import cairo
 import math
 from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
-from generativepy.drawing import EVEN_ODD, WINDING
+from generativepy.drawing import WINDING
 from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
 from generativepy.color import Color
 
@@ -223,7 +223,7 @@ class Text(Shape):
         x, y = self.position
         x += self._offset[0]
         y += self._offset[1]
-        xb, yb, width, height, dx, dy = self.ctx.text_extents(self.text)
+        xb, yb, width, height, _, dy = self.ctx.text_extents(self.text)
 
         x -= xb
         if self.alignx == CENTER:
@@ -622,8 +622,8 @@ def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
     ctx.new_path()
     if right_angle:
         radius /= 2
-        v = (math.cos(ang1), math.sin(ang1));
-        pv = (math.cos(ang2), math.sin(ang2));
+        v = (math.cos(ang1), math.sin(ang1))
+        pv = (math.cos(ang2), math.sin(ang2))
         polygon(ctx, [(b[0] + v[0] * radius, b[1] + v[1] * radius),
                       (b[0] + (v[0] + pv[0])*radius, b[1] + (v[1]+pv[1])*radius),
                       (b[0] + pv[0]*radius, b[1] + pv[1]*radius)], False)
@@ -649,9 +649,9 @@ def tick(ctx, a, b, count=1, length=4, gap=1):
     # Midpoint of line
     pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
     # Length of line
-    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
     # Unit vector along line
-    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
     # Unit vector perpendicular to line
     pvector = (-vector[1], vector[0])
 
@@ -685,9 +685,9 @@ def paratick(ctx, a, b, count=1, length=4, gap=1):
     # Midpoint ofgline
     pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
     # Length of line
-    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
     # Unit vector along line
-    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
     # Unit vector perpendicular to line
     pvector = (-vector[1], vector[0])
 
@@ -716,9 +716,9 @@ def arrowhead(ctx, a, b, length=4):
         ctx.line_to(x + ox2, y + oy2)
 
     # Length of line
-    len = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
+    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
     # Unit vector along line
-    vector = ((b[0] - a[0]) / len, (b[1] - a[1]) / len)
+    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
     # Unit vector perpendicular to line
     pvector = (-vector[1], vector[0])
 

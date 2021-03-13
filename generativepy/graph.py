@@ -39,14 +39,14 @@ class Axes:
         xoffset = self.pts2pixels(1)
         yoffset = self.pts2pixels(1)
         for p in self.get_divs(self.start[0], self.extent[0], self.divisions[0]):
-           if abs(p)>0.001:
+            if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
                 text(self.ctx, pstr, p - xoffset, -yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
 
         xoffset = self.pts2pixels(1)
         yoffset = self.pts2pixels(1)
         for p in self.get_divs(self.start[1], self.extent[1], self.divisions[1]):
-           if abs(p)>0.001:
+            if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
                 text(self.ctx, pstr, -xoffset, p - yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
 

@@ -1,4 +1,3 @@
-from generativepy import drawing
 from generativepy.drawing import make_image
 from generativepy.color import Color
 
