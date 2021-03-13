@@ -6,9 +6,14 @@ from generativepy.tween import Tween
 import generativepy.tween
 from generativepy.geometry import Polygon, Square
 
+"""
+Test the tween module. Most of the module functionality is tested bu unit tests, but
+we use image tests to check the easing functions by plotting them.
+"""
+
 class TestTweenImages(unittest.TestCase):
 
-    def test_easing_graphs(self):
+    def test_tween_easing(self):
         '''
         Plot the easing functions as graphs on an image
         '''
@@ -42,4 +47,4 @@ class TestTweenImages(unittest.TestCase):
             make_image(file, draw, 700, 600, channels=3)
 
 
-        self.assertTrue(run_image_test('test_easing_graphs.png', creator))
+        self.assertTrue(run_image_test('test_tween_easing.png', creator))
