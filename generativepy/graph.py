@@ -22,6 +22,7 @@ class Axes:
 
 
     def draw(self):
+        self.clip()
         self.ctx.set_line_width(self.pts2pixels(0.5))
         self.ctx.set_source_rgba(*Color(0.8, 0.8, 1))
         for p in self.get_divs(self.start[0], self.extent[0], self.divisions[0]):
@@ -30,6 +31,13 @@ class Axes:
         for p in self.get_divs(self.start[1], self.extent[1], self.divisions[1]):
             self.ctx.move_to(self.start[0], p)
             self.ctx.line_to(self.start[0]+self.extent[0], p)
+        self.ctx.stroke()
+
+        self.ctx.set_source_rgba(*Color(0.2, 0.2, 0.2))
+        self.ctx.move_to(0, self.start[1])
+        self.ctx.line_to(0, self.start[1] + self.extent[1])
+        self.ctx.move_to(self.start[0], 0)
+        self.ctx.line_to(self.start[0]+self.extent[0], 0)
         self.ctx.stroke()
 
         self.ctx.set_source_rgba(*Color(0.2, 0.2, 0.2))
@@ -42,6 +50,9 @@ class Axes:
             if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
                 text(self.ctx, pstr, p - xoffset, -yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
+                self.ctx.move_to(p, 0)
+                self.ctx.line_to(p, -yoffset)
+                self.ctx.stroke()
 
         xoffset = self.pts2pixels(1)
         yoffset = self.pts2pixels(1)
@@ -49,11 +60,15 @@ class Axes:
             if abs(p)>0.001:
                 pstr = self.format_div(p, self.divisions[0])
                 text(self.ctx, pstr, -xoffset, p - yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP, flip=True)
+                self.ctx.move_to(0, p)
+                self.ctx.line_to(-xoffset, p)
+                self.ctx.stroke()
 
         self.ctx.set_line_width(self.pts2pixels(0.5))
         self.ctx.new_path()
         self.ctx.arc(0, 0, self.pts2pixels(2), 0, 2 * math.pi)
         self.ctx.stroke()
+        self.unclip()
 
     def clip(self):
         self.ctx.move_to(self.start[0], self.start[1])
