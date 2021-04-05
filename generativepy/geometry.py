@@ -7,6 +7,7 @@ import math
 from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
 from generativepy.drawing import WINDING
 from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
+from generativepy.drawing import LINE, RAY, SEGMENT
 from generativepy.color import Color
 
 # DEPRECATED - replace with easy_vector, then remove from utils
@@ -359,12 +360,32 @@ class Line(Shape):
         super().__init__(ctx)
         self.start = (0, 0)
         self.end = (0, 0)
+        self.extent_type = SEGMENT
+        self.infinity = 1000
+
+    def _get_start(self):
+        # Get the effective start position for a full LINE
+        # If this is a segment, ray or zero length line just return the normal start point
+        if self.extent_type == SEGMENT or self.extent_type == RAY or self.start == self.end:
+            return self.start
+        # Get the line angle and extend backward to infinity
+        angle = math.atan2(self.end[1] - self.start[1], self.end[0] - self.start[0])
+        return self.start[0] - math.cos(angle)*self.infinity, self.start[1] - math.sin(angle)*self.infinity
+
+    def _get_end(self):
+        # Get the effective end position for a full LINE or RAY
+        # If this is a segment, zero length line just return the normal start point
+        if self.extent_type == SEGMENT or self.start == self.end:
+            return self.end
+        # Get the line angle and extend backward to infinity
+        angle = math.atan2(self.end[1] - self.start[1], self.end[0] - self.start[0])
+        return self.start[0] + math.cos(angle)*self.infinity, self.start[1] + math.sin(angle)*self.infinity
 
     def add(self):
         self._do_path_()
         if not self.extend:
-            self.ctx.move_to(*self.start)
-        self.ctx.line_to(*self.end)
+            self.ctx.move_to(*self._get_start())
+        self.ctx.line_to(*self._get_end())
         if self.final_close:
             self.ctx.close_path()
         return self
@@ -377,6 +398,30 @@ class Line(Shape):
     def of_end(self, end):
         self.start = (0, 0)
         self.end = end
+        return self
+
+    def as_line(self, infinity=None):
+        self.extent_type = LINE
+        if infinity:
+            self.infinity = infinity
+        return self
+
+    def as_ray(self, infinity=None):
+        self.extent_type = RAY
+        if infinity:
+            self.infinity = infinity
+        return self
+
+    def as_segment(self, infinity=None):
+        self.extent_type = SEGMENT
+        if infinity:
+            self.infinity = infinity
+        return self
+
+    def as_type(self, extent_type, infinity=None):
+        self.extent_type = extent_type
+        if infinity:
+            self.infinity = infinity
         return self
 
 

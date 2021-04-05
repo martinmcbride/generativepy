@@ -21,13 +21,17 @@ EVEN_ODD=0
 WINDING=1
 
 ## Line cap/join
-MITER = 0  # join
-ROUND = 1  # join/cap
-BEVEL = 2  # join
-BUTT = 3   # cap
-SQUARE = 4 # cap
+MITER = 0   # join
+ROUND = 1   # join/cap
+BEVEL = 2   # join
+BUTT = 3    # cap
+SQUARE = 4  # cap
 
+## Line extension
 
+SEGMENT = 0
+RAY = 1
+LINE = 2
 
 def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, starty=0, background=None, flip=False):
     '''

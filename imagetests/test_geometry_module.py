@@ -123,6 +123,54 @@ class TestGeometryImages(unittest.TestCase):
 
         self.assertTrue(run_image_test('test_lines.png', creator))
 
+    def test_line_segment(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, width=6, background=Color(0.8))
+
+            for i in range(9):
+                angle = 2*math.pi*i/9
+                a = (1.5 + 1.5*(i%3), 1.5 + 1.5*(i//3))
+                b = (a[0] + math.cos(angle), a[1] + math.sin(angle))
+                Line(ctx).of_start_end(a, b).as_segment().stroke(Color('fuchsia'), 0.05)
+                Circle(ctx).of_center_radius(a, .1).fill(Color(0))
+
+        def creator(file):
+            make_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test('test_line_segment.png', creator))
+
+    def test_line_ray(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, width=6, background=Color(0.8))
+
+            for i in range(9):
+                angle = 2*math.pi*i/9
+                a = (1.5 + 1.5*(i%3), 1.5 + 1.5*(i//3))
+                b = (a[0] + math.cos(angle), a[1] + math.sin(angle))
+                Line(ctx).of_start_end(a, b).as_ray().stroke(Color('fuchsia'), 0.05)
+                Circle(ctx).of_center_radius(a, .1).fill(Color(0))
+
+        def creator(file):
+            make_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test('test_line_ray.png', creator))
+
+    def test_line_full(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, width=6, background=Color(0.8))
+
+            for i in range(9):
+                angle = 2*math.pi*i/9
+                a = (1.5 + 1.5*(i%3), 1.5 + 1.5*(i//3))
+                b = (a[0] + math.cos(angle), a[1] + math.sin(angle))
+                Line(ctx).of_start_end(a, b).as_line().stroke(Color('fuchsia'), 0.05)
+                Circle(ctx).of_center_radius(a, .1).fill(Color(0))
+
+        def creator(file):
+            make_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test('test_line_full.png', creator))
+
     def test_line_styles(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=5, background=Color(0.8))
