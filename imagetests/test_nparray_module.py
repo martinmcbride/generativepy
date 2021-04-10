@@ -2,9 +2,7 @@ import unittest
 from generativepy.nparray import make_nparray, make_nparray_frame
 from generativepy.movie import save_frame
 from image_test_helper import run_image_test
-from generativepy.color import Color
-from PIL import ImageDraw
-
+import numpy as np
 """
 Test each function of the nparray module, with 1, 3 and 4 channel output
 """
@@ -51,23 +49,36 @@ def draw1(array, pixel_width, pixel_height, frame_no, frame_count):
     array[:,:] = [196]
     array[50:350, 100:500] = [64]
 
+def draw3_nofill(array, pixel_width, pixel_height, frame_no, frame_count):
+    """
+    Draw a blue rectangle with no background
+    :param array:
+    :param pixel_width:
+    :param pixel_height:
+    :param frame_no:
+    :param frame_count:
+    :return:
+    """
+    array[50:350, 100:500] = [0, 128, 196]
+
+
 
 
 class TestNparrayModule(unittest.TestCase):
 
-    def test_make_bitmap_rgba(self):
+    def test_make_nparray_rgba(self):
         def creator(file):
             make_nparray(file, draw4, 600, 400, channels=4)
 
         self.assertTrue(run_image_test('test_make_nparray_rgba.png', creator))
 
-    def test_make_bitmap_rgb(self):
+    def test_make_nparray_rgb(self):
         def creator(file):
             make_nparray(file, draw3, 600, 400, channels=3)
 
         self.assertTrue(run_image_test('test_make_nparray_rgb.png', creator))
 
-    def test_make_bitmap_gray(self):
+    def test_make_nparray_gray(self):
         def creator(file):
             make_nparray(file, draw1, 600, 400, channels=1)
 
@@ -80,17 +91,26 @@ class TestNparrayModule(unittest.TestCase):
 
         self.assertTrue(run_image_test('test_make_nparray_frame_rgba.png', creator))
 
-    def test_make_bitmap_frame_rgb(self):
+    def test_make_nparray_frame_rgb(self):
         def creator(file):
             frame = make_nparray_frame(draw3, 600, 400, channels=3)
             save_frame(file, frame)
 
         self.assertTrue(run_image_test('test_make_nparray_frame_rgb.png', creator))
 
-    def test_make_bitmap_frame_gray(self):
+    def test_make_nparray_frame_gray(self):
         def creator(file):
             frame = make_nparray_frame(draw1, 600, 400, channels=1)
             save_frame(file, frame)
 
         self.assertTrue(run_image_test('test_make_nparray_frame_gray.png', creator))
+
+    def test_make_nparray_frame_with_output_rgb(self):
+        def creator(file):
+            out = np.full((400, 600, 3), 128, dtype=np.uint)
+            out[25:100, 50:550] = [0, 0, 0]
+            frame = make_nparray_frame(draw3_nofill, 600, 400, out=out)
+            save_frame(file, frame)
+
+        self.assertTrue(run_image_test('test_make_nparray_frame_with_output_rgb.png', creator))
 

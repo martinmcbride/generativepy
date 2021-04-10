@@ -7,16 +7,22 @@ import numpy as np
 from generativepy.movie import save_frame, save_frames
 from generativepy.color import make_colormap
 
-def make_nparray_frame(paint, pixel_width, pixel_height, channels=3):
+def make_nparray_frame(paint, pixel_width, pixel_height, channels=3, out=None):
     '''
     Create a frame using numpy
     :param paint: the paint function
     :param pixel_width: width in pixels, int
     :param pixel_height: height in pixels, int
     :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
+    :param out: optional array to hold result. Must be correct width, height and channels, but can be any int type
     :return: a frame buffer
     '''
-    array = np.full((pixel_height, pixel_width, channels), 255, dtype=np.uint)
+    if out is not None:
+        if out.shape != (pixel_height, pixel_width, channels):
+            raise ValueError('out array shape not compatible with image dimensions')
+        array = out
+    else:
+        array = np.full((pixel_height, pixel_width, channels), 255, dtype=np.uint)
     paint(array, pixel_width, pixel_height, 0, 1)
     array = np.clip(array, 0, 255).astype(np.uint8)
     return array
@@ -62,7 +68,7 @@ def make_nparrays(outfile, paint, pixel_width, pixel_height, count, channels=3):
     :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
     :return:
     '''
-    frames = make_nparray_frames(paint, pixel_width, pixel_height, channels)
+    frames = make_nparray_frames(paint, pixel_width, pixel_height, count, channels)
     save_frames(outfile, frames)
 
 def save_nparray(outfile, array):
