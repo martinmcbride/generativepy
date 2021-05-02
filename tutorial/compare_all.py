@@ -29,6 +29,8 @@ tests = [compare_images("colour-rgb.png"),
          compare_images("colour-hsl.png"),
          compare_images("colour-alpha.png"),
          compare_images("colour-delta.png"),
+         compare_images("text-drawing.png"),
+         compare_images("text-offset.png"),
          ]
 
 print("Passed" if all(tests) else "Failed")
