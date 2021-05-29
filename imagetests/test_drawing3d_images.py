@@ -1,6 +1,7 @@
 import unittest
 from image_test_helper import run_image_test
 from generativepy.drawing3d import make_3dimage
+from generativepy.geometry3d import FlatColorProgram, Triangle
 import moderngl
 import numpy as np
 from generativepy.color import Color
@@ -57,3 +58,20 @@ class TestDrawing3dImages(unittest.TestCase):
             make_3dimage(file, draw, 700, 600, Color('grey'))
 
         self.assertTrue(run_image_test('test_simple_drawing3d.png', creator))
+
+
+    def test_flatcolor_drawing3d(self):
+        def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
+            prog = FlatColorProgram(ctx).set_uniform(eye=(0, 0, 6), up=(0, 1, 0)).get_program()
+            vertices = Triangle().get_flat_color(Color('red'))
+
+            vbo = ctx.buffer(vertices)
+
+            vao = ctx.vertex_array(prog,
+                                   [(vbo, '3f 3f', 'in_vert', 'in_color')])
+            vao.render(moderngl.TRIANGLES)
+
+        def creator(file):
+            make_3dimage(file, draw, 700, 600, Color('grey'))
+
+        self.assertTrue(run_image_test('test_flatcolor_drawing3d.png', creator))
