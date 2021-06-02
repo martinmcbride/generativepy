@@ -799,3 +799,67 @@ class Image():
         self.ctx.fill()
         self.ctx.restore()
         return self
+
+class Turtle():
+
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.heading = 0
+        self.x = 0
+        self.y = 0
+        self.color = Color(0)
+        self.line_width = 1
+        self.dash = []
+        self.cap = SQUARE
+        self.stack = []
+
+    def push(self):
+        state = self.heading, self.x, self.y, self.color, self.line_width, self.dash, self.cap
+        self.stack.append(state)
+        return self
+
+    def pop(self):
+        state = self.stack.pop()
+        self.heading, self.x, self.y, self.color, self.line_width, self.dash, self.cap = state
+        return self
+
+    def forward(self, distance):
+        p1 = self.x, self.y
+        self.x += distance*math.cos(self.heading)
+        self.y += distance*math.sin(self.heading)
+        Line(self.ctx).of_start_end(p1, (self.x, self.y))\
+                      .stroke(self.color, line_width=self.line_width, dash=self.dash, cap=self.cap)
+        return self
+
+    def move(self, distance):
+        self.x += distance*math.cos(self.heading)
+        self.y += distance*math.sin(self.heading)
+        return self
+
+    def move_to(self, x, y):
+        self.x = x
+        self.y = y
+        return self
+
+    def left(self, angle):
+        self.heading -= angle
+        return self
+
+    def right(self, angle):
+        self.heading += angle
+        return self
+
+    def set_heading(self, angle):
+        self.heading = angle
+        return self
+
+    def set_style(self, color=Color(0), line_width=1, dash=None, cap=SQUARE):
+        self.color = color
+        self.line_width = line_width
+        if not dash:
+            self.dash = []
+        else:
+            self.dash = dash
+        self.cap = cap
+        return self
+
