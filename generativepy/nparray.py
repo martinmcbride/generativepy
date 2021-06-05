@@ -27,6 +27,20 @@ def make_nparray_frame(paint, pixel_width, pixel_height, channels=3, out=None):
     array = np.clip(array, 0, 255).astype(np.uint8)
     return array
 
+def make_nparray_data(paint, pixel_width, pixel_height, channels=3, dtype=np.uint):
+    '''
+    Create a frame using numpy
+    :param paint: the paint function
+    :param pixel_width: width in pixels, int
+    :param pixel_height: height in pixels, int
+    :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
+    :param out: optional array to hold result. Must be correct width, height and channels, but can be any int type
+    :return: a frame buffer
+    '''
+    array = np.full((pixel_height, pixel_width, channels), 0, dtype=dtype)
+    paint(array, pixel_width, pixel_height, 0, 1)
+    return array
+
 def make_nparray_frames(paint, pixel_width, pixel_height, count, channels=3):
     '''
     Create a frame sequence using numpy
@@ -81,6 +95,16 @@ def save_nparray(outfile, array):
     with open(outfile, 'wb') as f:
         np.save(f, array)
 
+def save_nparray_image(outfile, array):
+    '''
+    Save an array to an image file
+    :param outfile: file path including extension
+    :param array: numpy array to be saved
+    :return:
+    '''
+    array = np.clip(array, 0, 255).astype(np.uint8)
+    save_frame(outfile, array)
+
 def load_nparray(infile):
     '''
     Load a numpy array from file
@@ -129,4 +153,4 @@ def apply_npcolormap(out, counts, npcolormap):
     if np.max(counts) > npcolormap.shape[0]:
         raise ValueError('npcolormap too small for maximum value in counts array')
 
-    out[:, :, :] = npcolormap[counts]
+    out[...] = npcolormap[counts]
