@@ -17,6 +17,7 @@ Main functionality:
 * A simple tweening module to help with animation.
 * Geometry module for drawing shapes.
 * A graphing library for plotting 2D functions.
+* 3D geometry module using moderngl.
 
 ## Website
 
@@ -25,6 +26,6 @@ Visit [pythoninformer.com](http://www.pythoninformer.com/generative-art/) for de
 * [generativepy reference](http://www.pythoninformer.com/generative-art/generativepy/).
 * [generativepy tutorials](http://www.pythoninformer.com/generative-art/generativepy-tutorial/).
 * [Generative art examples](http://www.pythoninformer.com/generative-art/generativepy-art/).
-* [Fractal examples](http://www.pythoninformer.com/generative-art/iterated-function-systems/).
+* [Fractal examples](http://www.pythoninformer.com/generative-art/fractals/).
 
 For detailed information of pycairo see the [Computer graphics in Python](https://leanpub.com/computergraphicsinpython) ebook.

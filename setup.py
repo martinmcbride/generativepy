@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
  
 setup(name='generativepy',
-      version='2.4',
+      version='2.5',
       url='https://github.com/martinmcbride/generativepy',
       license='MIT',
       author='Martin McBride',
@@ -12,7 +12,7 @@ setup(name='generativepy',
       description='Generative art library',
       long_description=long_description,
       long_description_content_type="text/markdown",
-      packages=find_packages(exclude=['examples', 'test']),
+      packages=find_packages(exclude=['examples', 'test', 'imagetests', 'tutorial']),
       classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",

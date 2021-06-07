@@ -6,7 +6,7 @@
 import numpy as np
 
 
-def print_stats(array, title='histogram'):
+def print_stats(array, title='stats'):
     '''
     Print the stats of a numpy array
     :param array: the array to analyse
@@ -20,12 +20,12 @@ def print_stats(array, title='histogram'):
     print('Median:', np.median(array))
 
 
-def print_histogram(array, bins=10, title='histogram'):
+def print_histogram(array, title='histogram', bins=10):
     '''
     Print the histogram of a numpy array
     :param array: the array to analyse
-    :param bins: Number of bins to use
     :param title: Title to display
+    :param bins: Number of bins to use
     :return:
     '''
     data = np.histogram(array, bins)
