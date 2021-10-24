@@ -2,6 +2,21 @@
 
 Generative art and graphing library for creating images and animations.
 
+## Breaking changes
+
+The graph module in this repo has been updated in anticipation of V3. This will offer significant improvements going forward:
+
+* Fluent interface for axes will allow for more formatting options to be added in the future.
+* Line thickness and text sizes are controlled by current context, rather than relying on magic scaling factors.
+* Graph plots are now Shapes (similar to Polygons) to more consistent with other items.
+* This will allow for other axis styles (eg logarithmic and polar plots) and other plot types (bar, scatter etc) in the future. 
+
+*These are breaking changes, but affecting the graph module only. They should also be regarded as experimental, as they might change in the final release. The documentation on pythoninformer.com has not been updated and still reflects V2.5.*
+
+It is recommended that you continue working with V2.5 for now, until V3 is released. The code can be donwloaded from PyPi.org and the documentation on pythoninformer is correct.
+
+But if you are keen to try out the changes, feel free to dig into the code, and also look at test_graph_module.py in the imagetests folder, that shows how the new interface is used.
+
 ## Usage
 
 generativepy is a library rather an application. It provides useful functions and example code that allow you to
