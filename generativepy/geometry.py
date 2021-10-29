@@ -13,6 +13,50 @@ from generativepy.color import Color
 # DEPRECATED - replace with easy_vector, then remove from utils
 from generativepy.utils import vector_unit, vector_a_b
 
+class Pattern:
+    '''
+    Base class for all patterns.
+    A pattern provides a fill (such as a gradient ort image fill) that can be used instead of a colour to
+    fill or stroke a shape.
+    '''
+
+    def get_pattern(self):
+        return None
+
+class LinearGradient(Pattern):
+    '''
+    Creates a linear gradient pattern
+    '''
+
+    def __init__(self):
+        self.pattern = None
+        self.start = (0, 0)
+        self.end = (0, 0)
+        self.stops = []
+
+    def of_points(self, start, end):
+        self.start = start
+        self.end = end
+        return self
+
+    def with_start_end(self, color1, color2):
+        self.stops = [(0, color1), (1, color2)]
+        return self
+
+    def with_stops(self, stops):
+        self.stops = [(pos, color) for pos, color in stops]
+        return self
+
+    def build(self):
+        self.pattern = cairo.LinearGradient(self.start[0], self.start[1], self.end[0], self.end[1])
+        for position, color in self.stops:
+            self.pattern.add_color_stop_rgba(position, color.r, color.g, color.b, color.a)
+        return self
+
+    def get_pattern(self):
+        return self.pattern
+
+
 class Shape():
 
     def __init__(self, ctx):
@@ -43,7 +87,10 @@ class Shape():
         if not self.added:
             self.add()
             self.added = True
-        self.ctx.set_source_rgba(*color)
+        if isinstance(color, Color):
+            self.ctx.set_source_rgba(*color)
+        else:
+            self.ctx.set_source(color.get_pattern())
 
         if fill_rule == WINDING:
             self.ctx.set_fill_rule(cairo.FillRule.WINDING)
@@ -61,7 +108,10 @@ class Shape():
         if not dash:
             dash = []
 
-        self.ctx.set_source_rgba(*color)
+        if isinstance(color, Color):
+            self.ctx.set_source_rgba(*color)
+        else:
+            self.ctx.set_source(color.get_pattern())
 
         self.ctx.set_line_width(line_width)
 
