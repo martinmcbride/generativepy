@@ -14,7 +14,7 @@ from generativepy import drawing
 
 class AxesAppearance():
     '''
-    Parameters that control teh appearance of the axes (colours, line styles).
+    Parameters that control the appearance of the axes (colours, line styles).
     '''
 
     def __init__(self):
@@ -154,7 +154,7 @@ class Plot(Shape):
             self.ctx.close_path()
         return self
 
-    def stroke(self, color=Color(0), line_width=2, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
+    def stroke(self, color=None, line_width=2, dash=None, cap=None, join=None, miter_limit=None):
         self.axes.clip()
         super().stroke(color, line_width, dash, cap, join, miter_limit)
         self.axes.unclip()

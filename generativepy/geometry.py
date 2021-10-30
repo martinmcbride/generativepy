@@ -20,8 +20,20 @@ class Pattern:
     fill or stroke a shape.
     '''
 
+    def __init__(self):
+        '''
+        Constructor
+        '''
+        self.pattern = None
+
+
     def get_pattern(self):
-        return None
+        '''
+        Get the Pycairo pattern object associated with this Pattern
+        :return: Pycairo pattern object
+        '''
+        return self.pattern
+
 
 class LinearGradient(Pattern):
     '''
@@ -29,32 +41,140 @@ class LinearGradient(Pattern):
     '''
 
     def __init__(self):
-        self.pattern = None
+        '''
+        Constructor
+        '''
+        super().__init__()
         self.start = (0, 0)
         self.end = (0, 0)
         self.stops = []
 
     def of_points(self, start, end):
+        '''
+        Get the points for the Pycairo LinearGradient pattern
+        :param start: The start point, tuple (x, y)
+        :param end: The end point, tuple (x, y)
+        :return: self
+        '''
         self.start = start
         self.end = end
         return self
 
     def with_start_end(self, color1, color2):
+        '''
+        Set up a simple linear gradient, with a start color at position 0 and an end color at position 1.
+        This is equivalent to calling with_stops with ((0, color1), (1, color2)
+        :param color1: The start color, Color object
+        :param color2: The end color, Color object
+        :return: self
+        '''
         self.stops = [(0, color1), (1, color2)]
         return self
 
     def with_stops(self, stops):
+        '''
+        Set the gradient stops. THere should be 2 or more stops in the sequence
+        :param stops: A sequence of stops, where each stop is a tuple (position, color).
+        :return: self
+        '''
         self.stops = [(pos, color) for pos, color in stops]
         return self
 
     def build(self):
+        '''
+        Build the pattern. This MUST be called after all the stops have been added. It creates the Pycairo
+        Pattern object that will be returned by get_pattern
+        :return:
+        '''
         self.pattern = cairo.LinearGradient(self.start[0], self.start[1], self.end[0], self.end[1])
         for position, color in self.stops:
             self.pattern.add_color_stop_rgba(position, color.r, color.g, color.b, color.a)
         return self
 
-    def get_pattern(self):
-        return self.pattern
+
+class FillParameters:
+    '''
+    Stores parameters for filling a shape, and can apply them to a context
+    '''
+
+    def __init__(self, pattern=Color(0), fill_rule=WINDING):
+        '''
+        Initialise the fill parameters
+        :param pattern: the fill pattern or color to use, None for default
+        :param fill_rule: the fill rule to use, None for default
+        '''
+        self.pattern = Color(0) if pattern is None else pattern
+        self.fill_rule = WINDING if fill_rule is None else fill_rule
+
+    def apply(self, ctx):
+        '''
+        Apply the settings to a context. After this, any fill operation using the context will use the
+        settings.
+        :param ctx: The context to apply the settinsg to.
+        '''
+        if isinstance(self.pattern, Color):
+            ctx.set_source_rgba(*self.pattern)
+        else:
+            ctx.set_source(self.pattern.get_pattern())
+
+        if self.fill_rule == WINDING:
+            ctx.set_fill_rule(cairo.FillRule.WINDING)
+        else:
+            ctx.set_fill_rule(cairo.FillRule.EVEN_ODD)
+
+
+class StrokeParameters:
+    '''
+    Stores parameters for stroking a shape, and can apply them to a context
+    '''
+
+    def __init__(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):
+        '''
+        Initialise the stroke parameters
+        :param pattern:  the fill pattern or color to use for the outline, None for default
+        :param line_width: width of stroke line, None for default
+        :param dash: dash patter of line, as for Pycairo, None for default
+        :param cap: line end style, None for default
+        :param join: line join style, None for default
+        :param miter_limit: mitre limit, None for default
+        '''
+        self.pattern = Color(0) if pattern is None else pattern
+        self.line_width = 1 if line_width is None else line_width
+        self.dash = [] if dash is None else dash
+        self.cap = SQUARE if cap is None else cap
+        self.join = MITER if join is None else join
+        self.miter_limit = 10 if miter_limit is None else miter_limit
+
+    def apply(self, ctx):
+        '''
+        Apply the settings to a context. After this, any stroke operation using the context will use the
+        settings.
+        :param ctx: The context to apply the settinsg to.
+        '''
+        if isinstance(self.pattern, Color):
+            ctx.set_source_rgba(*self.pattern)
+        else:
+            ctx.set_source(self.pattern.get_pattern())
+
+        ctx.set_line_width(self.line_width)
+
+        ctx.set_dash(self.dash)
+
+        if self.cap == ROUND:
+            ctx.set_line_cap(cairo.LineCap.ROUND)
+        elif self.cap == BUTT:
+            ctx.set_line_cap(cairo.LineCap.BUTT)
+        else:
+            ctx.set_line_cap(cairo.LineCap.SQUARE)
+
+        if self.join == ROUND:
+            ctx.set_line_join(cairo.LineJoin.ROUND)
+        elif self.join == BEVEL:
+            ctx.set_line_join(cairo.LineJoin.BEVEL)
+        else:
+            ctx.set_line_join(cairo.LineJoin.MITER)
+
+        ctx.set_miter_limit(self.miter_limit)
 
 
 class Shape():
@@ -83,56 +203,22 @@ class Shape():
     def add(self):
         raise NotImplementedError()
 
-    def fill(self, color=Color(0), fill_rule=WINDING):
+    def fill(self, pattern=None, fill_rule=None):
         if not self.added:
             self.add()
             self.added = True
-        if isinstance(color, Color):
-            self.ctx.set_source_rgba(*color)
-        else:
-            self.ctx.set_source(color.get_pattern())
 
-        if fill_rule == WINDING:
-            self.ctx.set_fill_rule(cairo.FillRule.WINDING)
-        else:
-            self.ctx.set_fill_rule(cairo.FillRule.EVEN_ODD)
+        FillParameters(pattern, fill_rule).apply(self.ctx)
 
         self.ctx.fill_preserve()
         return self
 
-    def stroke(self, color=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
+    def stroke(self, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
         if not self.added:
             self.add()
             self.added = True
 
-        if not dash:
-            dash = []
-
-        if isinstance(color, Color):
-            self.ctx.set_source_rgba(*color)
-        else:
-            self.ctx.set_source(color.get_pattern())
-
-        self.ctx.set_line_width(line_width)
-
-        self.ctx.set_dash(dash)
-
-        if cap == ROUND:
-            self.ctx.set_line_cap(cairo.LineCap.ROUND)
-        elif cap == BUTT:
-            self.ctx.set_line_cap(cairo.LineCap.BUTT)
-        else:
-            self.ctx.set_line_cap(cairo.LineCap.SQUARE)
-
-        if join == ROUND:
-            self.ctx.set_line_join(cairo.LineJoin.ROUND)
-        elif join == BEVEL:
-            self.ctx.set_line_join(cairo.LineJoin.BEVEL)
-        else:
-            self.ctx.set_line_join(cairo.LineJoin.MITER)
-
-        if miter_limit != None:
-            self.ctx.set_miter_limit(miter_limit)
+        StrokeParameters(pattern, line_width, dash, cap, join, miter_limit).apply(self.ctx)
 
         self.ctx.stroke_preserve()
         return self
@@ -171,7 +257,6 @@ class Path(Shape):
     def of(self, path):
         self.path = path
         return self
-
 
 class Rectangle(Shape):
 
