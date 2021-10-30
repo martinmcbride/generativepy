@@ -6,23 +6,29 @@
 import cairo
 import math
 import numpy as np
+from dataclasses import dataclass
 
-from generativepy.geometry import text, Shape
-from generativepy.drawing import MITER, SQUARE
+from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters
+from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD
 from generativepy.color import Color
 from generativepy import drawing
 
-class AxesAppearance():
+@dataclass
+class AxesAppearance:
     '''
     Parameters that control the appearance of the axes (colours, line styles).
     '''
+    background = FillParameters(Color(1))
+    textcolor = Color(0.2)
+    fontparams = FontParameters('arial', size=15, weight=FONT_WEIGHT_BOLD)
+    divlines = StrokeParameters(Color(0.8, 0.8, 1), line_width=2, cap=BUTT)
+    axislines = StrokeParameters(Color(0.2), line_width=2, cap=BUTT)
 
-    def __init__(self):
-        pass
 
 class Axes:
     def __init__(self, ctx, position, width, height):
         self.ctx = ctx
+        self.appearance = AxesAppearance()
         self.position = position
         self.width = width
         self.height = height
@@ -40,14 +46,19 @@ class Axes:
 
     def draw(self):
         self.clip()
+        self._draw_background()
         self._draw_divlines()
         self._draw_axes()
         self._draw_axes_values()
         self.unclip()
 
+    def _draw_background(self):
+        self.appearance.background.apply(self.ctx)
+        self.ctx.rectangle(self.position[0], self.position[1], self.width, self.height)
+        self.ctx.fill()
+
     def _draw_divlines(self):
-        self.ctx.set_line_width(2)
-        self.ctx.set_source_rgba(*Color(0.8, 0.8, 1))
+        self.appearance.divlines.apply(self.ctx)
         for p in self._get_divs(self.start[0], self.extent[0], self.divisions[0]):
             self.ctx.move_to(*self.transform_from_graph((p, self.start[1])))
             self.ctx.line_to(*self.transform_from_graph((p, self.start[1] + self.extent[1])))
@@ -57,8 +68,7 @@ class Axes:
         self.ctx.stroke()
 
     def _draw_axes(self):
-        self.ctx.set_line_width(2)
-        self.ctx.set_source_rgba(*Color(0.2, 0.2, 0.2))
+        self.appearance.axislines.apply(self.ctx)
         self.ctx.move_to(*self.transform_from_graph((0, self.start[1])))
         self.ctx.line_to(*self.transform_from_graph((0, self.start[1] + self.extent[1])))
         self.ctx.move_to(*self.transform_from_graph((self.start[0], 0)))
@@ -69,10 +79,7 @@ class Axes:
         self.ctx.stroke()
 
     def _draw_axes_values(self):
-        self.ctx.set_line_width(2)
-        self.ctx.set_source_rgba(*Color(0.2, 0.2, 0.2))
-        self.ctx.set_font_size(15)
-        self.ctx.select_font_face('Arial', cairo.FONT_SLANT_NORMAL, cairo.FONT_WEIGHT_BOLD)
+        self.appearance.axislines.apply(self.ctx)
 
         xoffset = 10
         yoffset = 10
@@ -80,7 +87,11 @@ class Axes:
             if abs(p)>0.001:
                 position = self.transform_from_graph((p, 0))
                 pstr = self._format_div(p, self.divisions[0])
-                text(self.ctx, pstr, position[0] - xoffset, position[1] + yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP)
+                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset))\
+                    .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
+                          self.appearance.fontparams.slant)\
+                    .size(self.appearance.fontparams.size).align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
+                self.ctx.new_path()
                 self.ctx.move_to(position[0], position[1])
                 self.ctx.line_to(position[0], position[1] + yoffset)
                 self.ctx.stroke()
@@ -89,7 +100,11 @@ class Axes:
             if abs(p)>0.001:
                 position = self.transform_from_graph((0, p))
                 pstr = self._format_div(p, self.divisions[1])
-                text(self.ctx, pstr, position[0] - xoffset, position[1] + yoffset, alignx=drawing.RIGHT, aligny=drawing.TOP)
+                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset))\
+                    .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
+                          self.appearance.fontparams.slant)\
+                    .size(self.appearance.fontparams.size).align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
+                self.ctx.new_path()
                 self.ctx.move_to(position[0], position[1])
                 self.ctx.line_to(position[0] - xoffset, position[1])
                 self.ctx.stroke()

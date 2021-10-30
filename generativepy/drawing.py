@@ -33,6 +33,16 @@ SEGMENT = 0
 RAY = 1
 LINE = 2
 
+## Font styles
+
+FONT_WEIGHT_NORMAL = 0
+FONT_WEIGHT_BOLD = 1
+
+FONT_SLANT_NORMAL = 0
+FONT_SLANT_ITALIC = 1
+FONT_SLANT_OBLIQUE = 2
+
+
 def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, starty=0, background=None, flip=False):
     '''
     Set up the context initial sclaling and background color

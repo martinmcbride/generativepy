@@ -4,8 +4,11 @@
 # License: MIT
 import cairo
 import math
+from dataclasses import dataclass
 from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
 from generativepy.drawing import WINDING
+from generativepy.drawing import FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD
+from generativepy.drawing import FONT_SLANT_NORMAL, FONT_SLANT_ITALIC, FONT_SLANT_OBLIQUE
 from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
 from generativepy.drawing import LINE, RAY, SEGMENT
 from generativepy.color import Color
@@ -92,6 +95,7 @@ class LinearGradient(Pattern):
         return self
 
 
+@dataclass
 class FillParameters:
     '''
     Stores parameters for filling a shape, and can apply them to a context
@@ -123,6 +127,7 @@ class FillParameters:
             ctx.set_fill_rule(cairo.FillRule.EVEN_ODD)
 
 
+@dataclass
 class StrokeParameters:
     '''
     Stores parameters for stroking a shape, and can apply them to a context
@@ -175,6 +180,45 @@ class StrokeParameters:
             ctx.set_line_join(cairo.LineJoin.MITER)
 
         ctx.set_miter_limit(self.miter_limit)
+
+
+@dataclass
+class FontParameters:
+    '''
+    Stores parameters for font, and can apply them to a context
+    '''
+
+    def __init__(self, font=None, weight=None, slant=None, size=None):
+        '''
+        Set parameters
+        :param font: name of font face
+        :param weight: font weight
+        :param slant:  font slant
+        :param size: font size
+        '''
+        self.font = 'Arial' if font is None else font
+        self.weight = FONT_WEIGHT_NORMAL if weight is None else weight
+        self.slant = FONT_SLANT_NORMAL if slant is None else slant
+        self.size = 10 if size is None else size
+
+    def apply(self, ctx):
+        '''
+        Apply the settings to a context. After this, any stroke operation using the context will use the
+        settings.
+        :param ctx: The context to apply the settings to.
+        '''
+        c_weight = cairo.FONT_WEIGHT_NORMAL
+        if self.weight == FONT_WEIGHT_BOLD:
+            c_weight = cairo.FONT_WEIGHT_BOLD
+
+        c_slant = cairo.FONT_SLANT_NORMAL
+        if self.slant == FONT_SLANT_ITALIC:
+            c_slant = cairo.FONT_SLANT_ITALIC
+        elif self.slant == FONT_SLANT_OBLIQUE:
+            c_slant = cairo.FONT_SLANT_OBLIQUE
+
+        ctx.select_font_face(self.font, c_slant, c_weight)
+        ctx.set_font_size(self.size)
 
 
 class Shape():
@@ -343,6 +387,8 @@ class Text(Shape):
         self.position = (0, 0)
         self._size = None
         self._font = None
+        self._weight = None
+        self._slant = None
         self.alignx = LEFT
         self.aligny = BASELINE
         self._flip = False
@@ -350,11 +396,7 @@ class Text(Shape):
 
     def add(self):
         self._do_path_()
-        if self._font:
-            self.ctx.select_font_face(self._font, cairo.FONT_SLANT_NORMAL,
-                                 cairo.FONT_WEIGHT_BOLD)
-        if self._size:
-            self.ctx.set_font_size(self._size)
+        FontParameters(font=self._font, size=self._size, weight=self._weight, slant=self._slant).apply(self.ctx)
 
         x, y = self.position
         x += self._offset[0]
@@ -390,8 +432,10 @@ class Text(Shape):
         self.position = position
         return self
 
-    def font(self, font):
+    def font(self, font, weight=None, slant=None):
         self._font = font
+        self._weight = weight
+        self._slant = slant
         return self
 
     def size(self, size):
@@ -458,7 +502,7 @@ class Text(Shape):
 
 
 
-def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
+def text(ctx, txt, x, y, font=None, size=None, weight=None, slant=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
     '''
     Draw text using ths supplied ctx
     :param ctx: The context
@@ -467,6 +511,8 @@ def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=B
     :param y: y position
     :param font: font name, string
     :param size: text size
+    :param weight: text weight
+    :param slant: text slant
     :param color: text colour, Color
     :param alignx: x alignment
     :param aligny: y alignemen
@@ -476,7 +522,7 @@ def text(ctx, txt, x, y, font=None, size=None, color=None, alignx=LEFT, aligny=B
 
     shape = Text(ctx).of(txt, (x, y)).align(alignx, aligny)
     if font:
-        shape = shape.font(font)
+        shape = shape.font(font, weight, slant)
     if size:
         shape = shape.size(size)
     if flip:
