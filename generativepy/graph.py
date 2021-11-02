@@ -340,11 +340,11 @@ class Plot(Shape):
             self.ctx.close_path()
         return self
 
-    def stroke(self, color=None, line_width=2, dash=None, cap=None, join=None, miter_limit=None):
+    def stroke(self, pattern=None, line_width=2, dash=None, cap=None, join=None, miter_limit=None):
         '''
         Stroke overrides the Shape stroke() method. It clips the stroke to the area of the axes. This ensures that if
         the curve goes out of range it will not interfere with other parts of the image.
-        :param color:
+        :param pattern:
         :param line_width:
         :param dash:
         :param cap:
@@ -353,7 +353,7 @@ class Plot(Shape):
         :return:
         '''
         self.axes.clip()
-        super().stroke(color, line_width, dash, cap, join, miter_limit)
+        super().stroke(pattern, line_width, dash, cap, join, miter_limit)
         self.axes.unclip()
 
 
