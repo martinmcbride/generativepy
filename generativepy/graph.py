@@ -44,6 +44,7 @@ class Axes:
         self.divisions = (1, 1)
         self.subdivisons = False
         self.subdivisionfactor = 1
+        self.text_height = 0
 
     def of_start(self, start):
         '''
@@ -157,6 +158,14 @@ class Axes:
         Draw the axes
         :return:
         '''
+
+        # Get the text height using the selected font. This is used to control text offset and other sizes.
+        _, self.text_height = Text(self.ctx).of('0', (0, 0)) \
+                                .font(self.appearance.fontparams.font,
+                                      self.appearance.fontparams.weight,
+                                      self.appearance.fontparams.slant) \
+                                .size(self.appearance.fontparams.size * self.appearance.featurescale) \
+                                .get_size()
         self.clip()
         self._draw_background()
         if self.subdivisons:
@@ -205,7 +214,7 @@ class Axes:
         self.ctx.line_to(*self.transform_from_graph((self.start[0] + self.extent[0], 0)))
         self.ctx.stroke()
         self.ctx.new_path()
-        self.ctx.arc(*self.transform_from_graph((0, 0)), 10, 0, 2 * math.pi)
+        self.ctx.arc(*self.transform_from_graph((0, 0)), self.text_height/1.1, 0, 2 * math.pi)
         self.ctx.stroke()
 
     def _draw_axes_values(self):
@@ -213,8 +222,8 @@ class Axes:
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
 
-        xoffset = 10
-        yoffset = 10
+        xoffset = self.text_height/1.1
+        yoffset = self.text_height/1.1
         for p in self._get_divs(self.start[0], self.extent[0], self.divisions[0]):
             if abs(p)>0.001:
                 position = self.transform_from_graph((p, 0))

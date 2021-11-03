@@ -425,6 +425,23 @@ class Text(Shape):
             self.ctx.text_path(self.text)
         return self
 
+    def get_metrics(self):
+        '''
+        Get the size of the text.
+        :return: a tuple (x_bearing, y_bearing, width, height, x_advance, y_advance)
+        '''
+        FontParameters(font=self._font, size=self._size, weight=self._weight, slant=self._slant).apply(self.ctx)
+        return self.ctx.text_extents(self.text)
+
+    def get_size(self):
+        '''
+        Get the size of the text.
+        :return: a tuple (width)
+        '''
+        FontParameters(font=self._font, size=self._size, weight=self._weight, slant=self._slant).apply(self.ctx)
+        extents = self.ctx.text_extents(self.text)
+        return extents[2], extents[3]
+
     def of(self, text, position):
         self.text = text
         self.position = position
