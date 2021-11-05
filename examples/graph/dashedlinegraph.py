@@ -1,7 +1,6 @@
-from generativepy import graph
 from generativepy.drawing import make_image, setup, ROUND, BUTT
 from generativepy.color import Color
-from generativepy.graph import Axes
+from generativepy.graph import Axes, Plot
 
 '''
 Create a simple graph with dashed lines
@@ -9,17 +8,17 @@ Create a simple graph with dashed lines
 
 def draw(ctx, width, height, frame_no, frame_count):
 
-    setup(ctx, width, height, width=12, startx=-6, starty=-6, background=Color(1), flip=True)
+    setup(ctx, width, height, background=Color(1))
 
     # Creates a set of axes.
     # Use the default size of 10 units, but offset the start toplace the origin inthe centre
-    axes = Axes(ctx, start=(-5, -5))
+    axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
     axes.draw()
 
-    # Add various curves
-    graph.plot_curve(axes, lambda x: x*x, line_width=2, dash=[5])
-    graph.plot_xy_curve(axes, lambda x: 1.5**x, line_color=Color(0, 0, 0.5), line_width=2, dash=[5, 5, 10, 5], cap=ROUND)
-    graph.plot_polar_curve(axes, lambda x: 2*x, line_color=Color(0, 0.5, 0), line_width=2, dash=[5], cap=BUTT)
+    Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'), line_width=3, dash=[5])
+    Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'), line_width=5, dash=[10, 10, 20, 10],
+                                                         cap=ROUND)
+    Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'), line_width=4, dash=[5], cap=BUTT)
 
 
 make_image("/tmp/dashedlinegraph.png", draw, 600, 600)

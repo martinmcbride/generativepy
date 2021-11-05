@@ -1,7 +1,7 @@
 from generativepy import graph
 from generativepy.drawing import make_image, setup
 from generativepy.color import Color
-from generativepy.graph import Axes
+from generativepy.graph import Axes, Plot
 
 '''
 Create a simple graph
@@ -9,17 +9,17 @@ Create a simple graph
 
 def draw(ctx, width, height, frame_no, frame_count):
 
-    setup(ctx, width, height, width=12, startx=-6, starty=-6, background=Color(1), flip=True)
+    setup(ctx, width, height, background=Color(1))
 
     # Creates a set of axes.
     # Use the default size of 10 units, but offset the start toplace the origin inthe centre
-    axes = Axes(ctx, start=(-5, -5))
+    axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
     axes.draw()
 
     # Add various curves
-    graph.plot_curve(axes, lambda x: x*x)
-    graph.plot_xy_curve(axes, lambda x: 1.5**x, line_color=Color(0, 0, 0.5))
-    graph.plot_polar_curve(axes, lambda x: 2*x, line_color=Color(0, 0.5, 0))
+    Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'))
+    Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'))
+    Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'))
 
 
 make_image("/tmp/simplegraph.png", draw, 500, 500)
