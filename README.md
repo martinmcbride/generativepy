@@ -2,20 +2,13 @@
 
 Generative art and graphing library for creating images and animations.
 
-## Breaking changes
+## Version 3.0 notes
 
-The graph module in this repo has been updated in anticipation of V3. This will offer significant improvements going forward:
+Version 3 introduces a few breaking changes compared to 2.x, mainly to improve the graph module.
 
-* Fluent interface for axes will allow for more formatting options to be added in the future.
-* Line thickness and text sizes are controlled by current context, rather than relying on magic scaling factors.
-* Graph plots are now Shapes (similar to Polygons) to more consistent with other items.
-* This will allow for other axis styles (eg logarithmic and polar plots) and other plot types (bar, scatter etc) in the future. 
-
-*These are breaking changes, but affecting the graph module only. They should also be regarded as experimental, as they might change in the final release. The documentation on pythoninformer.com has not been updated and still reflects V2.5.*
-
-It is recommended that you continue working with V2.5 for now, until V3 is released. The code can be donwloaded from PyPi.org and the documentation on pythoninformer is correct.
-
-But if you are keen to try out the changes, feel free to dig into the code, and also look at test_graph_module.py in the imagetests folder, that shows how the new interface is used.
+* The `Axes` class has changed. The main breaking change is that it now uses the current user coordinates to control line thickness and text size, just like most other classes. Previously it used a crazy system of guesswork and magic scaling factors. On the plus side, it now also allows much more control over the axes appearance.
+* The previous graph plotting functions have gone. Plotting is now done by a `Plot` class, that works in a similar way to other shape classes.
+* A minor change is that the `color` parameter has been renamed to `pattern` in most places, to reflect the fact that it can now be a gradient (and hopefully soon image, vector pattern and mesh fills will be supported). This will only affect code that uses a named parameter for `color`. The parameter itself can still accept `Color` objects, as well as the new `LinearGradient` objects.
 
 ## Usage
 
