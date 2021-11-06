@@ -16,15 +16,15 @@ def draw(ctx, width, height, frame_no, frame_count):
     ctx.fill()
 
     # Ellipse objects can be filled, stroked, filled and stroked.
-    Ellipse(ctx).of_center_radius((2.5, 1), 0.7, 0.3).fill_stroke(Color(0, 0, 1), Color(0), 0.05)
+    Ellipse(ctx).of_center_radius((2.5, 1), 0.7, 0.3).fill(Color(0, 0, 1)).stroke(Color(0), 0.05)
     Ellipse(ctx).of_center_radius((4, 1), 0.7, 0.3).as_arc(0, 1).stroke(Color(0, 0.5, 0), 0.05)
 
     Ellipse(ctx).of_center_radius((1, 2.5), 0.7, 0.3).as_sector(1, 3).stroke(Color('orange'), 0.05)
     Ellipse(ctx).of_center_radius((2.5, 2.5), 0.7, 0.3).as_sector(2, 4.5).fill(Color('cadetblue'))
-    Ellipse(ctx).of_center_radius((4, 2.5), 0.7, 0.3).as_sector(2.5, 6).fill_stroke(Color('yellow'), Color('magenta'), 0.05)
+    Ellipse(ctx).of_center_radius((4, 2.5), 0.7, 0.3).as_sector(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
     Ellipse(ctx).of_center_radius((1, 4), 0.7, 0.3).as_segment(1, 3).stroke(Color('orange'), 0.05)
     Ellipse(ctx).of_center_radius((2.5, 4), 0.7, 0.3).as_segment(2, 4.5).fill(Color('cadetblue'))
-    Ellipse(ctx).of_center_radius((4, 4), 0.7, 0.3).as_segment(2.5, 6).fill_stroke(Color('yellow'), Color('magenta'), 0.05)
+    Ellipse(ctx).of_center_radius((4, 4), 0.7, 0.3).as_segment(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
 make_image("/tmp/geometry-ellipses.png", draw, 500, 500)

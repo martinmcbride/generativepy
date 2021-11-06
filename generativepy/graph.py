@@ -43,7 +43,7 @@ class Axes:
         self.extent = (10, 10)
         self.divisions = (1, 1)
         self.subdivisons = False
-        self.subdivisionfactor = 1
+        self.subdivisionfactor = (1, 1)
         self.text_height = 0
 
     def of_start(self, start):
@@ -102,13 +102,13 @@ class Axes:
         self.appearance.background = FillParameters(pattern)
         return self
 
-    def text_color(self, color):
+    def text_color(self, pattern):
         '''
         Sets the color of the axes text
-        :param color: color
+        :param pattern: color or pattern
         :return: self
         '''
-        self.appearance.textcolor = color
+        self.appearance.textcolor = pattern
         return self
 
     def axis_linestyle(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):

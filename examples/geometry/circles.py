@@ -16,15 +16,15 @@ def draw(ctx, width, height, frame_no, frame_count):
     ctx.fill()
 
     # Circle objects can be filled, stroked, filled and stroked.
-    Circle(ctx).of_center_radius((2.5, 1), 0.7).fill_stroke(Color(0, 0, 1), Color(0), 0.05)
+    Circle(ctx).of_center_radius((2.5, 1), 0.7).fill(Color(0, 0, 1)).stroke(Color(0), 0.05)
     Circle(ctx).of_center_radius((4, 1), 0.7).as_arc(0, 1).stroke(Color(0, 0.5, 0), 0.05)
 
     Circle(ctx).of_center_radius((1, 2.5), 0.7).as_sector(1, 3).stroke(Color('orange'), 0.05)
     Circle(ctx).of_center_radius((2.5, 2.5), 0.7).as_sector(2, 4.5).fill(Color('cadetblue'))
-    Circle(ctx).of_center_radius((4, 2.5), 0.7).as_sector(2.5, 6).fill_stroke(Color('yellow'), Color('magenta'), 0.05)
+    Circle(ctx).of_center_radius((4, 2.5), 0.7).as_sector(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
     Circle(ctx).of_center_radius((1, 4), 0.7).as_segment(1, 3).stroke(Color('orange'), 0.05)
     Circle(ctx).of_center_radius((2.5, 4), 0.7).as_segment(2, 4.5).fill(Color('cadetblue'))
-    Circle(ctx).of_center_radius((4, 4), 0.7).as_segment(2.5, 6).fill_stroke(Color('yellow'), Color('magenta'), 0.05)
+    Circle(ctx).of_center_radius((4, 4), 0.7).as_segment(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
 make_image("/tmp/geometry-circles.png", draw, 500, 500)

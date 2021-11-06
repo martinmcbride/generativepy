@@ -265,6 +265,7 @@ class Shape():
         self.ctx.stroke_preserve()
         return self
 
+    # Deprecated, use fill() and stroke()
     def fill_stroke(self, fill_color, stroke_color, line_width=1):
         self.fill(fill_color)
         self.stroke(stroke_color, line_width)

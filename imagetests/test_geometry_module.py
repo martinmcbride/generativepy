@@ -198,18 +198,16 @@ class TestGeometryImages(unittest.TestCase):
             ctx.fill()
 
             # Ellipse objects can be filled, stroked, filled and stroked.
-            Ellipse(ctx).of_center_radius((2.5, 1), 0.7, 0.3).fill_stroke(Color(0, 0, 1), Color(0), 0.05)
+            Ellipse(ctx).of_center_radius((2.5, 1), 0.7, 0.3).fill(Color(0, 0, 1)).stroke(Color(0), 0.05)
             Ellipse(ctx).of_center_radius((4, 1), 0.7, 0.3).as_arc(0, 1).stroke(Color(0, 0.5, 0), 0.05)
 
             Ellipse(ctx).of_center_radius((1, 2.5), 0.7, 0.3).as_sector(1, 3).stroke(Color('orange'), 0.05)
             Ellipse(ctx).of_center_radius((2.5, 2.5), 0.7, 0.3).as_sector(2, 4.5).fill(Color('cadetblue'))
-            Ellipse(ctx).of_center_radius((4, 2.5), 0.7, 0.3).as_sector(2.5, 6).fill_stroke(Color('yellow'),
-                                                                                            Color('magenta'), 0.05)
+            Ellipse(ctx).of_center_radius((4, 2.5), 0.7, 0.3).as_sector(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
             Ellipse(ctx).of_center_radius((1, 4), 0.7, 0.3).as_segment(1, 3).stroke(Color('orange'), 0.05)
             Ellipse(ctx).of_center_radius((2.5, 4), 0.7, 0.3).as_segment(2, 4.5).fill(Color('cadetblue'))
-            Ellipse(ctx).of_center_radius((4, 4), 0.7, 0.3).as_segment(2.5, 6).fill_stroke(Color('yellow'),
-                                                                                           Color('magenta'), 0.05)
+            Ellipse(ctx).of_center_radius((4, 4), 0.7, 0.3).as_segment(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
         def creator(file):
             make_image(file, draw, 500, 500)
@@ -317,18 +315,16 @@ class TestGeometryImages(unittest.TestCase):
             ctx.fill()
 
             # Circle objects can be filled, stroked, filled and stroked.
-            Circle(ctx).of_center_radius((2.5, 1), 0.7).fill_stroke(Color(0, 0, 1), Color(0), 0.05)
+            Circle(ctx).of_center_radius((2.5, 1), 0.7).fill(Color(0, 0, 1)).stroke(Color(0), 0.05)
             Circle(ctx).of_center_radius((4, 1), 0.7).as_arc(0, 1).stroke(Color(0, 0.5, 0), 0.05)
 
             Circle(ctx).of_center_radius((1, 2.5), 0.7).as_sector(1, 3).stroke(Color('orange'), 0.05)
             Circle(ctx).of_center_radius((2.5, 2.5), 0.7).as_sector(2, 4.5).fill(Color('cadetblue'))
-            Circle(ctx).of_center_radius((4, 2.5), 0.7).as_sector(2.5, 6).fill_stroke(Color('yellow'), Color('magenta'),
-                                                                                      0.05)
+            Circle(ctx).of_center_radius((4, 2.5), 0.7).as_sector(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
             Circle(ctx).of_center_radius((1, 4), 0.7).as_segment(1, 3).stroke(Color('orange'), 0.05)
             Circle(ctx).of_center_radius((2.5, 4), 0.7).as_segment(2, 4.5).fill(Color('cadetblue'))
-            Circle(ctx).of_center_radius((4, 4), 0.7).as_segment(2.5, 6).fill_stroke(Color('yellow'), Color('magenta'),
-                                                                                     0.05)
+            Circle(ctx).of_center_radius((4, 4), 0.7).as_segment(2.5, 6).fill(Color('yellow')).stroke(Color('magenta'), 0.05)
 
         def creator(file):
             make_image(file, draw, 500, 500)
@@ -365,7 +361,7 @@ class TestGeometryImages(unittest.TestCase):
             # Rectangle objects can be filled, stroked, filled and stroked.
             Rectangle(ctx).of_corner_size((3, 1), 1, 1.2).fill(Color(0, .5, 0))
             Rectangle(ctx).of_corner_size((1, 3), 1.2, 1).stroke(Color(0, .5, 0), 0.1)
-            Rectangle(ctx).of_corner_size((3, 3), 1.2, 1).fill_stroke(Color(0, 0, 1), Color(0), 0.2)
+            Rectangle(ctx).of_corner_size((3, 3), 1.2, 1).fill(Color(0, 0, 1)).stroke(Color(0), 0.2)
 
         def creator(file):
             make_image(file, draw, 500, 500)
@@ -385,7 +381,7 @@ class TestGeometryImages(unittest.TestCase):
             # Square objects can be filled, stroked, filled and stroked.
             Square(ctx).of_corner_size((3, 1), 1).fill(Color(0, .5, 0))
             Square(ctx).of_corner_size((1, 3), 1).stroke(Color(0, .5, 0), 0.1)
-            Square(ctx).of_corner_size((3, 3), 1).fill_stroke(Color(0, 0, 1), Color(0), 0.2)
+            Square(ctx).of_corner_size((3, 3), 1).fill(Color(0, 0, 1)).stroke(Color(0), 0.2)
 
         def creator(file):
             make_image(file, draw, 500, 500)
