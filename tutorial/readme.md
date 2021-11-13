@@ -2,4 +2,4 @@
 
 Example files from the [generativepy tutorials](https://pythoninformer.com/generative-art/generativepy-tutorial/).
 
-The corresponding images are in the images folder. 
+The files are in subfolders corresponding to the sections of the tutorial.
