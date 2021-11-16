@@ -11,9 +11,6 @@ from generativepy.geometry import Rectangle
 def draw_map(ctx, pixel_width, pixel_height, frame_no, frame_count):
     setup(ctx, pixel_width, pixel_height, background=Color(0.5))
 
-    color1 = Color('red')
-    color2 = Color('blue')
-
     w = 2
     h = 100
 

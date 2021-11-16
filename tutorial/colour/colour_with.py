@@ -7,11 +7,6 @@ from generativepy.drawing import make_image, setup
 from generativepy.color import Color
 from generativepy.geometry import Rectangle
 
-
-from generativepy.drawing import make_image, setup
-from generativepy.color import Color
-from generativepy.geometry import Rectangle
-
 def draw_with(ctx, pixel_width, pixel_height, frame_no, frame_count):
     setup(ctx, pixel_width, pixel_height, background=Color(1))
 
