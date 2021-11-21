@@ -1,6 +1,6 @@
 import unittest
 import math
-from generativepy.drawing import setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC
+from generativepy.drawing import setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.graph import Axes, Plot
@@ -100,7 +100,7 @@ class TestGraphImages(unittest.TestCase):
                 .with_subdivisions((2, 5))\
                 .background(Color('wheat'))\
                 .text_color(Color('darkgreen'))\
-                .text_style(font="Times", size=20, slant=FONT_SLANT_ITALIC)\
+                .text_style(font="Times", size=20, slant=FONT_SLANT_ITALIC, weight=FONT_WEIGHT_NORMAL)\
                 .axis_linestyle(Color('darkblue'), line_width=3)\
                 .division_linestyle(Color('steelblue'), line_width=3)\
                 .subdivision_linestyle(Color('lightblue'), line_width=2, dash=[4, 2])

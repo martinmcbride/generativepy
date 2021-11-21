@@ -10,7 +10,7 @@ import copy
 from dataclasses import dataclass
 
 from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters
-from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_WEIGHT_NORMAL, FONT_SLANT_NORMAL
+from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL
 from generativepy.color import Color
 from generativepy import drawing
 
@@ -111,7 +111,7 @@ class Axes:
         self.appearance.textcolor = pattern
         return self
 
-    def text_style(self, font="Arial", weight=FONT_WEIGHT_NORMAL, slant=FONT_SLANT_NORMAL, size=15):
+    def text_style(self, font="Arial", weight=FONT_WEIGHT_BOLD, slant=FONT_SLANT_NORMAL, size=15):
         '''
         Set the style of the axis text
         :param font: Font name
