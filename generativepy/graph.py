@@ -111,7 +111,7 @@ class Axes:
         self.appearance.textcolor = pattern
         return self
 
-    def text_style(self, font="Arial", weight=FONT_WEIGHT_BOLD, slant=FONT_SLANT_NORMAL, size=15):
+    def text_style(self, font="arial", weight=FONT_WEIGHT_BOLD, slant=FONT_SLANT_NORMAL, size=15):
         '''
         Set the style of the axis text
         :param font: Font name
