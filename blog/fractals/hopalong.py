@@ -12,16 +12,16 @@ import numpy as np
 import math
 
 MAX_COUNT = 10000000
-A = -11
-B = 0.05
-C = 0.5
+A = -55
+B = -1
+C = 42
 
 def sign(x):
     if x > 0:
         return 1
     if x < 0:
         return -1
-    return(0)
+    return 0
 
 def colorise(counts):
     counts = np.reshape(counts, (counts.shape[0], counts.shape[1]))
@@ -36,9 +36,9 @@ def colorise(counts):
     return outarray
 
 def paint(image, pixel_width, pixel_height, frame_no, frame_count):
-    scaler = Scaler(pixel_width, pixel_height, width=50, startx=-29, starty=-28)
+    scaler = Scaler(pixel_width, pixel_height, width=1000, startx=-500, starty=-500)
 
-    x = 0
+    x = -1
     y = 0
     for i in range(MAX_COUNT):
         x, y = y-math.sqrt(abs(B*x-C))*sign(x), A-x

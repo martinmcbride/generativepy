@@ -45,7 +45,7 @@ def colorise(counts):
 
 data = make_nparray_data(paint, 800, 600, channels=1)
 
-filename = temp_file('tinkerbell.dat')
+filename = temp_file('burning-ship.dat')
 save_nparray(filename, data)
 data = load_nparray(filename)
 
