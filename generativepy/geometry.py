@@ -437,7 +437,7 @@ class Text(Shape):
     def get_size(self):
         '''
         Get the size of the text.
-        :return: a tuple (width)
+        :return: a tuple (width, height)
         '''
         FontParameters(font=self._font, size=self._size, weight=self._weight, slant=self._slant).apply(self.ctx)
         extents = self.ctx.text_extents(self.text)
