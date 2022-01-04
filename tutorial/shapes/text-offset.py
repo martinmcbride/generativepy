@@ -9,7 +9,7 @@ from generativepy.geometry import Text, Circle, Line
 import math
 
 
-def draw_alpha(ctx, pixel_width, pixel_height, frame_no, frame_count):
+def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
     setup(ctx, pixel_width, pixel_height, background=Color(1))
 
     a = (100, 100)
@@ -31,4 +31,4 @@ def draw_alpha(ctx, pixel_width, pixel_height, frame_no, frame_count):
     Text(ctx).of("C", c).font("Arial").size(40).offset_towards(d, 30).fill(Color(0))
 
 
-make_image("text-offset.png", draw_alpha, 700, 200)
+make_image("text-offset.png", draw, 700, 300)

@@ -8,7 +8,7 @@ from generativepy.color import Color
 from generativepy.geometry import Text
 
 
-def draw_alpha(ctx, pixel_width, pixel_height, frame_no, frame_count):
+def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
     setup(ctx, pixel_width, pixel_height, background=Color(1))
 
     Text(ctx).of("Filled Times", (100, 100)).font("Times").size(40).fill(Color('blue'))
@@ -21,4 +21,4 @@ def draw_alpha(ctx, pixel_width, pixel_height, frame_no, frame_count):
     Text(ctx).of("Dashed", (100, 450)).font("Arial").size(60).stroke(Color('black'), 3, dash=[4])
 
 
-make_image("text-drawing.png", draw_alpha, 500, 500)
+make_image("text-drawing.png", draw, 500, 500)
