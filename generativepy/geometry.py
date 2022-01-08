@@ -1061,3 +1061,44 @@ class Turtle():
         self.cap = cap
         return self
 
+class Transform():
+    '''
+    Enapsulates a Pycairo transform.
+    Implements context save on entry, context restore on exit.
+    active member variable checks that a restore always matches a save.
+    '''
+
+    def __init__(self, ctx):
+        self.ctx = ctx
+        self.ctx.save()
+        self.active = True
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.active:
+            self.ctx.restore()
+            self.active = False
+        else:
+            raise RuntimeError('Transform exit called twice')
+
+    def scale(self, sx, sy, centre=(0, 0)):
+        self.ctx.translate(centre[0], centre[1])
+        self.ctx.scale(sx, sy)
+        self.ctx.translate(-centre[0], -centre[1])
+        return self
+
+    def rotate(self, angle, centre=(0, 0)):
+        self.ctx.translate(centre[0], centre[1])
+        self.ctx.rotate(angle)
+        self.ctx.translate(-centre[0], -centre[1])
+        return self
+
+    def translate(self, tx, ty):
+        self.ctx.translate(tx, ty)
+        return self
+
+    def matrix(self, m):
+        self.ctx.set_matrix(cairo.Matrix(*m))
+        return self

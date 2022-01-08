@@ -4,7 +4,7 @@ from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.geometry import Image, Text, Circle, circle, Bezier, Polygon, Square, square, Rectangle,\
                                   rectangle, Line, line, Ellipse, ellipse, tick, paratick, arrowhead, polygon,\
-                                  angle_marker, Path, Triangle, triangle, Turtle
+                                  angle_marker, Path, Triangle, triangle, Turtle, Transform
 import math
 
 """
@@ -568,3 +568,47 @@ class TestGeometryImages(unittest.TestCase):
             make_image(file, draw, 500, 500)
 
         self.assertTrue(run_image_test('test_turtle.png', creator))
+
+    def test_transform(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, width=500, background=Color(0.8))
+
+            with Transform(ctx) as transform:
+                Text(ctx).of('A', (10, 100)).size(80).fill(Color('blue'))
+
+            Text(ctx).of('B', (110, 100)).size(80).fill(Color('black'))
+            with Transform(ctx) as transform:
+                transform.scale(0.75, 1.5)
+                Text(ctx).of('B', (110, 100)).size(80).fill(Color('blue', 0.5))
+
+            Text(ctx).of('C', (210, 100)).size(80).fill(Color('black'))
+            Circle(ctx).of_center_radius((250, 80), 5).fill(Color('red'))
+            with Transform(ctx).scale(0.75, 1.5, (250, 80)):
+                Text(ctx).of('C', (210, 100)).size(80).fill(Color('blue', 0.5))
+
+            Text(ctx).of('D', (110, 200)).size(80).fill(Color('black'))
+            with Transform(ctx) as transform:
+                transform.translate(20, 30)
+                Text(ctx).of('D', (110, 200)).size(80).fill(Color('blue', 0.5))
+
+            Text(ctx).of('E', (110, 300)).size(80).fill(Color('black'))
+            with Transform(ctx) as transform:
+                transform.rotate(0.1)
+                Text(ctx).of('E', (110, 300)).size(80).fill(Color('blue', 0.5))
+
+            Text(ctx).of('F', (210, 300)).size(80).fill(Color('black'))
+            Circle(ctx).of_center_radius((250, 80), 5).fill(Color('red'))
+            with Transform(ctx).rotate(0.1, (210, 300)):
+                Text(ctx).of('F', (210, 300)).size(80).fill(Color('blue', 0.5))
+
+            Text(ctx).of('G', (210, 400)).size(80).fill(Color('black'))
+            Circle(ctx).of_center_radius((250, 80), 5).fill(Color('red'))
+            with Transform(ctx).matrix([1, 0.5, 0, 1, 0, 0]):
+                Text(ctx).of('G', (210, 400)).size(80).fill(Color('blue', 0.5))
+
+
+        def creator(file):
+            make_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test('test_transform.png', creator))
+
