@@ -1100,5 +1100,7 @@ class Transform():
         return self
 
     def matrix(self, m):
-        self.ctx.set_matrix(cairo.Matrix(*m))
+        new_matrix = cairo.Matrix(*m)
+        old_matrix = self.ctx.get_matrix()
+        self.ctx.set_matrix(new_matrix*old_matrix)
         return self
