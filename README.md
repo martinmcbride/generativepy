@@ -15,7 +15,14 @@ Version 3 introduces a few breaking changes compared to 2.x, mainly to improve t
 generativepy is a library rather an application. It provides useful functions and example code that allow you to
 create images and videos by writing simple Python scripts.
 
-The library uses [pycairo](https://pycairo.readthedocs.io/en/latest/index.html) for drawing graphics.
+The library requires:
+
+* [pycairo](https://pycairo.readthedocs.io/en/latest/index.html).
+* NumPy.
+* Pillow.
+* easy_vector.
+* moderngl (only required for 3D imaging).
+* Command line application gifsicle (only needed for GIF creation).
 
 Main functionality:
 
@@ -33,7 +40,7 @@ Visit [pythoninformer.com](http://www.pythoninformer.com/generative-art/) for de
 
 * [generativepy reference](http://www.pythoninformer.com/generative-art/generativepy/).
 * [generativepy tutorials](http://www.pythoninformer.com/generative-art/generativepy-tutorial/).
-* [Generative art examples](http://www.pythoninformer.com/generative-art/generativepy-art/).
-* [Fractal examples](http://www.pythoninformer.com/generative-art/fractals/).
+
+There are also some art examples in the Generative Art section of [my blog](https://martinmcbride.org/).
 
 For detailed information of pycairo see the [Computer graphics in Python](https://leanpub.com/computergraphicsinpython) ebook.
