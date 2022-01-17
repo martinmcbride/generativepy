@@ -847,109 +847,214 @@ def ellipse(ctx, center, radius_x, radius_y):
     Ellipse(ctx).of_center_radius(center, radius_x, radius_y).add()
 
 
+class AngleMarker(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.a = (0, 0)
+        self.b = (0, 0)
+        self.c = (0, 0)
+        self.radius = 8
+        self.count = 1
+        self.gap = 2
+        self.right_angle = False
+
+    def add(self):
+        self._do_path_()
+        ang1 = math.atan2(self.a[1] - self.b[1], self.a[0] - self.b[0])
+        ang2 = math.atan2(self.c[1] - self.b[1], self.c[0] - self.b[0])
+        if self.right_angle:
+            self.radius /= 2
+            v = (math.cos(ang1), math.sin(ang1))
+            pv = (math.cos(ang2), math.sin(ang2))
+            polygon(self.ctx, [(self.b[0] + v[0] * self.radius, self.b[1] + v[1] * self.radius),
+                               (self.b[0] + (v[0] + pv[0]) * self.radius, self.b[1] + (v[1] + pv[1]) * self.radius),
+                               (self.b[0] + pv[0] * self.radius, self.b[1] + pv[1] * self.radius)], False)
+        elif self.count == 2:
+            self.ctx.arc(self.b[0], self.b[1], self.radius - self.gap / 2, ang1, ang2)
+            self.ctx.new_sub_path()
+            self.ctx.arc(self.b[0], self.b[1], self.radius + self.gap / 2, ang1, ang2)
+        elif self.count == 3:
+            self.ctx.arc(self.b[0], self.b[1], self.radius - self.gap, ang1, ang2)
+            self.ctx.new_sub_path()
+            self.ctx.arc(self.b[0], self.b[1], self.radius, ang1, ang2)
+            self.ctx.new_sub_path()
+            self.ctx.arc(self.b[0], self.b[1], self.radius + self.gap, ang1, ang2)
+        else:
+            self.ctx.arc(self.b[0], self.b[1], self.radius, ang1, ang2)
+        return self
+
+    def of_points(self, a, b, c):
+        self.a = a
+        self.b = b
+        self.c = c
+        return self
+
+    def with_radius(self, radius):
+        self.radius = radius
+        return self
+
+    def with_count(self, count):
+        self.count = count
+        return self
+
+    def with_gap(self, gap):
+        self.gap = gap
+        return self
+
+    def as_right_angle(self, right_angle=True):
+        self.right_angle = right_angle
+        return self
+
+
+class TickMarker(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.a = (0, 0)
+        self.b = (0, 0)
+        self.length = 4
+        self.count = 1
+        self.gap = 1
+
+    def add(self):
+        self._do_path_()
+        pmid = ((self.a[0] + self.b[0]) / 2, (self.a[1] + self.b[1]) / 2)
+        # self.length of line
+        l = math.sqrt((self.a[0] - self.b[0]) * (self.a[0] - self.b[0]) + (self.a[1] - self.b[1]) * (self.a[1] - self.b[1]))
+        # Unit vector along line
+        # Draw a tick on a line - deprecated, use TickMarker class instead
+        vector = ((self.b[0] - self.a[0]) / l, (self.b[1] - self.a[1]) / l)
+        # Unit vector perpendicular to line
+        pvector = (-vector[1], vector[0])
+
+        self.ctx.new_path()
+        if self.count == 1:
+            pos = (pmid[0], pmid[1])
+            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
+                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+        elif self.count == 2:
+            pos = (pmid[0] - vector[0] * self.gap / 2, pmid[1] - vector[1] * self.gap / 2)
+            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
+                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+            pos = (pmid[0] + vector[0] * self.gap / 2, pmid[1] + vector[1] * self.gap / 2)
+            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
+                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+        elif self.count == 3:
+            pos = (pmid[0] - vector[0] * self.gap, pmid[1] - vector[1] * self.gap)
+            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
+                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+            pos = (pmid[0], pmid[1])
+            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
+                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+            pos = (pmid[0] + vector[0] * self.gap, pmid[1] + vector[1] * self.gap)
+            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
+                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+        return self
+
+    def of_start_end(self, a, b):
+        self.a = a
+        self.b = b
+        return self
+
+    def with_length(self, length):
+        self.length = length
+        return self
+
+    def with_count(self, count):
+        self.count = count
+        return self
+
+    def with_gap(self, gap):
+        self.gap = gap
+        return self
+
+    def _do_line(self, a, b):
+        self.ctx.move_to(*a)
+        self.ctx.line_to(*b)
+
+
+class ParallelMarker(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.a = (0, 0)
+        self.b = (0, 0)
+        self.length = 4
+        self.count = 1
+        self.gap = 1
+
+    def add(self):
+        self._do_path_()
+        # Midpoint of line
+        pmid = ((self.a[0] + self.b[0]) / 2, (self.a[1] + self.b[1]) / 2)
+        # self.length of line
+        l = math.sqrt((self.a[0] - self.b[0]) * (self.a[0] - self.b[0]) + (self.a[1] - self.b[1]) * (self.a[1] - self.b[1]))
+        # Unit vector along line
+        vector = ((self.b[0] - self.a[0]) / l, (self.b[1] - self.a[1]) / l)
+        # Unit vector perpendicular to line
+        pvector = (-vector[1], vector[0])
+
+        self.ctx.new_path()
+        if self.count == 1:
+            pos = (pmid[0], pmid[1])
+            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
+                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+        elif self.count == 2:
+            pos = (pmid[0] - vector[0] * self.gap / 2, pmid[1] - vector[1] * self.gap / 2)
+            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
+                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+            pos = (pmid[0] + vector[0] * self.gap / 2, pmid[1] + vector[1] * self.gap / 2)
+            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
+                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+        elif self.count == 3:
+            pos = (pmid[0] - vector[0] * self.gap, pmid[1] - vector[1] * self.gap)
+            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
+                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+            pos = (pmid[0], pmid[1])
+            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
+                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+            pos = (pmid[0] + vector[0] * self.gap, pmid[1] + vector[1] * self.gap)
+            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
+                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+        return self
+
+    def of_start_end(self, a, b):
+        self.a = a
+        self.b = b
+        return self
+
+    def with_length(self, length):
+        self.length = length
+        return self
+
+    def with_count(self, count):
+        self.count = count
+        return self
+
+    def with_gap(self, gap):
+        self.gap = gap
+        return self
+    
+    def _do_draw(self, x, y, ox1, oy1, ox2, oy2):
+        self.ctx.move_to(x, y)
+        self.ctx.line_to(x + ox1, y + oy1)
+        self.ctx.move_to(x, y)
+        self.ctx.line_to(x + ox2, y + oy2)
+
+
+
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
-    '''
-    Draw an angle marker
-    :param ctx: Context
-    :param a:
-    :param b:
-    :param c:
-    :param count:
-    :param radius:
-    :param gap:
-    :param rightangle:
-    :return:
-    '''
-    ang1 = math.atan2(a[1] - b[1], a[0] - b[0])
-    ang2 = math.atan2(c[1] - b[1], c[0] - b[0])
-    ctx.new_path()
-    if right_angle:
-        radius /= 2
-        v = (math.cos(ang1), math.sin(ang1))
-        pv = (math.cos(ang2), math.sin(ang2))
-        polygon(ctx, [(b[0] + v[0] * radius, b[1] + v[1] * radius),
-                      (b[0] + (v[0] + pv[0])*radius, b[1] + (v[1]+pv[1])*radius),
-                      (b[0] + pv[0]*radius, b[1] + pv[1]*radius)], False)
-    elif count==2:
-        ctx.arc(b[0], b[1], radius - gap / 2, ang1, ang2)
-        ctx.new_sub_path()
-        ctx.arc(b[0], b[1], radius + gap / 2, ang1, ang2)
-    elif count == 3:
-        ctx.arc(b[0], b[1], radius - gap, ang1, ang2)
-        ctx.new_sub_path()
-        ctx.arc(b[0], b[1], radius, ang1, ang2)
-        ctx.new_sub_path()
-        ctx.arc(b[0], b[1], radius + gap, ang1, ang2)
-    else:
-        ctx.arc(b[0], b[1], radius, ang1, ang2)
+    # Draw an angle marker - deprecated, use AngleMarker class instead
+    AngleMarker(ctx).of_points(a, b, c).with_count(count).with_radius(radius).with_gap(gap).as_right_angle(right_angle).add()
 
 def tick(ctx, a, b, count=1, length=4, gap=1):
-
-    def do_line(ctx, a, b):
-        ctx.move_to(*a)
-        ctx.line_to(*b)
-
-    # Midpoint of line
-    pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
-    # Length of line
-    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
-    # Unit vector along line
-    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
-    # Unit vector perpendicular to line
-    pvector = (-vector[1], vector[0])
-
-    ctx.new_path()
-    if count==1:
-        pos = (pmid[0], pmid[1])
-        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
-    elif count == 2:
-        pos = (pmid[0] - vector[0] * gap / 2, pmid[1] - vector[1] * gap / 2)
-        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
-             (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
-        pos = (pmid[0] + vector[0] * gap / 2, pmid[1] + vector[1] * gap / 2)
-        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2),
-             (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
-    elif count==3:
-        pos = (pmid[0] - vector[0]*gap, pmid[1] - vector[1]*gap)
-        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
-        pos = (pmid[0], pmid[1])
-        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
-        pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
-        do_line(ctx, (pos[0] + pvector[0] * length / 2, pos[1] + pvector[1] * length / 2), (pos[0] - pvector[0] * length / 2, pos[1] - pvector[1] * length / 2))
+    # Draw a tick on a line - deprecated, use TickMarker class instead
+    TickMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
 
 def paratick(ctx, a, b, count=1, length=4, gap=1):
-
-    def draw(x, y, ox1, oy1, ox2, oy2):
-        ctx.move_to(x, y)
-        ctx.line_to(x + ox1, y + oy1)
-        ctx.move_to(x, y)
-        ctx.line_to(x + ox2, y + oy2)
-
-    # Midpoint ofgline
-    pmid = ((a[0] + b[0])/2, (a[1] + b[1])/2)
-    # Length of line
-    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
-    # Unit vector along line
-    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
-    # Unit vector perpendicular to line
-    pvector = (-vector[1], vector[0])
-
-    ctx.new_path()
-    if count==1:
-        pos = (pmid[0], pmid[1])
-        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
-    elif count == 2:
-        pos = (pmid[0] - vector[0] * gap / 2, pmid[1] - vector[1] * gap / 2)
-        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
-        pos = (pmid[0] + vector[0] * gap / 2, pmid[1] + vector[1] * gap / 2)
-        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
-    elif count==3:
-        pos = (pmid[0] - vector[0]*gap, pmid[1] - vector[1]*gap)
-        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
-        pos = (pmid[0], pmid[1])
-        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
-        pos = (pmid[0] + vector[0]*gap, pmid[1] + vector[1]*gap)
-        draw(pos[0], pos[1], (-vector[0]+pvector[0])*length/2, (-vector[1]+pvector[1])*length/2, (-vector[0]-pvector[0])*length/2, (-vector[1]-pvector[1])*length/2)
+    # Draw a parallel market on a line - deprecated, use ParallelMarker class instead
+    ParallelMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
 
 def arrowhead(ctx, a, b, length=4):
 
