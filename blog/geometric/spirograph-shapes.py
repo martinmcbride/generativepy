@@ -7,7 +7,7 @@ from generativepy.color import Color
 from generativepy.drawing import make_image, setup, EVEN_ODD
 import math
 
-from generativepy.geometry import Polygon, Circle
+from generativepy.geometry import Polygon, Circle, Transform
 
 
 def sinsq(x):
@@ -134,4 +134,25 @@ def draw3(ctx, pixel_width, pixel_height, frame_no, frame_count):
 
 
 make_image("spirograph-triangle.png", draw3, 600, 600)
+
+def draw4(ctx, pixel_width, pixel_height, frame_no, frame_count):
+
+    width = 32
+    setup(ctx, pixel_width, pixel_height, width=width, startx=-width/2, starty=-width/2, background=Color(1))
+
+    colors = [Color('magenta', 0.7),
+              Color('red', 0.7),
+              Color('blue', 0.7),
+              Color('gold', 0.7),
+              ]
+
+    for i, color in enumerate(colors):
+        a = 16
+        b = 10
+        d = 7
+        with Transform(ctx).rotate(i*math.pi/6):
+            Polygon(ctx).of_points(create_spiro_triangle(a, b, d)).fill(color, fill_rule=EVEN_ODD)
+
+
+make_image("spirograph-triangle2.png", draw4, 600, 600)
 
