@@ -26,9 +26,9 @@ def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
     width = 32
     setup(ctx, pixel_width, pixel_height, width=width, startx=-width/2, starty=-width/2, background=Color(1))
 
-    a = 16
-    b = 11
-    d = 9
+    a = 14
+    b = 6
+    d = 4
     Polygon(ctx).of_points(create_spiro(a, b, d)).stroke(Color('red'), line_width=0.1)
 
 
