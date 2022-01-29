@@ -864,7 +864,7 @@ class AngleMarker(Shape):
         ang1 = math.atan2(self.a[1] - self.b[1], self.a[0] - self.b[0])
         ang2 = math.atan2(self.c[1] - self.b[1], self.c[0] - self.b[0])
         if self.right_angle:
-            self.radius /= 2
+            self.radius /= 1.4
             v = (math.cos(ang1), math.sin(ang1))
             pv = (math.cos(ang2), math.sin(ang2))
             polygon(self.ctx, [(self.b[0] + v[0] * self.radius, self.b[1] + v[1] * self.radius),
