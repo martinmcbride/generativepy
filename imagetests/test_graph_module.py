@@ -22,14 +22,39 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add various curves
+            axes.clip()
             Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'))
             Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'))
             Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'))
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)
 
         self.assertTrue(run_image_test('test_graph_simple.png', creator))
+
+    def test_graph_multiple(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
+            axes.draw()
+
+            # Add various curves
+            formula1 = lambda x: math.exp(x)
+            formula2 = lambda x: -math.exp(-x)
+            formula3 = lambda x: (math.exp(x) - math.exp(-x)) / 2
+
+            axes.clip()
+            Plot(axes).of_function(formula1, [-5, 3]).stroke(Color(0, 1, 1), line_width=4)
+            Plot(axes).of_function(formula2, [-3, 5]).stroke(Color(1, 0, 1), line_width=4)
+            Plot(axes).of_function(formula3, [-3, 3]).stroke(Color(1, 1, 0), line_width=4)
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test('test_graph_multiple.png', creator))
 
     def test_graph_dashed_line(self):
         def draw(ctx, width, height, frame_no, frame_count):
@@ -40,10 +65,12 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add various curves
+            axes.clip()
             Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'), line_width=3, dash=[5])
             Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'), line_width=5, dash=[10, 10, 20, 10],
                                 cap=ROUND)
             Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'), line_width=4, dash=[5], cap=BUTT)
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)
@@ -60,9 +87,11 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add various curves
+            axes.clip()
             Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'))
             Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'))
             Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'))
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)
@@ -80,7 +109,9 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add curve. Deliberate low precision to test it works
+            axes.clip()
             Plot(axes).of_function(lambda x: math.sin(x*math.pi/180), precision=25).stroke(pattern=Color('red'))
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)
@@ -107,7 +138,9 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add curve
+            axes.clip()
             Plot(axes).of_function(lambda x: math.sin(x*math.pi/180), precision=100).stroke(pattern=Color('red'))
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)
@@ -125,7 +158,9 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add curve. Deliberate low precision to test it works
+            axes.clip()
             Plot(axes).of_function(lambda x: math.sin(x*math.pi/180), precision=25).stroke(pattern=Color('red'))
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 1800, 1800)
@@ -145,9 +180,11 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add various curves
+            axes.clip()
             Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'))
             Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'))
             Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'))
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)
@@ -164,9 +201,11 @@ class TestGraphImages(unittest.TestCase):
 
             # Add various curves
             gradient = LinearGradient().of_points((0, 50), (0, 450)).with_start_end(Color('red'), Color('darkblue')).build()
+            axes.clip()
             Plot(axes).of_function(lambda x: x * x).stroke(pattern=gradient, line_width=4)
             Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=gradient)
             Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=gradient)
+            axes.unclip()
 
         def creator(file):
             make_image(file, draw, 600, 600)

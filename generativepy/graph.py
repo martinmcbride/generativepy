@@ -373,9 +373,7 @@ class Plot(Shape):
         :param miter_limit:
         :return:
         '''
-        self.axes.clip()
         super().stroke(pattern, line_width, dash, cap, join, miter_limit)
-        self.axes.unclip()
 
 
     def of_function(self, fn, extent=None, precision=100):
