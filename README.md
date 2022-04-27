@@ -2,13 +2,17 @@
 
 Generative art and graphing library for creating images and animations.
 
-## Version 3.0 notes
+## Version 3.1 notes
 
-Version 3 introduces a few breaking changes compared to 2.x, mainly to improve the graph module.
-
-* The `Axes` class has changed. The main breaking change is that it now uses the current user coordinates to control line thickness and text size, just like most other classes. Previously it used a crazy system of guesswork and magic scaling factors. On the plus side, it now also allows much more control over the axes appearance.
-* The previous graph plotting functions have gone. Plotting is now done by a `Plot` class, that works in a similar way to other shape classes.
-* A minor change is that the `color` parameter has been renamed to `pattern` in most places, to reflect the fact that it can now be a gradient (and hopefully soon image, vector pattern and mesh fills will be supported). This will only affect code that uses a named parameter for `color`. The parameter itself can still accept `Color` objects, as well as the new `LinearGradient` objects.
+* New `formulas` module converts latex formulas to bitmap that can be used with the `Image` class.
+* New `MovieBuilder` class allows movies to be created from multiple scenes, with option to add audio files.
+* MINOR BREAKING CHANGE - `Plot` no longer automatically clips to axes, requires explicit axes.clip().
+* Make right angle marker slightly bigger to match normal angle markers.
+* Change angle, tick and parallel markers to be implemented as Shapes.
+* Add text style (size and font) to `Axes` in the graph module.
+* Started updating/extending tutorials on github to match the [generativepy tutorial](http://www.pythoninformer.com/generative-art/generativepy-tutorial/). The current examples folder will be deprecated.
+* Clarify that default fill rule for `Shape` objects is `WINDING` (documentation change).
+* Add [Transform](http://www.pythoninformer.com/generative-art/generativepy/transform/) class for transforming user space.
 
 ## Usage
 
@@ -22,7 +26,9 @@ The library requires:
 * Pillow.
 * easy_vector.
 * moderngl (only required for 3D imaging).
+* MoviePy
 * Command line application gifsicle (only needed for GIF creation).
+* Commandline applications latex and divpng
 
 Main functionality:
 
@@ -32,6 +38,7 @@ Main functionality:
 * A simple tweening module to help with animation.
 * Geometry module for drawing shapes.
 * A graphing library for plotting 2D functions.
+* MovieBuilder supports creating video files from separate scenes.
 * 3D geometry module using moderngl.
 
 ## Website
