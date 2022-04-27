@@ -17,9 +17,10 @@ def draw(ctx, width, height, frame_no, frame_count):
     axes.draw()
 
     # Add various curves
+    axes.clip()
     Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'))
     Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'))
     Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'))
-
+    axes.unclip()
 
 make_image("/tmp/simplegraph.png", draw, 500, 500)

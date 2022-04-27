@@ -15,10 +15,12 @@ def draw(ctx, width, height, frame_no, frame_count):
     axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
     axes.draw()
 
+    axes.clip()
     Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color('red'), line_width=3, dash=[5])
     Plot(axes).of_xy_function(lambda x: 1.5 ** x).stroke(pattern=Color('green'), line_width=5, dash=[10, 10, 20, 10],
                                                          cap=ROUND)
     Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color('blue'), line_width=4, dash=[5], cap=BUTT)
+    axes.unclip()
 
 
 make_image("/tmp/dashedlinegraph.png", draw, 600, 600)
