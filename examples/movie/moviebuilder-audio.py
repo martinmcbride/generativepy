@@ -42,8 +42,8 @@ def scene2(duration):
 
 
 builder = MovieBuilder(FRATE)
-builder.add_clip(scene1(5), "scene1-audio.mp3")
-builder.add_clip(scene2(5), "scene2-audio.mp3")
+builder.add_scene(scene1(5), "scene1-audio.mp3")
+builder.add_scene(scene2(5), "scene2-audio.mp3")
 
 # builder.make_movie(VIDEONAME, n) creates video of just scene n
 # builder.make_movie(VIDEONAME) creates full video

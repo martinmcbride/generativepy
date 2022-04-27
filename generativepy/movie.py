@@ -107,7 +107,7 @@ class MovieBuilder():
         self.audio_files = []
         self.duration = []
 
-    def add_clip(self, frame_source_duration, audio_file=None):
+    def add_scene(self, frame_source_duration, audio_file=None):
         """
         Add a clip
         :param frame_source_duration: Tuple of (frame_source, duration). frame_source is a iterator returning
