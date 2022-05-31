@@ -187,6 +187,49 @@ class TestColour(unittest.TestCase):
         self.assertAlmostEqual(color.rgba[2], 0.25)
         self.assertAlmostEqual(color.rgba[3], 0.7)
 
+    def test_dark1(self):
+        color = Color(0.1, 0.3, 0.5, 0.7).dark1
+        self.assertAlmostEqual(color.rgba[0], 0.075)
+        self.assertAlmostEqual(color.rgba[1], 0.225)
+        self.assertAlmostEqual(color.rgba[2], 0.375)
+        self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    def test_dark2(self):
+        color = Color(0.1, 0.3, 0.5, 0.7).dark2
+        self.assertAlmostEqual(color.rgba[0], 0.05)
+        self.assertAlmostEqual(color.rgba[1], 0.15)
+        self.assertAlmostEqual(color.rgba[2], 0.25)
+        self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    def test_dark3(self):
+        color = Color(0.1, 0.3, 0.5, 0.7).dark3
+        self.assertAlmostEqual(color.rgba[0], 0.03)
+        self.assertAlmostEqual(color.rgba[1], 0.09)
+        self.assertAlmostEqual(color.rgba[2], 0.15)
+        self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    def test_light1(self):
+        color = Color(0.1, 0.3, 0.5, 0.7).light1
+        self.assertAlmostEqual(color.rgba[0], 0.14)
+        self.assertAlmostEqual(color.rgba[1], 0.42)
+        self.assertAlmostEqual(color.rgba[2], 0.7)
+        self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    def test_light2(self):
+        color = Color(0.1, 0.3, 0.5, 0.7).light2
+        self.assertAlmostEqual(color.rgba[0], 0.2833333)
+        self.assertAlmostEqual(color.rgba[1], 0.57)
+        self.assertAlmostEqual(color.rgba[2], 0.8566667)
+        self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    def test_light3(self):
+        color = Color(0.1, 0.3, 0.5, 0.7).light3
+        self.assertAlmostEqual(color.rgba[0], 0.5833333)
+        self.assertAlmostEqual(color.rgba[1], 0.75)
+        self.assertAlmostEqual(color.rgba[2], 0.9166667)
+        self.assertAlmostEqual(color.rgba[3], 0.7)
+
+
     # Test lerp function
     def test_lerp_0(self):
         color = (Color(0.1, 0.2, 0.3, 0.4).lerp(Color(0.6, 0.7, 0.8, 0.9), 0))
@@ -256,7 +299,6 @@ class TestColour(unittest.TestCase):
         color_str = ' '.join(map(str, colormap))
         self.assertEqual(color_str,
                          'rgba(0, 0, 0, 1) rgba(0.25, 0.25, 0.25, 1) rgba(0.5, 0.5, 0.5, 1) rgba(0.75, 0.75, 0.75, 1) rgba(1, 1, 1, 1) rgba(1, 1, 1, 1) rgba(0.875, 1, 1, 1) rgba(0.75, 1, 1, 1) rgba(0.625, 1, 1, 1) rgba(0.5, 1, 1, 1)')
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -325,6 +325,30 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(h, Color.clamp(l*factor), s)
         return Color(r, g, b, self.color[3])
 
+    @property
+    def dark3(self):
+        return self.with_l_factor(0.3)
+
+    @property
+    def dark2(self):
+        return self.with_l_factor(0.5)
+
+    @property
+    def dark1(self):
+        return self.with_l_factor(0.75)
+
+    @property
+    def light3(self):
+        return self.with_l_factor(2.5)
+
+    @property
+    def light2(self):
+        return self.with_l_factor(1.9)
+
+    @property
+    def light1(self):
+        return self.with_l_factor(1.4)
+
     def lerp(self, other, factor):
         factor = Color.clamp(factor)
         col1 = self.rgba

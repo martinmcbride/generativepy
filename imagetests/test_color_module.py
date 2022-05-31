@@ -1,7 +1,10 @@
 import unittest
 
+from generativepy.geometry import Transform, Square
+
 from generativepy.color import Color
-from generativepy.drawing import make_image
+from generativepy.drawing import make_image, setup
+
 from image_test_helper import run_image_test
 
 """
@@ -256,4 +259,40 @@ class TestDrawingModule(unittest.TestCase):
             make_image(file, draw, 500, 350, channels=3)
 
         self.assertTrue(run_image_test('test_css_colors.png', creator))
+
+
+    def test_light_dark_colors(self):
+        """
+        Create light and dark properties
+        """
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            colors = [Color(0.5, 0, 0),  # red
+                      Color(0, 0.5, 0),  # green
+                      Color(0, 0, 0.5),  #blue
+                      Color(0, 0.5, 0.5),  # cyan
+                      Color(0.5, 0, 0.5),  # magenta
+                      Color(0.5, 0.5, 0),  # yellow
+                      Color(1, 1, 1),  # white
+                      Color(0.5, 0.5, 0.5),  # grey
+                      ]
+
+            Transform(ctx).translate(50, 50)
+
+            for i, color in enumerate(colors):
+                Square(ctx).of_corner_size((i*50, 0), 50).fill(color.dark3)
+                Square(ctx).of_corner_size((i*50, 50), 50).fill(color.dark2)
+                Square(ctx).of_corner_size((i*50, 100), 50).fill(color.dark1)
+                Square(ctx).of_corner_size((i*50, 150), 50).fill(color)
+                Square(ctx).of_corner_size((i*50, 200), 50).fill(color.light1)
+                Square(ctx).of_corner_size((i*50, 250), 50).fill(color.light2)
+                Square(ctx).of_corner_size((i*50, 300), 50).fill(color.light3)
+
+        def creator(file):
+            make_image(file, draw, 500, 450, channels=3)
+
+        self.assertTrue(run_image_test('test_light_dark_colors.png', creator))
+
 
