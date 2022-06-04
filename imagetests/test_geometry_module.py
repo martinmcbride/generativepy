@@ -2,10 +2,10 @@ import unittest
 from generativepy.drawing import setup, make_image, BUTT, ROUND, BEVEL, FONT_WEIGHT_BOLD, FONT_SLANT_ITALIC
 from image_test_helper import run_image_test
 from generativepy.color import Color
-from generativepy.geometry import Image, Text, Circle, circle, Bezier, Polygon, Square, square, Rectangle,\
-                                  rectangle, Line, line, Ellipse, ellipse, tick, paratick, arrowhead, polygon,\
-                                  angle_marker, Path, Triangle, triangle, Turtle, Transform, AngleMarker,\
-                                  ParallelMarker, TickMarker
+from generativepy.geometry import Image, Text, Circle, circle, Bezier, Polygon, Square, square, Rectangle, \
+    rectangle, Line, line, Ellipse, ellipse, tick, paratick, arrowhead, polygon, \
+    angle_marker, Path, Triangle, triangle, Turtle, Transform, AngleMarker, \
+    ParallelMarker, TickMarker, RegularPolygon
 import math
 
 """
@@ -419,6 +419,35 @@ class TestGeometryImages(unittest.TestCase):
             make_image(file, draw, 500, 500)
 
         self.assertTrue(run_image_test('test_polygon.png', creator))
+
+    def draw_regular_polygon(self, ctx, centre, sides, radius, angle):
+        # Draw a regular polygon, including inner and outer circle and points.
+        p = RegularPolygon(ctx).of_centre_sides_radius(centre, sides, radius, angle).fill(Color("palegoldenrod")).stroke(Color("blue"), 4)
+        Circle(ctx).of_center_radius(centre, p.outer_radius).stroke(Color("black"), 4)
+        Circle(ctx).of_center_radius(centre, p.inner_radius).stroke(Color("grey"), 4)
+        for v in p.vertices:
+            Circle(ctx).of_center_radius(v, 5).fill(Color("green"))
+
+
+    def test_regular_polygon(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(0.8))
+
+            self.draw_regular_polygon(ctx, (150, 150), 3, 100, 0)
+            self.draw_regular_polygon(ctx, (350, 150), 4, 100, 0)
+            self.draw_regular_polygon(ctx, (550, 150), 7, 100, 0)
+            self.draw_regular_polygon(ctx, (750, 150), 8, 100, 0)
+
+            self.draw_regular_polygon(ctx, (150, 350), 3, 100, math.pi/6)
+            self.draw_regular_polygon(ctx, (350, 350), 4, 100, math.pi/6)
+            self.draw_regular_polygon(ctx, (550, 350), 7, 100, math.pi/6)
+            self.draw_regular_polygon(ctx, (750, 350), 8, 100, math.pi/6)
+
+
+        def creator(file):
+            make_image(file, draw, 900, 500)
+
+        self.assertTrue(run_image_test('test_regular_polygon.png', creator))
 
     def test_rectangle(self):
         def draw(ctx, width, height, frame_no, frame_count):

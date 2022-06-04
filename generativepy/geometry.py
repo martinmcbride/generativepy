@@ -777,6 +777,75 @@ def circle(ctx, center, radius):
     Circle(ctx).of_center_radius(center, radius).add()
 
 
+class RegularPolygon(Shape):
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.closed = True
+        self.centre = (0, 0)
+        self.numsides = 3
+        self.radius = 1
+        self.points = None
+
+    def add(self):
+        self._do_path_()
+        centre_angle = math.pi*2/self.numsides
+        angle = math.pi/2 - centre_angle/2
+        first = True
+        for p in self.points:
+            if first:
+                if not self.extend:
+                    self.ctx.move_to(*p)
+                first = False
+            else:
+                self.ctx.line_to(*p)
+        if self.closed or self.final_close:
+            self.ctx.close_path()
+        return self
+
+    def of_centre_sides_radius(self, centre, numsides, radius, angle=0):
+        self.centre = centre
+        self.numsides = numsides
+        self.radius = radius
+        centre_angle = math.pi*2/self.numsides
+        angle = math.pi/2 - centre_angle/2 + angle
+        p = []
+        for i in range(self.numsides):
+            p.append((self.centre[0]+self.radius*math.cos(angle),
+                      self.centre[1] + self.radius * math.sin(angle)))
+            angle += centre_angle
+        self.points = tuple(p)
+        return self
+
+    def open(self):
+        self.closed = False
+        return self
+
+    @property
+    def side_len(self):
+        return 2*self.radius*math.sin(math.pi/self.numsides)
+
+    @property
+    def outer_radius(self):
+        return self.radius
+
+    @property
+    def interior_angle(self):
+        return (self.numsides-2)*math.pi/self.numsides
+
+    @property
+    def exterior_angle(self):
+        return 2*math.pi/self.numsides
+
+    @property
+    def inner_radius(self):
+        return self.radius*math.cos(math.pi/self.numsides)
+
+    @property
+    def vertices(self):
+        return self.points
+
+
 class Ellipse(Shape):
 
     arc = 1
