@@ -2,7 +2,7 @@ import unittest
 
 from generativepy.geometry import Transform, Square
 
-from generativepy.color import Color
+from generativepy.color import Color, ArtisticColorScheme, DarkColorScheme
 from generativepy.drawing import make_image, setup
 
 from image_test_helper import run_image_test
@@ -294,5 +294,82 @@ class TestDrawingModule(unittest.TestCase):
             make_image(file, draw, 500, 450, channels=3)
 
         self.assertTrue(run_image_test('test_light_dark_colors.png', creator))
+
+    def test_artistic_color_scheme(self):
+        """
+        Create light and dark properties
+        """
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            cs = ArtisticColorScheme()
+
+            colors = [cs.RED,
+                      cs.BLUE,
+                      cs.GREEN,
+                      cs.YELLOW,
+                      cs.MAGENTA,
+                      cs.STEEL,
+                      cs.CREAM,
+                      cs.LIME,
+                      cs.BLACK,
+                      cs.GREY,
+                      cs.WHITE,
+                      ]
+
+            Transform(ctx).translate(50, 50)
+
+            for i, color in enumerate(colors):
+                Square(ctx).of_corner_size((i*50, 0), 50).fill(color.dark3)
+                Square(ctx).of_corner_size((i*50, 50), 50).fill(color.dark2)
+                Square(ctx).of_corner_size((i*50, 100), 50).fill(color.dark1)
+                Square(ctx).of_corner_size((i*50, 150), 50).fill(color)
+                Square(ctx).of_corner_size((i*50, 200), 50).fill(color.light1)
+                Square(ctx).of_corner_size((i*50, 250), 50).fill(color.light2)
+                Square(ctx).of_corner_size((i*50, 300), 50).fill(color.light3)
+
+        def creator(file):
+            make_image(file, draw, 650, 450, channels=3)
+
+        self.assertTrue(run_image_test('test_artistic_color_scheme.png', creator))
+
+
+    def test_dark_color_scheme(self):
+        """
+        Create light and dark properties
+        """
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            cs = DarkColorScheme()
+            setup(ctx, width, height, background=cs.BACKGROUND)
+
+            colors = [cs.RED,
+                      cs.GREEN,
+                      cs.BLUE,
+                      cs.WHITE,
+                      cs.GREY,
+                      cs.BLACK,
+                      cs.YELLOW,
+                      cs.CYAN,
+                      cs.MAGENTA,
+                      cs.ORANGE,
+                      ]
+
+            Transform(ctx).translate(50, 50)
+
+            for i, color in enumerate(colors):
+                Square(ctx).of_corner_size((i*50, 0), 50).fill(color.dark3)
+                Square(ctx).of_corner_size((i*50, 50), 50).fill(color.dark2)
+                Square(ctx).of_corner_size((i*50, 100), 50).fill(color.dark1)
+                Square(ctx).of_corner_size((i*50, 150), 50).fill(color)
+                Square(ctx).of_corner_size((i*50, 200), 50).fill(color.light1)
+                Square(ctx).of_corner_size((i*50, 250), 50).fill(color.light2)
+                Square(ctx).of_corner_size((i*50, 300), 50).fill(color.light3)
+
+        def creator(file):
+            make_image(file, draw, 650, 450, channels=3)
+
+        self.assertTrue(run_image_test('test_dark_color_scheme.png', creator))
 
 

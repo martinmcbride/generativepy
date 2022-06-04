@@ -433,3 +433,123 @@ def make_colormap(length, colors, bands=None):
                  for col, band in colormap ]
 
     return colormap
+
+## Colour schemes
+
+class ArtisticColorScheme:
+
+    def __init__(self):
+        self._RED = Color(0.941, 0.234, 0.125)
+        self._BLUE = Color(0.250, 0.336, 0.629)
+        self._GREEN = Color(0.250, 0.629, 0.336)
+        self._YELLOW = Color(0.840, 0.598, 0.133)
+        self._MAGENTA = Color(0.840, 0.133, 0.598)
+        self._STEEL = Color(0.770, 0.793, 0.887)
+        self._CREAM = Color(0.934, 0.883, 0.727)
+        self._LIME = Color(0.727, 0.934, 0.727)
+        self._BLACK = Color(0.2)
+        self._GREY = Color(0.4)
+        self._WHITE = Color(1)
+
+    @property
+    def RED(self):
+        return self._RED
+
+    @property
+    def BLUE(self):
+        return self._BLUE
+
+    @property
+    def GREEN(self):
+        return self._GREEN
+
+    @property
+    def YELLOW(self):
+        return self._YELLOW
+
+    @property
+    def MAGENTA(self):
+        return self._MAGENTA
+
+    @property
+    def STEEL(self):
+        return self._STEEL
+
+    @property
+    def CREAM(self):
+        return self._CREAM
+
+    @property
+    def LIME(self):
+        return self._LIME
+
+    @property
+    def BLACK(self):
+        return self._BLACK
+
+    @property
+    def GREY(self):
+        return self._GREY
+
+    @property
+    def WHITE(self):
+        return self._WHITE
+
+class DarkColorScheme:
+
+    def __init__(self):
+        self._BACKGROUND = Color(0.2)
+        self._RED = Color("firebrick")
+        self._GREEN = Color("mediumseagreen")
+        self._BLUE = Color("steelblue")
+        self._WHITE = Color(0.8)
+        self._GREY = Color(0.5)
+        self._BLACK = Color(0)
+        self._YELLOW = Color("darkkhaki")
+        self._CYAN = Color("darkturquoise")
+        self._MAGENTA = Color("orchid")
+        self._ORANGE = Color("orangered")
+
+    @property
+    def BACKGROUND(self):
+        return self._BACKGROUND
+
+    @property
+    def RED(self):
+        return self._RED
+
+    @property
+    def GREEN(self):
+        return self._GREEN
+
+    @property
+    def BLUE(self):
+        return self._BLUE
+
+    @property
+    def WHITE(self):
+        return self._WHITE
+
+    @property
+    def GREY(self):
+        return self._GREY
+
+    @property
+    def BLACK(self):
+        return self._BLACK
+
+    @property
+    def YELLOW(self):
+        return self._YELLOW
+
+    @property
+    def CYAN(self):
+        return self._CYAN
+
+    @property
+    def MAGENTA(self):
+        return self._MAGENTA
+
+    @property
+    def ORANGE(self):
+        return self._ORANGE
