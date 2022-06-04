@@ -173,11 +173,11 @@ class Color():
 
     Color objects are immutable.
 
-    get_rgb, get_rgba gets the colour values as a 3- or 4-tuple
+    rgb, rgba (properties) gets the colour values as a 3- or 4-tuple
 
     of_hsl, of_hsla creates a new Color from hsl values (color values are stored as RGB)
 
-    get_r gets the red value (similar for b, g, a, h, s, l). h, s and l values are obtained by converting from rgb
+    r (property) gets the red value (similar for b, g, a, h, s, l). h, s and l values are obtained by converting from rgb
 
     with_r creates a new Color from an existing colour by setting the r value (similar for b, g, a, h, s, l). For
     h, s, l values, the color is converted to hsl, modified, then converted back to rgb.
