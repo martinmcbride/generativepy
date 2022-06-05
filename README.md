@@ -2,17 +2,11 @@
 
 Generative art and graphing library for creating images and animations.
 
-## Version 3.1 notes
+## Version 3.2 notes
 
-* New `formulas` module converts latex formulas to bitmap that can be used with the `Image` class.
-* New `MovieBuilder` class allows movies to be created from multiple scenes, with option to add audio files.
-* MINOR BREAKING CHANGE - `Plot` no longer automatically clips to axes, requires explicit axes.clip().
-* Make right angle marker slightly bigger to match normal angle markers.
-* Change angle, tick and parallel markers to be implemented as Shapes.
-* Add text style (size and font) to `Axes` in the graph module.
-* Started updating/extending tutorials on github to match the [generativepy tutorial](http://www.pythoninformer.com/generative-art/generativepy-tutorial/). The current examples folder will be deprecated.
-* Clarify that default fill rule for `Shape` objects is `WINDING` (documentation change).
-* Add [Transform](http://www.pythoninformer.com/generative-art/generativepy/transform/) class for transforming user space.
+* New `Color` properties `light1`, `light2`, `light3`, `dark1`, `dark2`, `dark3`, that creater lighter or darker versions of the base colour.
+* New RegularPolygon shape for drawing regular polygons.
+* New colour schemes for creating reusuable colour sets.
 
 ## Usage
 
@@ -39,6 +33,7 @@ Main functionality:
 * Geometry module for drawing shapes.
 * A graphing library for plotting 2D functions.
 * MovieBuilder supports creating video files from separate scenes.
+* Latex formula rendering
 * 3D geometry module using moderngl.
 
 ## Website
