@@ -5,12 +5,19 @@ import random
 import os
 
 
-tex1 = '\n'.join([r'\documentclass[preview]{standalone}'
-                  r'\usepackage{amsmath}',
-                  r'\begin{document}',
-                  r'\begin{equation*}'])
-tex2 = '\n'.join([r'\end{equation*}'
-                  r'\end{document}'])
+def _create_tex(formula, packages):
+    """
+    Create tex from the formula and any optional packages.
+    Return latex string
+    """
+    tex_elements = [r'\documentclass[preview]{standalone}', r'\usepackage{amsmath}']
+    if packages:
+        tex_elements += [r'\usepackage{' + package + '}' for package in packages]
+    tex_elements += [r'\begin{document}', r'\begin{equation*}']
+    tex_elements += [formula]
+    tex_elements += [r'\end{equation*}', r'\end{document}']
+
+    return "\n".join(tex_elements)
 
 def _crop(inname, outname, color):
     """
@@ -65,7 +72,7 @@ def _remove_ignore_errors(filename):
         pass
 
 
-def rasterise_formula(name, formula, color, dpi=600):
+def rasterise_formula(name, formula, color, dpi=600, packages=None):
     """
     Convert a latex formula into a PNG image. The PNG image will be tightly cropped, with a transparent background and
     text in the selected colour.
@@ -74,11 +81,12 @@ def rasterise_formula(name, formula, color, dpi=600):
     :param formula: The forumal, as a latex string.
     :param color: Color object defining the required colour of the output.
     :param dpi: The resolution, in dpi. This indirectly controls the size of the image,
+    :param packages: tuple containing any required additiona latex packages
     :return: A tuple containing the filename of teh result (with a png extension) and the (width, height) of the image
     in pixels.
     """
     unique_name = "{}-{}".format(name, random.randint(100000, 999999))
-    tex = '\n'.join([tex1, formula, tex2])
+    tex = _create_tex(formula, packages)
     tex_fn = '{}.tex'.format(unique_name)
     with open(tex_fn, 'w') as tex_file:
         tex_file.write(tex)
