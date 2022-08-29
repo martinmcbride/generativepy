@@ -42,9 +42,16 @@ def _crop(inname, outname, color):
     image_data_bw = image_data.max(axis=2)
     non_empty_columns = np.where(image_data_bw.max(axis=0)>0)[0]
     non_empty_rows = np.where(image_data_bw.max(axis=1)>0)[0]
-    cropbox = (min(non_empty_rows), max(non_empty_rows), min(non_empty_columns), max(non_empty_columns))
 
-    image_data_new = image_data[cropbox[0]:cropbox[1]+1, cropbox[2]:cropbox[3]+1 , :]
+    # If the image is empty, cropping will fail because non_empty_rows and non_empty_columns are empty. In that case
+    # we should not crop the image
+    if len(non_empty_rows) and len(non_empty_columns):
+        cropbox = (min(non_empty_rows), max(non_empty_rows), min(non_empty_columns), max(non_empty_columns))
+        image_data_new = image_data[cropbox[0]:cropbox[1]+1, cropbox[2]:cropbox[3]+1, :]
+        image_size = (cropbox[3]-cropbox[2], cropbox[1]-cropbox[0])
+    else:
+        image_data_new = image_data
+        image_size = image_data_new.shape[0:2]
 
     image_data_colored = np.zeros_like(image_data_new)
     color_data = (color.r*255, color.g*255, color.b*255)
@@ -58,7 +65,7 @@ def _crop(inname, outname, color):
     new_image = Image.fromarray(image_data_colored)
     filename = '{}.png'.format(outname)
     new_image.save(filename)
-    return filename, (cropbox[3]-cropbox[2], cropbox[1]-cropbox[0])
+    return filename, image_size
 
 def _remove_ignore_errors(filename):
     """
@@ -90,11 +97,14 @@ def rasterise_formula(name, formula, color, dpi=600, packages=None):
     tex_fn = '{}.tex'.format(unique_name)
     with open(tex_fn, 'w') as tex_file:
         tex_file.write(tex)
-    process = subprocess.Popen('latex {}.tex'.format(unique_name), shell=True,
+    process = subprocess.Popen('latex -interaction=batchmode {}.tex'.format(unique_name), shell=True,
                                stdout=subprocess.PIPE)
+    process.communicate()
     process.wait()
+
     process = subprocess.Popen('dvipng -T tight -D {} {}.dvi'.format(dpi, unique_name), shell=True,
                                stdout=subprocess.PIPE)
+    process.communicate()
     process.wait()
 
     filename, size = _crop(unique_name, name, color)
