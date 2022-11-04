@@ -444,6 +444,7 @@ class ArtisticColorScheme:
         self._GREEN = Color(0.250, 0.629, 0.336)
         self._YELLOW = Color(0.840, 0.598, 0.133)
         self._MAGENTA = Color(0.840, 0.133, 0.598)
+        self._ORANGE = Color("orangered")
         self._STEEL = Color(0.770, 0.793, 0.887)
         self._CREAM = Color(0.934, 0.883, 0.727)
         self._LIME = Color(0.727, 0.934, 0.727)
