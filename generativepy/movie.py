@@ -11,6 +11,7 @@ from moviepy.editor import VideoClip
 from moviepy.video.compositing.concatenate import concatenate_videoclips
 import subprocess as sp
 import pathlib
+import logging
 
 
 '''
@@ -138,7 +139,9 @@ class MovieBuilder():
         temp_video_filename = temp_file(pathlib.Path(video_out).stem + "TEMP.mp4")
         temp_audio_filename = temp_file(pathlib.Path(video_out).stem + "TEMP.m4a")
 
-        if not self.audio_files[0]:
+        if not all(self.audio_files):
+            if any(self.audio_files):
+                logging.warning("MovieBuilder - some of the scenes have audio data, some do not, so the final video will have no audio data")
             video.write_videofile(video_out, codec="libx264", fps=self.frame_rate)
         else:
             video.write_videofile(temp_video_filename, temp_audiofile=temp_audio_filename, codec="libx264",
