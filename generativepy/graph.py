@@ -171,6 +171,7 @@ class Axes:
         :return:
         '''
 
+        self.ctx.new_path()
         # Get the text height using the selected font. This is used to control text offset and other sizes.
         _, self.text_height = Text(self.ctx).of('0', (0, 0)) \
                                 .font(self.appearance.fontparams.font,
