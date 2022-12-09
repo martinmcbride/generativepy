@@ -376,7 +376,7 @@ class Color():
     def clamp(v):
         try:
             v = min(1, max(0, v)) #Clamp v between 0 and 1
-        except e:
+        except Exception as e:
             raise ValueError('Numerical value required') from e
         return v
 
