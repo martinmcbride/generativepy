@@ -5,6 +5,15 @@
 
 import math
 
+_FRAME_RATE = 1
+
+def set_frame_rate(rate):
+    global _FRAME_RATE
+    if not isinstance(rate, (int, float)):
+        raise ValueError('Frame rate must be a numeric value')
+    if rate < 1:
+        raise ValueError('Frame rate must be one or greater')
+    _FRAME_RATE = rate
 
 class Tween():
     '''
@@ -13,8 +22,6 @@ class Tween():
     Initial value is set on construction.
 
     wait() maintains the current value for the requested number of frames
-
-    pad() similar to wait, but pads until the total length of the tween is the required size.
 
     set() sets a new current values, and adds it for the requested number of frames (which can be zero)
 
@@ -34,19 +41,14 @@ class Tween():
 
     def wait(self, count):
         self.check_count(count)
+        count = int(_FRAME_RATE*count)
         self.frames.extend([self.previous for i in range(count)])
-        return self
-
-    def pad(self, final_length):
-        self.check_count(final_length)
-        required = final_length - len(self.frames)
-        if required > 0:
-            self.frames.extend([self.previous for i in range(required)])
         return self
 
     def set(self, value, count=0):
         self.check_value(value, self.previous)
         self.check_count(count)
+        count = int(_FRAME_RATE*count)
         self.frames.extend([value for i in range(count)])
         self.previous = value
         return self
@@ -54,6 +56,7 @@ class Tween():
     def to(self, value, count):
         self.check_value(value, self.previous)
         self.check_count(count)
+        count = int(_FRAME_RATE*count)
         for i in range(count):
             factor = (i + 1) / count
             self.frames.append(self.previous + factor * (value - self.previous))
@@ -63,6 +66,7 @@ class Tween():
     def ease(self, value, count, ease_function):
         self.check_value(value, self.previous)
         self.check_count(count)
+        count = int(_FRAME_RATE*count)
         for i in range(count):
             factor = ease_function((i + 1) / count)
             self.frames.append(self.previous + factor * (value - self.previous))
@@ -88,16 +92,12 @@ class Tween():
         return self
 
     def check_value(self, value, previous):
-        if (not isinstance(value, (int, float))) or isinstance(value, bool):
+        if not isinstance(value, (int, float)):
             raise ValueError('Numeric value required')
 
-    def check_index(self, value):
-        if not isinstance(value, int):
-            raise ValueError('Integer value required')
-
-    def check_count(self, value):
-        if not isinstance(value, int) or value < 0:
-            raise ValueError('Non-negative integer value required')
+    def check_count(self, count):
+        if (not isinstance(count, (int, float))) or count < 1:
+            raise ValueError('Count must be 1 or greater')
 
     def __len__(self):
         return len(self.frames)
@@ -121,6 +121,7 @@ class TweenVector(Tween):
     def to(self, value, count):
         self.check_value(value, self.previous)
         self.check_count(count)
+        self.check_count(count)
         for i in range(count):
             nextvalue = []
             factor = (i + 1) / count
@@ -132,6 +133,7 @@ class TweenVector(Tween):
 
     def ease(self, value, count, ease_function):
         self.check_value(value, self.previous)
+        self.check_count(count)
         self.check_count(count)
         for i in range(count):
             nextvalue = []

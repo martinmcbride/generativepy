@@ -64,8 +64,8 @@ class TestTween(unittest.TestCase):
 
     def test_to_tween_length_0(self):
         tween = Tween(3)
-        tween.to(9, 0)
-        self.assertEqual(len(tween), 0)
+        with self.assertRaises(ValueError):
+            tween.to(9, 0)
 
     def test_ease_tween(self):
         tween = Tween(3)
@@ -87,8 +87,8 @@ class TestTween(unittest.TestCase):
 
     def test_ease_tween_length_0(self):
         tween = Tween(3)
-        tween.ease(9, 0, test_linear())
-        self.assertEqual(len(tween), 0)
+        with self.assertRaises(ValueError):
+            tween.ease(9, 0, test_linear())
 
     def test_empty_tweenvector(self):
         tween = TweenVector((.1, .2, .3))
@@ -128,8 +128,8 @@ class TestTween(unittest.TestCase):
 
     def test_to_tweenvector_length_0(self):
         tween = TweenVector((0, 0, 0))
-        tween.to((5, 10, 15), 0)
-        self.assertEqual(len(tween), 0)
+        with self.assertRaises(ValueError):
+            tween.to((5, 10, 15), 0)
 
     def test_ease_tweenvector(self):
         tween = TweenVector((0, 0, 0))
@@ -151,8 +151,8 @@ class TestTween(unittest.TestCase):
 
     def test_ease_tweenvector_length_0(self):
         tween = TweenVector((0, 0, 0))
-        tween.ease((5, 10, 15), 0, test_linear())
-        self.assertEqual(len(tween), 0)
+        with self.assertRaises(ValueError):
+            tween.ease((5, 10, 15), 0, test_linear())
 
     def test_ease_linear(self):
         ease_function = generativepy.tween.ease_linear()
