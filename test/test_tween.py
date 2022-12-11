@@ -53,11 +53,13 @@ class TestTween(unittest.TestCase):
         set_frame_rate(2)
         tween = Tween(3)
         tween.to(9, 10)
-        self.assertEqual(len(tween), 20)
-        expected = [3.3, 3.6, 3.9, 4.2, 4.5, 4.8, 5.1, 5.4, 5.7, 6.0, 6.3, 6.6, 6.9, 7.2, 7.5, 7.8, 8.1, 8.4, 8.7, 9.0]
+        tween.to(3, 10)
+        self.assertEqual(len(tween), 40)
+        expected = [3.3, 3.6, 3.9, 4.2, 4.5, 4.8, 5.1, 5.4, 5.7, 6.0, 6.3, 6.6, 6.9, 7.2, 7.5, 7.8, 8.1, 8.4, 8.7, 9.0,
+                    8.7, 8.4, 8.1, 7.8, 7.5, 7.2, 6.9, 6.6, 6.3, 6.0, 5.7, 5.4, 5.1, 4.8, 4.5, 4.2, 3.9, 3.6, 3.3, 3.0]
         for i, v in enumerate(tween):
             self.assertAlmostEqual(v, expected[i])
-        self.assertEqual(i, 19)
+        self.assertEqual(i, 39)
 
     def test_to_tween_length_1(self):
         set_frame_rate(1)
@@ -79,11 +81,13 @@ class TestTween(unittest.TestCase):
         set_frame_rate(2)
         tween = Tween(3)
         tween.ease(9, 10, test_linear())
-        self.assertEqual(len(tween), 20)
-        expected = [3.3, 3.6, 3.9, 4.2, 4.5, 4.8, 5.1, 5.4, 5.7, 6.0, 6.3, 6.6, 6.9, 7.2, 7.5, 7.8, 8.1, 8.4, 8.7, 9.0]
+        tween.ease(3, 10, test_linear())
+        self.assertEqual(len(tween), 40)
+        expected = [3.3, 3.6, 3.9, 4.2, 4.5, 4.8, 5.1, 5.4, 5.7, 6.0, 6.3, 6.6, 6.9, 7.2, 7.5, 7.8, 8.1, 8.4, 8.7, 9.0,
+                    8.7, 8.4, 8.1, 7.8, 7.5, 7.2, 6.9, 6.6, 6.3, 6.0, 5.7, 5.4, 5.1, 4.8, 4.5, 4.2, 3.9, 3.6, 3.3, 3.0]
         for i, v in enumerate(tween):
             self.assertAlmostEqual(v, expected[i])
-        self.assertEqual(i, 19)
+        self.assertEqual(i, 39)
 
     def test_ease_tween_length_1(self):
         set_frame_rate(1)
@@ -128,11 +132,15 @@ class TestTween(unittest.TestCase):
         set_frame_rate(2)
         tween = TweenVector((0, 0, 0))
         tween.to((5, 10, 15), 5)
-        self.assertEqual(len(tween), 5)
-        expected = [[1, 2, 3], [2, 4, 6], [3, 6, 9], [4, 8, 12], [5, 10, 15]]
+        tween.to((0, 0, 0), 5)
+        self.assertEqual(len(tween), 20)
+        expected = [[0.5, 1.0, 1.5], [1.0, 2.0, 3.0], [1.5, 3.0, 4.5], [2.0, 4.0, 6.0], [2.5, 5.0, 7.5],
+                    [3.0, 6.0, 9.0], [3.5, 7.0, 10.5], [4.0, 8.0, 12.0], [4.5, 9.0, 13.5], [5.0, 10.0, 15.0],
+                    [4.5, 9.0, 13.5], [4.0, 8.0, 12.0], [3.5, 7.0, 10.5], [3.0, 6.0, 9.0], [2.5, 5.0, 7.5],
+                    [2.0, 4.0, 6.0], [1.5, 3.0, 4.5], [1.0, 2.0, 3.0], [0.5, 1.0, 1.5], [0.0, 0.0, 0.0]]
         for i, v in enumerate(tween):
             self.assertAlmostEqual(v, expected[i])
-        self.assertEqual(i, 4)
+        self.assertEqual(i, 19)
 
     def test_to_tweenvector_length_1(self):
         set_frame_rate(1)
@@ -154,11 +162,15 @@ class TestTween(unittest.TestCase):
         set_frame_rate(2)
         tween = TweenVector((0, 0, 0))
         tween.ease((5, 10, 15), 5, test_linear())
-        self.assertEqual(len(tween), 5)
-        expected = [[1, 2, 3], [2, 4, 6], [3, 6, 9], [4, 8, 12], [5, 10, 15]]
+        tween.ease((0, 0, 0), 5, test_linear())
+        self.assertEqual(len(tween), 20)
+        expected = [[0.5, 1.0, 1.5], [1.0, 2.0, 3.0], [1.5, 3.0, 4.5], [2.0, 4.0, 6.0], [2.5, 5.0, 7.5],
+                    [3.0, 6.0, 9.0], [3.5, 7.0, 10.5], [4.0, 8.0, 12.0], [4.5, 9.0, 13.5], [5.0, 10.0, 15.0],
+                    [4.5, 9.0, 13.5], [4.0, 8.0, 12.0], [3.5, 7.0, 10.5], [3.0, 6.0, 9.0], [2.5, 5.0, 7.5],
+                    [2.0, 4.0, 6.0], [1.5, 3.0, 4.5], [1.0, 2.0, 3.0], [0.5, 1.0, 1.5], [0.0, 0.0, 0.0]]
         for i, v in enumerate(tween):
             self.assertAlmostEqual(v, expected[i])
-        self.assertEqual(i, 4)
+        self.assertEqual(i, 19)
 
     def test_ease_tweenvector_length_1(self):
         set_frame_rate(1)
