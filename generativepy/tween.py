@@ -116,15 +116,15 @@ class Tween():
         if not isinstance(count, (int, float)):
             raise ValueError('Count must be a number')
         count = int(_FRAME_RATE*count)
-        if count < current + 1:
-            raise ValueError('New time must greater than previous time')
+        if count < current:
+            raise ValueError('New time must not be less than previous time')
         return count - current
 
     def check_d_count(self, count):
         if not isinstance(count, (int, float)):
             raise ValueError('Count must be a number')
-        if count < 1:
-            raise ValueError('Count must be 1 or greater')
+        if count < 0:
+            raise ValueError('Count must not be negative')
         return int(_FRAME_RATE*count)
 
     def __len__(self):
