@@ -2,7 +2,7 @@
 # Created: 2019-01-25
 # Copyright (C) 2018, Martin McBride
 # License: MIT
-
+import collections
 import math
 
 _FRAME_RATE = 1
@@ -40,8 +40,12 @@ class Tween():
         self.nextFrame = 0
 
     def wait(self, count):
-        self.check_count(count)
-        count = int(_FRAME_RATE*count)
+        count = self.check_count(count, len(self.frames))
+        self.frames.extend([self.previous for i in range(count)])
+        return self
+
+    def wait_d(self, count):
+        count = self.check_d_count(count)
         self.frames.extend([self.previous for i in range(count)])
         return self
 
@@ -52,8 +56,16 @@ class Tween():
 
     def to(self, value, count):
         self.check_value(value, self.previous)
-        self.check_count(count)
-        count = int(_FRAME_RATE*count)
+        count = self.check_count(count, len(self.frames))
+        for i in range(count):
+            factor = (i + 1) / count
+            self.frames.append(self.previous + factor * (value - self.previous))
+        self.previous = value
+        return self
+
+    def to_d(self, value, count):
+        self.check_value(value, self.previous)
+        count = self.check_d_count(count)
         for i in range(count):
             factor = (i + 1) / count
             self.frames.append(self.previous + factor * (value - self.previous))
@@ -62,8 +74,16 @@ class Tween():
 
     def ease(self, value, count, ease_function):
         self.check_value(value, self.previous)
-        self.check_count(count)
-        count = int(_FRAME_RATE*count)
+        count = self.check_count(count, len(self.frames))
+        for i in range(count):
+            factor = ease_function((i + 1) / count)
+            self.frames.append(self.previous + factor * (value - self.previous))
+        self.previous = value
+        return self
+
+    def ease_d(self, value, count, ease_function):
+        self.check_value(value, self.previous)
+        count = self.check_d_count(count)
         for i in range(count):
             factor = ease_function((i + 1) / count)
             self.frames.append(self.previous + factor * (value - self.previous))
@@ -92,9 +112,20 @@ class Tween():
         if not isinstance(value, (int, float)):
             raise ValueError('Numeric value required')
 
-    def check_count(self, count):
-        if (not isinstance(count, (int, float))) or count < 1:
+    def check_count(self, count, current):
+        if not isinstance(count, (int, float)):
+            raise ValueError('Count must be a number')
+        count = int(_FRAME_RATE*count)
+        if count < current + 1:
+            raise ValueError('New time must greater than previous time')
+        return count - current
+
+    def check_d_count(self, count):
+        if not isinstance(count, (int, float)):
+            raise ValueError('Count must be a number')
+        if count < 1:
             raise ValueError('Count must be 1 or greater')
+        return int(_FRAME_RATE*count)
 
     def __len__(self):
         return len(self.frames)
@@ -113,12 +144,24 @@ class TweenVector(Tween):
     '''
 
     def __init__(self, value=(0, 0)):
+        self.check_value(value, None)
         Tween.__init__(self, value)
 
     def to(self, value, count):
         self.check_value(value, self.previous)
-        self.check_count(count)
-        count = int(_FRAME_RATE*count)
+        count = self.check_count(count, len(self.frames))
+        for i in range(count):
+            nextvalue = []
+            factor = (i + 1) / count
+            for a, b in zip(self.previous, value):
+                nextvalue.append(a + factor * (b - a))
+            self.frames.append(nextvalue)
+        self.previous = value
+        return self
+
+    def to_d(self, value, count):
+        self.check_value(value, self.previous)
+        count = self.check_d_count(count)
         for i in range(count):
             nextvalue = []
             factor = (i + 1) / count
@@ -130,8 +173,19 @@ class TweenVector(Tween):
 
     def ease(self, value, count, ease_function):
         self.check_value(value, self.previous)
-        self.check_count(count)
-        count = int(_FRAME_RATE*count)
+        count = self.check_count(count, len(self.frames))
+        for i in range(count):
+            nextvalue = []
+            factor = ease_function((i + 1) / count)
+            for a, b in zip(self.previous, value):
+                nextvalue.append(a + factor * (b - a))
+            self.frames.append(nextvalue)
+        self.previous = value
+        return self
+
+    def ease_d(self, value, count, ease_function):
+        self.check_value(value, self.previous)
+        count = self.check_d_count(count)
         for i in range(count):
             nextvalue = []
             factor = ease_function((i + 1) / count)
@@ -142,13 +196,12 @@ class TweenVector(Tween):
         return self
 
     def check_value(self, value, previous):
-        try:
-            if len(value) <= 0:
-                raise ValueError('Vectors of rank 0 are not supported')
-            if previous and len(value) != len(self.previous):
-                raise ValueError('All values must be vectors of equal rank')
-        except:
-            ValueError('Sequence value required')
+        if not isinstance(value, collections.abc.Sequence) or isinstance(value, str):
+            raise ValueError('Sequence value required')
+        if len(value) <= 0:
+            raise ValueError('Vectors of rank 0 are not supported')
+        if previous and len(value) != len(self.previous):
+            raise ValueError('All values must be vectors of equal rank')
 
 
 def ease_linear():
