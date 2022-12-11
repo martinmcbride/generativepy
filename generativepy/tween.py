@@ -118,7 +118,7 @@ class TweenVector(Tween):
     def to(self, value, count):
         self.check_value(value, self.previous)
         self.check_count(count)
-        self.check_count(count)
+        count = int(_FRAME_RATE*count)
         for i in range(count):
             nextvalue = []
             factor = (i + 1) / count
@@ -131,7 +131,7 @@ class TweenVector(Tween):
     def ease(self, value, count, ease_function):
         self.check_value(value, self.previous)
         self.check_count(count)
-        self.check_count(count)
+        count = int(_FRAME_RATE*count)
         for i in range(count):
             nextvalue = []
             factor = ease_function((i + 1) / count)
