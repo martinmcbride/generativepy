@@ -45,11 +45,8 @@ class Tween():
         self.frames.extend([self.previous for i in range(count)])
         return self
 
-    def set(self, value, count=0):
+    def set(self, value):
         self.check_value(value, self.previous)
-        self.check_count(count)
-        count = int(_FRAME_RATE*count)
-        self.frames.extend([value for i in range(count)])
         self.previous = value
         return self
 
