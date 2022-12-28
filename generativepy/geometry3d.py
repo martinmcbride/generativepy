@@ -99,12 +99,12 @@ class FlatColorProgram:
 
 class Triangle():
 
-    def __init__(self):
+    def __init__(self, v0, v1, v2):
         self.vertices = np.array([
                 # x, y, z
-                [0.0, 0.8, 0.0],
-                [-0.6, -0.8, 0.0],
-                [0.6, -0.8, 0.0]
+                v0,
+                v1,
+                v2
             ], dtype='f4')
         self.Color = Color(0)
 
@@ -112,6 +112,19 @@ class Triangle():
         self.Color = color
         color_row = np.array([color.as_rgb_bytes()], dtype='f4')
         colors = np.repeat(color_row, 3, axis=0)
+        vertex_data = np.concatenate([self.vertices, colors], axis=1)
+        return vertex_data
+
+class Triangles():
+
+    def __init__(self, *args):
+        self.vertices = np.array(args, dtype='f4')
+        self.Color = Color(0)
+
+    def get_flat_color(self, color):
+        self.Color = color
+        color_row = np.array([color.as_rgb_bytes()], dtype='f4')
+        colors = np.repeat(color_row, self.vertices.shape[0], axis=0)
         vertex_data = np.concatenate([self.vertices, colors], axis=1)
         return vertex_data
 
