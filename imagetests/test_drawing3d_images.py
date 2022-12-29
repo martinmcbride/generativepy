@@ -152,12 +152,12 @@ class TestDrawing3dImages(unittest.TestCase):
             F2 = displace(E2, 2 * s, 2 * (c - 1), 0)
             F3 = displace(E3, 2 * s, 2 * (c - 1), 0)
 
-            create_rect(ctx, A0, A1, A2, A3, Color("cyan"))
-            create_rect(ctx, F0, F1, F2, F3, Color("magenta"))
-            create_rect(ctx, A0, C1, A2, C3, Color("blue"))
-            create_rect(ctx, A0, A1, B2, B3, Color("yellow"))
-            create_rect(ctx, D0, A1, D2, A3, Color("green"))
-            create_rect(ctx, F2, F3, A2, A3, Color("red"))
+            create_rect(ctx, A0, A1, A2, A3, Color("orange"))
+            create_rect(ctx, F0, F1, F2, F3, Color("purple"))
+            create_rect(ctx, A0, C1, A2, C3, Color("cadetblue"))
+            create_rect(ctx, A0, A1, B2, B3, Color("darkcyan"))
+            create_rect(ctx, D0, A1, D2, A3, Color("lawngreen"))
+            create_rect(ctx, F2, F3, A2, A3, Color("darkred"))
 
         def draw(ctx, pixel_width, pixel_height, frame_no, frame_count):
             ctx.enable(moderngl.DEPTH_TEST)

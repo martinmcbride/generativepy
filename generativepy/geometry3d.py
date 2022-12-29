@@ -110,7 +110,7 @@ class Triangle():
 
     def get_flat_color(self, color):
         self.Color = color
-        color_row = np.array([color.as_rgb_bytes()], dtype='f4')
+        color_row = np.array([[color.r, color.g, color.b]], dtype='f4')
         colors = np.repeat(color_row, 3, axis=0)
         vertex_data = np.concatenate([self.vertices, colors], axis=1)
         return vertex_data
@@ -123,7 +123,7 @@ class Triangles():
 
     def get_flat_color(self, color):
         self.Color = color
-        color_row = np.array([color.as_rgb_bytes()], dtype='f4')
+        color_row = np.array([[color.r, color.g, color.b]], dtype='f4')
         colors = np.repeat(color_row, self.vertices.shape[0], axis=0)
         vertex_data = np.concatenate([self.vertices, colors], axis=1)
         return vertex_data
