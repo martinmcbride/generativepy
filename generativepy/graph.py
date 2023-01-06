@@ -27,6 +27,11 @@ class AxesAppearance:
     axislines = StrokeParameters(Color(0.2), line_width=2, cap=BUTT)
     featurescale = 1
 
+    # x and y offset of tick labels. The actual offset is:
+    # text height (height of 0 character using fontparams) DIVIDED by ticklabeloffset
+    ticklabeloffset = 1.1
+
+
 
 class Axes:
     '''
@@ -235,8 +240,8 @@ class Axes:
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
 
-        xoffset = self.text_height/1.1
-        yoffset = self.text_height/1.1
+        xoffset = self.text_height/self.appearance.ticklabeloffset
+        yoffset = self.text_height/self.appearance.ticklabeloffset
         for p in self._get_divs(self.start[0], self.extent[0], self.divisions[0]):
             if abs(p)>0.001:
                 position = self.transform_from_graph((p, 0))
