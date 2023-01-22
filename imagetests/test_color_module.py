@@ -310,6 +310,8 @@ class TestDrawingModule(unittest.TestCase):
                       cs.GREEN,
                       cs.YELLOW,
                       cs.MAGENTA,
+                      cs.CYAN,
+                      cs.ORANGE,
                       cs.STEEL,
                       cs.CREAM,
                       cs.LIME,
@@ -330,7 +332,7 @@ class TestDrawingModule(unittest.TestCase):
                 Square(ctx).of_corner_size((i*50, 300), 50).fill(color.light3)
 
         def creator(file):
-            make_image(file, draw, 650, 450, channels=3)
+            make_image(file, draw, 750, 450, channels=3)
 
         self.assertTrue(run_image_test('test_artistic_color_scheme.png', creator))
 
@@ -354,6 +356,7 @@ class TestDrawingModule(unittest.TestCase):
                       cs.CYAN,
                       cs.MAGENTA,
                       cs.ORANGE,
+                      cs.BACKGROUND,
                       ]
 
             Transform(ctx).translate(50, 50)
