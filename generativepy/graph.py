@@ -50,6 +50,8 @@ class Axes:
         self.subdivisons = False
         self.subdivisionfactor = (1, 1)
         self.text_height = 0
+        self.x_div_formatter = None
+        self.y_div_formatter = None
 
     def of_start(self, start):
         '''
@@ -87,6 +89,10 @@ class Axes:
         '''
         self.divisions = divisions
         return self
+
+    def with_division_formatters(self, x_div_formatter=None, y_div_formatter=None):
+        self.x_div_formatter = x_div_formatter
+        self.y_div_formatter = y_div_formatter
 
     def with_subdivisions(self, factor):
         '''
@@ -245,7 +251,7 @@ class Axes:
         for p in self._get_divs(self.start[0], self.extent[0], self.divisions[0]):
             if abs(p)>0.001:
                 position = self.transform_from_graph((p, 0))
-                pstr = self._format_div(p, self.divisions[0])
+                pstr = self._format_div(p, self.divisions[0], self.x_div_formatter)
                 Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset))\
                     .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
                           self.appearance.fontparams.slant)\
@@ -260,7 +266,7 @@ class Axes:
         for p in self._get_divs(self.start[1], self.extent[1], self.divisions[1]):
             if abs(p)>0.001:
                 position = self.transform_from_graph((0, p))
-                pstr = self._format_div(p, self.divisions[1])
+                pstr = self._format_div(p, self.divisions[1], self.y_div_formatter)
                 Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset))\
                     .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
                           self.appearance.fontparams.slant)\
@@ -320,15 +326,19 @@ class Axes:
             n += subdiv
         return subdivs
 
-    def _format_div(self, value, div):
+    def _format_div(self, value, div, formatter):
         """
         Formats a division value into a string.
         If the division spacing is an integer, the string will be an integer (no dp).
         If the division spacing is float, the string will be a float with a suitable number of decimal places
         :param value: value to be formatted
         :param div: division spacing
+        :param formatter: formatting function, accepts vale and div, returns a formatted value string
         :return: string representation of the value
         """
+        if formatter:
+            return formatter(value, div)
+
         if isinstance(value, int):
             return str(value)
         return str(round(value*1000)/1000)

@@ -1,6 +1,6 @@
 import unittest
 import math
-from generativepy.drawing import setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL
+from generativepy.drawing import setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, BASELINE
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.graph import Axes, Plot
@@ -211,3 +211,49 @@ class TestGraphImages(unittest.TestCase):
             make_image(file, draw, 600, 600)
 
         self.assertTrue(run_image_test('test_graph_gradient_plot.png', creator))
+
+    def test_graph_formatted_axis_values(self):
+
+        def a_div_formatter(value, div):
+            """
+            Replace +1 amd -1 with a snd -a, leave others blank
+            :param value:
+            :param div:
+            :return:
+            """
+            if value-div/2 < 1 < value+div/2:
+                return "a"
+
+            if value - div / 2 < -1 < value + div / 2:
+                return "-a"
+
+            return ""
+
+        def pi_div_formatter(value, div):
+            """
+            Replace n with n*pi
+            :param value:
+            :param div:
+            :return:
+            """
+            if value-div/2 < 1 < value+div/2:
+                return "π"
+
+            if value - div / 2 < -1 < value + div / 2:
+                return "-π"
+
+            return str(value) + "π"
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
+            axes.with_division_formatters(pi_div_formatter, a_div_formatter)
+            axes.draw()
+
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test('test_graph_formatted_axis_values.png', creator))
+
