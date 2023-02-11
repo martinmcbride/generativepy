@@ -13,6 +13,39 @@ from generativepy.color import Color
 
 from generativepy.geometry import FillParameters, StrokeParameters
 
+class TableLayout():
+    """
+    Table layout can be used to layout other elements in a grid, without draewing the table. Doesn't require a ctx
+    """
+
+    def __init__(self, position):
+        self.position = position
+        self.rows = [100]
+        self.cols = [100]
+        self.row_pos = [0, 100]
+        self.col_pos = [0, 100]
+
+    def of_rows_cols(self, rows, cols):
+        """
+        Set the size and number of rows and columns
+        :param rows: A list of the height of each row in user space units. The length of the list controls the number of rows.
+        :param cols: A list of the width of each loum in user space units. The length of the list controls the number of columns.
+        :return:
+        """
+        self.rows = rows
+        self.cols = cols
+        self.row_pos = [0] + list(np.cumsum(self.rows))
+        self.col_pos = [0] + list(np.cumsum(self.cols))
+        return self
+
+    def get(self, row, col):
+        """
+        Get the position of the centre of cell (row, col)
+        :param row:
+        :param col:
+        :return: (x, y) position of the centre of the cell.
+        """
+        return self.position[0]+(self.col_pos[col]+self.col_pos[col+1])/2, self.position[1]+(self.row_pos[row]+self.row_pos[row+1])/2
 
 @dataclass
 class TableAppearance:
@@ -33,11 +66,7 @@ class Table:
     def __init__(self, ctx, position):
         self.ctx = ctx
         self.appearance = TableAppearance()
-        self.position = position
-        self.rows = [100]
-        self.cols = [100]
-        self.row_pos = [0, 100]
-        self.col_pos = [0, 100]
+        self.table_layout = TableLayout(position)
 
     def of_rows_cols(self, rows, cols):
         """
@@ -46,10 +75,7 @@ class Table:
         :param cols: A list of the width of each loum in user space units. The length of the list controls the number of columns.
         :return:
         """
-        self.rows = rows
-        self.cols = cols
-        self.row_pos = [0] + list(np.cumsum(self.rows))
-        self.col_pos = [0] + list(np.cumsum(self.cols))
+        self.table_layout.of_rows_cols(rows, cols)
         return self
 
     def background(self, pattern):
@@ -81,22 +107,22 @@ class Table:
         :return:
         '''
 
-        width = sum(self.cols)
-        height = sum(self.rows)
+        width = sum(self.table_layout.cols)
+        height = sum(self.table_layout.rows)
 
         self.ctx.new_path()
         self.appearance.background.apply(self.ctx)
-        self.ctx.rectangle(self.position[0], self.position[1], width, height)
+        self.ctx.rectangle(self.table_layout.position[0], self.table_layout.position[1], width, height)
         self.ctx.fill_preserve()
         self.appearance.lines.apply(self.ctx)
         self.ctx.stroke()
-        for i in range(len(self.row_pos) - 1):
-            self.ctx.move_to(self.position[0], self.position[1]+self.row_pos[i])
-            self.ctx.line_to(self.position[0]+width , self.position[1]+self.row_pos[i])
+        for i in range(len(self.table_layout.row_pos) - 1):
+            self.ctx.move_to(self.table_layout.position[0], self.table_layout.position[1]+self.table_layout.row_pos[i])
+            self.ctx.line_to(self.table_layout.position[0]+width , self.table_layout.position[1]+self.table_layout.row_pos[i])
             self.ctx.stroke()
-        for i in range(len(self.col_pos) - 1):
-            self.ctx.move_to(self.position[0]+self.col_pos[i], self.position[1])
-            self.ctx.line_to(self.position[0]+self.col_pos[i] , self.position[1]+height)
+        for i in range(len(self.table_layout.col_pos) - 1):
+            self.ctx.move_to(self.table_layout.position[0]+self.table_layout.col_pos[i], self.table_layout.position[1])
+            self.ctx.line_to(self.table_layout.position[0]+self.table_layout.col_pos[i], self.table_layout.position[1]+height)
             self.ctx.stroke()
 
     def get(self, row, col):
@@ -106,4 +132,4 @@ class Table:
         :param col:
         :return: (x, y) position of the centre of the cell.
         """
-        return self.position[0]+(self.col_pos[col]+self.col_pos[col+1])/2, self.position[1]+(self.row_pos[row]+self.row_pos[row+1])/2
+        return self.table_layout.get(row, col)
