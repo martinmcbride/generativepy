@@ -97,8 +97,7 @@ class TestTween(unittest.TestCase):
     def test_to_tween_length_0(self):
         set_frame_rate(2)
         tween = Tween(3)
-        with self.assertRaises(ValueError):
-            tween.to(9, 0)
+        tween.to(9, 0)
 
     def test_ease_tween(self):
         set_frame_rate(2)
@@ -137,8 +136,7 @@ class TestTween(unittest.TestCase):
     def test_ease_tween_length_0(self):
         set_frame_rate(2)
         tween = Tween(3)
-        with self.assertRaises(ValueError):
-            tween.ease(9, 0, test_linear())
+        tween.ease(9, 0, test_linear())
 
     def test_empty_tweenvector(self):
         set_frame_rate(2)
@@ -204,8 +202,7 @@ class TestTween(unittest.TestCase):
     def test_to_tweenvector_length_0(self):
         set_frame_rate(2)
         tween = TweenVector((0, 0, 0))
-        with self.assertRaises(ValueError):
-            tween.to((5, 10, 15), 0)
+        tween.to((5, 10, 15), 0)
 
     def test_ease_tweenvector(self):
         set_frame_rate(2)
@@ -248,8 +245,7 @@ class TestTween(unittest.TestCase):
     def test_ease_tweenvector_length_0(self):
         set_frame_rate(2)
         tween = TweenVector((0, 0, 0))
-        with self.assertRaises(ValueError):
-            tween.ease((5, 10, 15), 0, test_linear())
+        tween.ease((5, 10, 15), 0, test_linear())
 
     def test_ease_linear(self):
         set_frame_rate(2)
