@@ -184,6 +184,21 @@ class Vector():
     def rotate(self, angle):
         return Matrix.rotate(angle)*self
 
+    def lerp(self, other, factor):
+        """
+        Interpolate between this vecto and other.
+        Interplations factor:
+            0 - result is self
+            1 - result is other
+            0 to 1 - result between self and other
+            > 1 - result extensds beyond other
+            < 0 - result extends backwards before other
+        @param other: Other vector
+        @param factor: Interpolation factor
+        @return:
+        """
+
+        return Vector((1 - factor)*self.x + factor*other.x, (1 - factor)*self.y + factor*other.y)
     def __iter__(self):
         return iter(self.coords)
 
