@@ -124,11 +124,12 @@ class Matrix():
         else:
             return NotImplemented
 
-    def __str__(self):
-        return "Matrix({0}, {1}, {2}, {3}, {4}, {5})".format(*self.matrix)
-
     def __repr__(self):
         return "Matrix({0}, {1}, {2}, {3}, {4}, {5})".format(*self.matrix)
+
+    def __str__(self):
+        return repr(self)
+
 
 
 class Vector():
@@ -259,8 +260,9 @@ class Vector():
         return self / self.length
 
     # String representation
-    def __str__(self):
-        return "Vector({0}, {1})".format(self.x, self.y)
-
     def __repr__(self):
         return "Vector({0}, {1})".format(self.x, self.y)
+
+    def __str__(self):
+        return repr(self)
+

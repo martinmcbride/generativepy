@@ -83,6 +83,14 @@ class TestMatrix(unittest.TestCase):
         # floordiv
         self.assertEqual(m1//20, Matrix(1, 1, 2, 2, 3, 3))
 
+    def test_str(self):
+        m = Matrix(20, 30, 40, 50, 60, 70)
+        self.assertEqual(str(m), "Matrix(20, 30, 40, 50, 60, 70)")
+
+    def test_repr(self):
+        m = Matrix(20, 30, 40, 50, 60, 70)
+        self.assertEqual(repr(m), "Matrix(20, 30, 40, 50, 60, 70)")
+
     def test_static_multiply(self):
         m1 = Matrix(2, 3, 4, 5, 6, 7)
         m2 = Matrix(20, 30, 40, 50, 60, 70)
