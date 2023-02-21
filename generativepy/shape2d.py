@@ -38,7 +38,7 @@ class Points:
 
     def __rmul__(self, other):
         if isinstance(other, Matrix):
-            return tuple(Vector.matrix_premultiply(other, p) for p in self.points)
+            return Points(Vector.matrix_premultiply(other, p) for p in self.points)
         return NotImplemented
 
     def __repr__(self):
