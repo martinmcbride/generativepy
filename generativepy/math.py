@@ -42,7 +42,7 @@ class Matrix():
         :param y: Translation in y direction
         :return: New matrix
         """
-        return Matrix(0, 0, x, 0, 0, y)
+        return Matrix(1, 0, x, 0, 1, y)
 
     @staticmethod
     def rotate(angle):
