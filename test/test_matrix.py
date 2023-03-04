@@ -102,7 +102,7 @@ class TestMatrix(unittest.TestCase):
 
     def test_static_translate(self):
         m = Matrix.translate(10, 20)
-        self.assertEqual(m, Matrix(0, 0, 10, 0, 0, 20))
+        self.assertEqual(m, Matrix(1, 0, 10, 0, 1, 20))
 
     def test_static_rotate(self):
         m = Matrix.rotate(math.radians(30))

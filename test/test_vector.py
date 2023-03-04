@@ -118,6 +118,15 @@ class TestVector(unittest.TestCase):
         v2 = v1 // 3
         self.assertEqual(v2, Vector(3, 6))
 
+    def test_lerp(self):
+        v1 = Vector(10, 20)
+        v2 = Vector(50, 40)
+        self.assertEqual(v1.lerp(v2, 0), Vector(10, 20))
+        self.assertEqual(v1.lerp(v2, 1), Vector(50, 40))
+        self.assertEqual(v1.lerp(v2, 0.4), Vector(26, 28))
+        self.assertEqual(v1.lerp(v2, -.2), Vector(2, 16))
+        self.assertEqual(v1.lerp(v2, 2), Vector(90, 60))
+
     def test_length(self):
         v = Vector(10, 20)
         self.assertAlmostEqual(v.length, 22.360679775)

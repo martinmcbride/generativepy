@@ -58,3 +58,14 @@ class TestPoints(unittest.TestCase):
     def test_str(self):
         p = Points([[1, 2], [3, 4], [5, 6]])
         self.assertEqual(repr(p), "Points(Vector(1, 2), Vector(3, 4), Vector(5, 6))")
+
+    def test_regular_flat(self):
+        p = Points.regular_polygon(4, (0, 0), 1)
+        s = math.sqrt(2)/2
+        self.assertEqual(p, Points([(s, s), (-s, s), (-s, -s), (s, -s)]))
+
+    def test_regular_not_flat(self):
+        p = Points.regular_polygon(4, (0, 0), 1, flat_base=False)
+        exp = Points([(1, 0), (0, 1), (-1, 0), (0, -1)])
+        self.assertEqual(p, exp)
+

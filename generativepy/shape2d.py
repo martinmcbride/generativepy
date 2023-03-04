@@ -19,7 +19,7 @@ class Points:
         @return:
         """
         centre_angle = math.pi * 2 / sides
-        angle = math.pi / 2 - centre_angle / 2
+        angle = math.pi / 2 - centre_angle / 2 if flat_base else 0
         angles = [angle + centre_angle * i for i in range(sides)]
 
         return Points(((radius * math.cos(a) + centre[0], radius * math.sin(a) + centre[1]) for a in angles))

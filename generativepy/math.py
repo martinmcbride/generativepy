@@ -4,7 +4,7 @@
 # License: MIT
 import math
 
-def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):
+def isclose(a, b, rel_tol=1e-09, abs_tol=1e-12):
     """
     Check if two values a and b are equal to within a given tolerance
     :param a:
