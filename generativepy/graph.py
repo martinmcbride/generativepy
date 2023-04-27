@@ -93,6 +93,7 @@ class Axes:
     def with_division_formatters(self, x_div_formatter=None, y_div_formatter=None):
         self.x_div_formatter = x_div_formatter
         self.y_div_formatter = y_div_formatter
+        return self
 
     def with_subdivisions(self, factor):
         '''
