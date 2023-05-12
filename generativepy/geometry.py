@@ -504,17 +504,13 @@ class Text(Shape):
         return self
 
     def offset_angle(self, angle, distance):
-        x = distance*math.cos(angle)
-        y = distance*math.sin(angle)
-        self._offset = (x, y)
+        self._offset = V.polar(distance, angle)
         return self
 
     def offset_towards(self, point, distance):
         direction = V(point) - V(self.position)
-        unit = direction/direction.length
-        x = distance*unit[0]
-        y = distance*unit[1]
-        self._offset = (x, y)
+        unit = direction.unit
+        self._offset = (distance*unit.x, distance*unit.y)
         return self
 
 
