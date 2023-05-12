@@ -4,7 +4,6 @@
 # License: MIT
 import cairo
 import math
-from easy_vector import Vector
 from dataclasses import dataclass
 from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
 from generativepy.drawing import WINDING
@@ -12,6 +11,7 @@ from generativepy.drawing import FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD
 from generativepy.drawing import FONT_SLANT_NORMAL, FONT_SLANT_ITALIC, FONT_SLANT_OBLIQUE
 from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
 from generativepy.drawing import LINE, RAY, SEGMENT
+from generativepy.math import Vector as V
 from generativepy.color import Color
 
 class Pattern:
@@ -510,7 +510,7 @@ class Text(Shape):
         return self
 
     def offset_towards(self, point, distance):
-        direction = Vector(point) - Vector(self.position)
+        direction = V(point) - V(self.position)
         unit = direction/direction.length
         x = distance*unit[0]
         y = distance*unit[1]
