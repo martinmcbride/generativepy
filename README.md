@@ -2,9 +2,9 @@
 
 Generative art and graphing library for creating images and animations.
 
-## Version 4.0 beta notes
+## Version 4.0 notes
 
-This is a beta version, mainly because 3D drawing is likely to change in a future release. The rest of the library is reasonably stable. 
+3D drawing is likely to change in a future release. The rest of the library is reasonably stable. 
 
 * Allow images to eb preloaded for `Image` objects, to avoid frequent file reloads when creating animations.
 * Add shapes2d module representing abstract shapes.
