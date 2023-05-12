@@ -1143,12 +1143,21 @@ class Image():
 
     def __init__(self, ctx):
         self.ctx = ctx
-        self.filename = ''
+        self.image = None
         self.position = (0, 0)
         self.scale_factor = 1
 
-    def of_file_position(self, filename, position):
-        self.filename = filename
+    @staticmethod
+    def load_image(filename):
+        """
+        Load and image into an image surface.
+        @param filename: Path of file containing image.
+        @return:
+        """
+        return cairo.ImageSurface.create_from_png(filename)
+
+    def of_file_position(self, image, position):
+        self.image = image
         self.position = position
         return self
 
@@ -1157,7 +1166,7 @@ class Image():
         return self
 
     def paint(self):
-        image = cairo.ImageSurface.create_from_png(self.filename)
+        image = cairo.ImageSurface.create_from_png(self.image) if isinstance(self.image, str) else self.image
         self.ctx.save()
         self.ctx.translate(*self.position)
         self.ctx.scale(self.scale_factor, self.scale_factor)
