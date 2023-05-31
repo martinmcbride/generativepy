@@ -23,6 +23,13 @@ class Matrix():
     """
 
     @staticmethod
+    def unit():
+        """
+        Create a unit matrix
+        """
+        return Matrix(1, 0, 0, 0, 1, 0)
+
+    @staticmethod
     def scale(scale_x, scale_y=None):
         """
         Create a scaling matrix
