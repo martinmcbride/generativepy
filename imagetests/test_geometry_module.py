@@ -704,7 +704,7 @@ class TestGeometryImages(unittest.TestCase):
 
             Text(ctx).of('G', (210, 400)).size(80).fill(Color('black'))
             Circle(ctx).of_center_radius((250, 80), 5).fill(Color('red'))
-            with Transform(ctx).matrix([1, 0.5, 0, 1, 0, 0]):
+            with Transform(ctx).matrix([1, 0.5, 0, 0, 1, 0]):
                 Text(ctx).of('G', (210, 400)).size(80).fill(Color('blue', 0.5))
 
 

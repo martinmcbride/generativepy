@@ -61,9 +61,11 @@ class TestTransform(unittest.TestCase):
     def test_matrix(self):
         surface = cairo.ImageSurface(cairo.FORMAT_RGB24, 100, 200)
         ctx = cairo.Context(surface)
-        with Transform(ctx).matrix([1, 0, 0, 1, 1, 2]):
-            with Transform(ctx).matrix([10, 0, 0, 20, 0, 0]):
-                with Transform(ctx).matrix([1, 0, 0, 1, 5, 6]):
+        with Transform(ctx).matrix([1, 0, 1, 0, 1, 2]):
+            with Transform(ctx).matrix([10, 0, 0, 0, 20, 0]):
+                with Transform(ctx).matrix([1, 0, 5, 0, 1, 6]):
+                    # Note that ctx.get_matrix() return a cairo.Matrix. It has the elements in a different order to
+                    # a generativepy.math.Matrix.
                     self.assertEqual([10.0, 0.0, 0.0, 20.0, 51.0, 122.0], list(ctx.get_matrix()))
 
 

@@ -1279,7 +1279,13 @@ class Transform():
         return self
 
     def matrix(self, m):
-        new_matrix = cairo.Matrix(*m)
+        """
+
+        :param m: A Matrix object or a sequence of 6 values
+        :return:
+        """
+        # Convert the generativepy.math.matrix to a cairo.Matrix
+        new_matrix = cairo.Matrix(m[0], m[1], m[3], m[4], m[2], m[5])
         old_matrix = self.ctx.get_matrix()
         self.ctx.set_matrix(new_matrix*old_matrix)
         return self
