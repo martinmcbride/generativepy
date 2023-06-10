@@ -2,6 +2,8 @@
 # Created: 2019-01-25
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+
+import itertools
 import cairo
 import math
 from dataclasses import dataclass
@@ -1184,7 +1186,7 @@ class Turtle():
         self.heading = 0
         self.x = 0
         self.y = 0
-        self.color = Color(0)
+        self.color = itertools.cycle((Color(0),))
         self.line_width = 1
         self.dash = []
         self.cap = SQUARE
@@ -1205,7 +1207,7 @@ class Turtle():
         self.x += distance*math.cos(self.heading)
         self.y += distance*math.sin(self.heading)
         Line(self.ctx).of_start_end(p1, (self.x, self.y))\
-                      .stroke(self.color, line_width=self.line_width, dash=self.dash, cap=self.cap)
+                      .stroke(next(self.color), line_width=self.line_width, dash=self.dash, cap=self.cap)
         return self
 
     def move(self, distance):
@@ -1231,7 +1233,12 @@ class Turtle():
         return self
 
     def set_style(self, color=Color(0), line_width=1, dash=None, cap=SQUARE):
-        self.color = color
+        if isinstance(color, Color):
+            # Single color, create a 1 element tuple and cycle over it
+            self.color = itertools.cycle((color,))
+        else:
+            # Sequence of colors, cycle over colours
+            self.color = itertools.cycle(color)
         self.line_width = line_width
         if not dash:
             self.dash = []
