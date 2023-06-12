@@ -2,6 +2,34 @@
 # Created: 2019-06-04
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+"""
+generativepy uses `Color` objects to represent colours.
+
+Colours are stored as 4 values representing the red, green, blue and transparency (`rgba`). Each value has a range of 0.0 to 1.0, that represents the amount of that colour that is present:
+
+* An `r` value of 0.0 means that colour contains no red.
+* An `r` value of 1.0 means that colour contains the full intensity red.
+* An `r` value of 0.25 means that colour contains a 25% of full intensity red.
+* Similar for `b` and `g`, allowing any colour can be created using the `r`, `g`, `b` values.
+
+For the alpha value, `a`:
+
+* An `a` value of 0.0 means that colour is fully transparent (ie it can't be seen at all).
+* An `a` value of 1.0 means that colour is fully opaque. It will completely hide anything behind it.
+* An `a` value of 0.25 means that colour is partially transparent. It will partly hide anything behind it, creating a colour that is 75% of the background colour mixed with 25% of the foreground colour.
+* The way foreground and background colours mix can be changed using Pycairo compositing operators if you wish.
+
+`Color` can be used to represent various types of colour, but all are stored internally as `rgba` values (see the constructor section below for more details).
+
+`Color` objects are immutable - you cannot change a `Color` object once it has been created. However there are various *factory methods* available for creating new colours that are based on an existing colour (for example you can create a new colour that is 20% more red, or 50% less saturated, based on an existing colour).
+
+`Color` objects behave as immutable sequences (similar to tuples) so you can index, unpack, and loop over a `Color`.
+
+The `color` module also contains:
+
+* The `make_colormap` function that can be used to create a color map.
+* Several reusable colour schemes.
+"""
 
 import colorsys
 import itertools
@@ -158,36 +186,43 @@ cssColors = {
 }
 
 class Color():
-    '''
-    Holds a color value.
-
-    Color is stored as a tuple (r, g, b, a), where each channel has a value between 0 and 1.
-
-    Colour can be initialised with:
-    - a grey value
-    - a grey value + an alpha
-    - r, g and b values (alpha defaults to 1)
-    - r, g, b and a values
-    - a CSS color name as a string (alpha defaults to 1)
-    - a CSS color name as a string plus an alpha value (0 to 1)
-
-    Color objects are immutable.
-
-    rgb, rgba (properties) gets the colour values as a 3- or 4-tuple
-
-    of_hsl, of_hsla creates a new Color from hsl values (color values are stored as RGB)
-
-    r (property) gets the red value (similar for b, g, a, h, s, l). h, s and l values are obtained by converting from rgb
-
-    with_r creates a new Color from an existing colour by setting the r value (similar for b, g, a, h, s, l). For
-    h, s, l values, the color is converted to hsl, modified, then converted back to rgb.
-
-    with_r_factor creates a new Color from an existing colour by multiplying the r value by a factor. It is
-    equivalent to with_r(get_r()*factor). Similar for b, g, a, h, s, l
-
-    '''
 
     def __init__(self, *args):
+        """
+        The `Color` constructor creates an `rgba` colour object. It accepts between 1 and 4 parameters.
+
+        All numerical input values are clamped in the range 0.0 to 1.0 (values less than 0.0 are replaced with 0.0, values greater than 1.0 are replaced with 1.0).
+
+        **Parameters**
+
+        * `args`: various - See usage.
+
+        **Returns**
+        A `Color` object.
+
+        **Usage**
+
+        A color object always contains four values, `r`, `g`, `b` and `a`. Each value can have a value between
+        0.0 and 1.0. Out of range values are automatically clamped.
+
+        RGB values represent he three colours, where 0 is no colour, 1 is full intensity colour.
+
+        A is the alpha channel, where 0 is fully transparent and 1 is fully opaque.
+
+        Options for initialisation parameters are:
+
+        * `Color(k)` a grey color, value `k`.
+        * `Color(k, a)` a transparent grey color, value `k`, alpha `a`.
+        * `Color(r, g, b)` an RGB color.
+        * `Color(r, g, b, a)` a transparent RGB color, alpha `a`.
+        * `Color(name)` a CSS named color, where `name` is the colour name (case insensitive).
+        * `Color(name, a)` a transparent CSS named color, alpha `a`.
+
+        Color objects are immutable.
+
+        There are also various static methods and properties for creating other colours.
+        """
+
         if len(args) == 1:
             if args[0] in cssColors:
                 self.color = tuple([x/255 for x in cssColors[args[0]]]) + (1,)
@@ -210,6 +245,32 @@ class Color():
 
     @staticmethod
     def of_hsl(h, s, l):
+        """
+        Static method to create an HSL colour.
+
+        **Parameters**
+
+        * `h`: number - Hue of colour.
+        * `s`: number - Saturation of colour.
+        * `v`: number - Value (lightness) of colour.
+
+        **Returns**
+        A `Color` object.
+
+        **Usage**
+        HSL colours are defined by 3 values:
+        
+        * The hue value controls the position of the colour on the colour wheel.
+        * The saturation controls how pure the colour is. For a particular hue, reducing the saturation creates a greyed 
+        out version of the same colour.
+        * The lightness controls how light the colour is. Varying the lightness creates a lighter or darker version of
+        the same colour.
+        
+        HSL is very useful because it allows you to control colours more intuitively.
+        
+        Internally the colour is still represented as an `rgba` colour. The `h`, `s` and `l` values are converted to `rgb`,
+        with the `a` value to 1.
+        """
         h = Color.clamp(h)
         s = Color.clamp(s)
         l = Color.clamp(l)
@@ -218,6 +279,22 @@ class Color():
 
     @staticmethod
     def of_hsla(h, s, l, a):
+        """
+        Static method to create a transparent HSL colour.
+
+        **Parameters**
+
+        * `h`: number - Hue of colour.
+        * `s`: number - Saturation of colour.
+        * `v`: number - Value (lightness) of colour.
+        * `a`: number - Alpha (transparency) of colour.
+
+        **Returns**
+        A `Color` object.
+
+        **Usage**
+        Similar to `of_hsl` but provides alpha channel.
+        """
         h = Color.clamp(h)
         s = Color.clamp(s)
         l = Color.clamp(l)
@@ -227,129 +304,225 @@ class Color():
 
     @property
     def rgb(self):
+        """
+        Read-only property returns RGB values as a tuple of floats. Each value is in range 0.0 to 1.0.
+        """
         return tuple(self.color[:3])
 
     @property
     def rgba(self):
+        """
+        Read-only property returns RGBA values as a tuple of floats. Each value is in range 0.0 to 1.0.
+        """
         return tuple(self.color)
 
     @property
     def r(self):
+        """
+        Read-only property returns the red value of the colour as a float in range 0.0 to 1.0.
+        """
         return self.color[0]
 
     def with_r(self, newval):
+        """
+        Read-only property returns a new `Color` object with its red value set to `newval`
+        """
         newval = Color.clamp(newval)
         return Color(newval, self.color[1], self.color[2], self.color[3])
 
     def with_r_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its red value multiplied by `factor`
+        """
         return Color(self.color[0]*factor, self.color[1], self.color[2], self.color[3])
 
     @property
     def g(self):
+        """
+        Read-only property returns green value of the colour as a float in range 0.0 to 1.0.
+        """
         return self.color[1]
 
     def with_g(self, newval):
+        """
+        Read-only property returns a new `Color` object with its green value set to `newval`
+        """
         newval = Color.clamp(newval)
         return Color(self.color[0], newval, self.color[2], self.color[3])
 
     def with_g_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its green value multiplied by `factor`
+        """
         return Color(self.color[0], self.color[1]*factor, self.color[2], self.color[3])
 
     @property
     def b(self):
+        """
+        Read-only property returns blue value of the colour as a float in range 0.0 to 1.0.
+        """
         return self.color[2]
 
     def with_b(self, newval):
+        """
+        Read-only property returns a new `Color` object with its blue value set to `newval`
+        """
         newval = Color.clamp(newval)
         return Color(self.color[0], self.color[1], newval, self.color[3])
 
     def with_b_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its blue value multiplied by `factor`
+        """
         return Color(self.color[0], self.color[1], self.color[2]*factor, self.color[3])
 
     @property
     def a(self):
+        """
+        Read-only property returns the alpha value of the colour as a float in range 0.0 to 1.0.
+        """
         return self.color[3]
 
     def with_a(self, newval):
+        """
+        Read-only property returns a new `Color` object with its alpha value set to `newval`
+        """
         newval = Color.clamp(newval)
         return Color(self.color[0], self.color[1], self.color[2], newval)
 
     def with_a_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its alpha value multiplied by `factor`
+        """
         return Color(self.color[0], self.color[1], self.color[2], self.color[3]*factor)
 
     @property
     def h(self):
+        """
+        Read-only property returns the h value of the colour as a float in range 0.0 to 1.0.
+        """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return h
 
     def with_h(self, newval):
+        """
+        Read-only property returns a new `Color` object with its h value set to `newval`
+        """
         newval = Color.clamp(newval)
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         r, g, b = colorsys.hls_to_rgb(newval, l, s)
         return Color(r, g, b, self.color[3])
 
     def with_h_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its h value multiplied by `factor`
+        """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         r, g, b = colorsys.hls_to_rgb(Color.clamp(h*factor), l, s)
         return Color(r, g, b, self.color[3])
 
     @property
     def s(self):
+        """
+        Read-only property returns the s value of the colour as a float in range 0.0 to 1.0.
+        """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return s
 
     def with_s(self, newval):
+        """
+        Read-only property returns a new `Color` object with its s value set to `newval`
+        """
         newval = Color.clamp(newval)
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         r, g, b = colorsys.hls_to_rgb(h, l, newval)
         return Color(r, g, b, self.color[3])
 
     def with_s_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its s value multiplied by `factor`
+        """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         r, g, b = colorsys.hls_to_rgb(h, l, Color.clamp(s*factor))
         return Color(r, g, b, self.color[3])
 
     @property
     def l(self):
+        """
+        Read-only property returns the l value of the colour as a float in range 0.0 to 1.0.
+        """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return l
 
     def with_l(self, newval):
+        """
+        Read-only property returns a new `Color` object with its l value set to `newval`
+        """
         newval = Color.clamp(newval)
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         r, g, b = colorsys.hls_to_rgb(h, newval, s)
         return Color(r, g, b, self.color[3])
 
     def with_l_factor(self, factor):
+        """
+        Read-only property returns a new `Color` object with its l value multiplied by `factor`
+        """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         r, g, b = colorsys.hls_to_rgb(h, Color.clamp(l*factor), s)
         return Color(r, g, b, self.color[3])
 
     @property
     def dark3(self):
+        """
+        Read-only property returns a new `Color` object that is a much darker version of the current colout.
+        """
         return self.with_l_factor(0.3)
 
     @property
     def dark2(self):
+        """
+        Read-only property returns a new `Color` object that is a darker version of the current colout.
+        """
         return self.with_l_factor(0.5)
 
     @property
     def dark1(self):
+        """
+        Read-only property returns a new `Color` object that is a slightly darker version of the current colout.
+        """
         return self.with_l_factor(0.75)
 
     @property
     def light3(self):
+        """
+        Read-only property returns a new `Color` object that is a much lighter version of the current colout.
+        """
         return self.with_l_factor(2.5)
 
     @property
     def light2(self):
+        """
+        Read-only property returns a new `Color` object that is a lighter version of the current colout.
+        """
         return self.with_l_factor(1.9)
 
     @property
     def light1(self):
+        """
+        Read-only property returns a new `Color` object that is a slightly lighter version of the current colout.
+        """
         return self.with_l_factor(1.4)
 
     def lerp(self, other, factor):
+        """
+        Creates a new `Color` object that is part way between the current colour and the `other` colour. `factor` controls
+        the mixture, eg:
+
+        0: Current colour
+        0.2: 80% current + 20% other
+        0.7: 30% current + 70% other
+        1: Other colour
+        """
         factor = Color.clamp(factor)
         col1 = self.rgba
         col2 = other.rgba
@@ -357,16 +530,34 @@ class Color():
         return Color(*col)
 
     def as_rgbstr(self):
+        """
+        Converts current colour into a string format.
+
+        **Returns**
+        String of form rgb(255, 128, 0)
+        """
         return 'rgb({}, {}, {})'.format(int(self.color[0] * 255),
                                        int(self.color[1] * 255),
                                        int(self.color[2] * 255))
 
     def as_rgb_bytes(self):
+        """
+        Converts current colour into a tuple.
+
+        **Returns**
+        Tuple of form (255, 128, 0)
+        """
         return (int(self.color[0] * 255),
                 int(self.color[1] * 255),
                 int(self.color[2] * 255))
 
     def as_rgba_bytes(self):
+        """
+        Converts current colour into a tuple including alpha.
+
+        **Returns**
+        Tuple of form (255, 128, 0, 64)
+        """
         return (int(self.color[0] * 255),
                 int(self.color[1] * 255),
                 int(self.color[2] * 255),
@@ -391,14 +582,22 @@ class Color():
 
 
 def make_colormap(length, colors, bands=None):
-    '''
-    Create a colormap, a list of varying colors.
-    :param length: Total size of list
-    :param colors: List of colors, must be at least 2 long.
-    :param bands: Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
-                  len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
-    :return: a list of Color objects
-    '''
+    """
+    A colormap is a list of varying colors. It can be used to map a set of integers onto a list of colours.
+
+    A colormap can be used to assign colour gradients, gradients with step changes, or discrete colours depending on how
+    it is set up.
+
+    **Parameters**
+
+    * `length`: int - Total size of returned list.
+    * `colors`: list[Colors] - Colours for creating the map. The list must be at least 2 long.
+    * `bands`: list[number] - Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
+    len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
+
+    **Returns**
+    A list of `Color` objects.
+    """
 
     color_count = len(colors)
 
