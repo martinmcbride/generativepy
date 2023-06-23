@@ -1,9 +1,21 @@
+# Author:  Martin McBride
+# Created: 2022-07-24
+# Copyright (C) 2022, Martin McBride
+# License: MIT
+"""
+The `formulas` module provides the ability to display formatted mathematical equations.
+
+The module converts latex format equations into bitmap images, with text of any required colour and a transparent background.
+The image can be displayed using the `Image` class, which allows positioning and scaling of the formula. It is also
+possible to use the `Transform` class to apply general transforms to the formula image.
+
+The image will be tightly cropped to include just the marked pixels, with no border.
+"""
 import subprocess
 from PIL import Image
 import numpy as np
 import random
 import os
-
 
 def _create_tex(formula, packages):
     """
@@ -83,14 +95,40 @@ def rasterise_formula(name, formula, color, dpi=600, packages=None):
     """
     Convert a latex formula into a PNG image. The PNG image will be tightly cropped, with a transparent background and
     text in the selected colour.
-    :param name: Name of the output images. String with no extension, eg "myformula". The final output will be stored
-    using this name, in the current working folder, so if you are creating multiple formulae give each one a unique name
-    :param formula: The forumal, as a latex string.
-    :param color: Color object defining the required colour of the output.
-    :param dpi: The resolution, in dpi. This indirectly controls the size of the image,
-    :param packages: tuple containing any required additiona latex packages
-    :return: A tuple containing the filename of teh result (with a png extension) and the (width, height) of the image
+
+    **Parameters**
+
+    * `name`: str - The base filename for the output PNG file. String with no extension, eg "myformula". The final
+    output will be stored using this name, in the current working folder, so if you are creating multiple formulae give
+    each one a unique name.
+    * `formula`: string - The formula, as a latex string.
+    * `color`: `Color` object - The colour that will be used to paint the formula.
+    * `dpi`: number - The nominal size of the formula. See usage.
+    * `packages`: sequence of strings - a list of the names of any required latex packages.  Any valid packages listed
+    here will be imported into the Latex equation description so that they can be used in the formula.
+
+    **Returns**
+    A tuple containing the filename of the result (with a png extension) and the (width, height) of the image
     in pixels.
+
+    **Usage**
+    The default `dpi`value of 600 creates the formula using a text height of about 60 pixels. The exact size of the image
+    depends on the formula used. The image is cropped tightly to the image area that includes the formula.
+
+    You can change the image size by altering the `dpi` value - a smaller number creates a smaller image, larger value
+    creates a larger image. Since the scaling is applied to the vector data, it is always rendered at the best quality
+    at any size.
+
+    You can also resize the image when it is drawn on the page, using the `scale` method of the `Image` class. This method
+    can reduce the size of the formula with reasonable quality, but since it works on the bitmap data increasing the size
+    will cause pixelation problems.
+
+    The function return a tuple. The first element is the name of the PNG file where the output is stored. The output is
+    always place in the current working directory. The filename will be base on tehe `name` parameter, but it will also
+    have additional characters to avoid name clashes.
+
+    The second element is a size tuple, `(width, height)`, giving the exact size of the output image. The image is tightly
+    cropped so the dimensions can be used to align the image.
     """
     unique_name = "{}-{}".format(name, random.randint(100000, 999999))
     tex = _create_tex(formula, packages)

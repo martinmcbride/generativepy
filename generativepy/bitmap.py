@@ -273,8 +273,7 @@ def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
 
 def example_paint_function(image, pixel_width, pixel_height, frame_no, frame_count):
     """
-    This is an example paint function
-    `make_bitmap_frame` except it creates `count` frames instead of just one.
+    This is an example paint function. It is a dummy function used to document the required parameters.
 
     **Parameters**
 

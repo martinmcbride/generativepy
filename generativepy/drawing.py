@@ -276,8 +276,7 @@ def make_svg(outfile, draw, width, height):
 
 def example_draw_function(image, pixel_width, pixel_height, frame_no, frame_count):
     """
-    This is an example paint function
-    `make_bitmap_frame` except it creates `count` frames instead of just one.
+    This is an example paint function. It is a dummy function used to document the required parameters.
 
     **Parameters**
 
