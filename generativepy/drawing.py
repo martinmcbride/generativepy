@@ -2,15 +2,31 @@
 # Created: 2018-10-22
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+"""
+The drawing module provides the ability to draw vector images and save them as either PNG images, SVG images, or frames.
+
+The module is based on the Pycairo library. This provides many vector drawing methods.
+
+However, it is often more convenient to use the `geometry` module of generativepy, which provides higher level versions
+of most of the primitive drawing functions.
+"""
 
 import cairo
 import generativepy.utils
 import numpy as np
 
 # Text align
+
+# Centre text horizontally
 CENTER = 0
+
+# Centre text vertically
 MIDDLE = 0
+
+# Left align text
 LEFT = 1
+
+# Right align text
 RIGHT = 2
 TOP = 3
 BOTTOM = 4
@@ -44,19 +60,32 @@ FONT_SLANT_OBLIQUE = 2
 
 
 def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, starty=0, background=None, flip=False):
-    '''
-    Set up the context initial sclaling and background color
-    :param ctx: The context
-    :param pixel_width: The device space width
-    :param pixel_height:  The device space width
-    :param width: The user space width
-    :param height:  The user space width
-    :param startx: The x offset of the top left corner from the origin
-    :param starty: The y offset of the top left corner from the origin
-    :param background: Color of the background
-    :param flip: If true, user space is flipped in the y direction.
-    :return:
-    '''
+    """
+    Set up the context initial scaling and background color.
+    
+    **Parameters**
+
+    * `ctx` :  Pycairo context - The drawing context.
+    * `pixel_width` int:  - Pycairo context. Use the value passed into the `draw` function.
+    * `pixel_height` int:  -  The device space height. Use the value passed into the `draw` function.
+    * `width` number:  - The user space width.
+    * `height` number:  -  The user space height.
+    * `startx` number:  - The x offset of the top left corner from the origin.
+    * `starty` number:  - The y offset of the top left corner from the origin.
+    * `background` Color:  - Color of the background.
+    * `flip` bool:  - If true, flips the page in the y direction, so the origin is at the bottom left, useful for
+    mathematical drawing.
+    
+    **Returns**
+    None.
+
+    **Usage**
+    This function maps performs a scaling to set the drawing coordinates. This is optional, but in generative art you
+    will often be using functions that work at a particular scale. It is very useful to be able to set your drawing
+    coordinates to maths this, so you don't need to worry about scaling values when you draw.
+
+    As a convenience it can also set the page background colour.
+    """
 
     if not height and not width:
         width = pixel_width
@@ -80,15 +109,27 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
 
 
 def make_image(outfile, draw, width, height, channels=3):
-    '''
-    Create a PNG file using cairo
-    :param outfile: Name of output file
-    :param draw: the draw function
-    :param width: width in pixels, int
-    :param height: height in pixels, int
-    :param channels: 3 for rgb, 4 for rgba
-    :return:
-    '''
+    """
+    Used to create a single PNG image.
+
+    **Parameters**
+
+    * `outfile`: str - The path and filename for the output PNG file. The '.png' extension is optional, it will be added
+    if it isn't present.
+    * `draw`: function - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image that will be created, in pixels.
+    * `pixel_height`: int - The height of the image that will be created, in pixels.
+    * `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+
+    **Returns**
+    None
+
+    **Usage**
+    `make_image` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the
+    context. It then stores the image as a PNG file.
+
+    The draw function must have the signature described for `example_draw_function`.
+    """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
@@ -99,16 +140,33 @@ def make_image(outfile, draw, width, height, channels=3):
 
 
 def make_images(outfile, draw, width, height, count, channels=3):
-    '''
-    Create a sequence of PNG files using cairo
-    :param outfile: Base name of output files
-    :param draw: the draw function
-    :param width: width in pixels, int
-    :param height: height in pixels, int
-    :param count: number of frames to create
-    :param channels: 3 for rgb, 4 for rgba
-    :return: a frame buffer
-    '''
+    """
+    Used to create a sequence of PNG images. These can be combined into an animated GIF or video. This is similar to
+    `make_image` except it creates `count` files instead of just one.
+
+    **Parameters**
+
+    * `outfile`: str - The path and filename template for the output PNG file. The '.png' extension is optional, it
+    will be added if it isn't present.
+    * `draw`: function - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image that will be created, in pixels.
+    * `pixel_height`: int - The height of the image that will be created, in pixels.
+    * `count`: int - the number of images to create
+    * `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+
+    **Returns**
+    None
+
+    **Usage**
+    `make_images` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the context.
+    It repeats this process `count` times to create a sequence of image files.
+
+    The image files are stored in numbered files. For example if `outfile` is "myfolder/myname.png" the files
+    will be saved as "myfolder/myname00000000.png", "myfolder/myname00000001.png" and so on.
+
+    The paint function must have the signature described for `example_draw_function`. Each time the draw function is
+    called, `fn` will contain the frame number - 0, 1 etc
+    """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
     for i in range(count):
@@ -120,15 +178,28 @@ def make_images(outfile, draw, width, height, count, channels=3):
 
 
 def make_image_frames(draw, width, height, count, channels=3):
-    '''
-    Create a numpy frame file using cairo
-    :param draw: the draw function
-    :param width: width in pixels, int
-    :param height: height in pixels, int
-    :param count: number of frames to create
-    :param channels: 3 for rgb, 4 for rgba
-    :return: a lazy sequence of frame buffers
-    '''
+    """
+    Used to create a single image as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, channels).
+
+    **Parameters**
+
+    * `draw`: function - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image that will be created, in pixels.
+    * `pixel_height`: int - The height of the image that will be created, in pixels.
+    * `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+
+    **Returns**
+    A frame.
+
+    **Usage**
+    `make_image_frames` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the context.
+    It repeats this process `count` times to create a sequence of image frames.
+
+    The function returns a lazy iterator. When this iterator is evaluated, the image frames are created on demand.
+
+    The draw function must have the signature described for `example_draw_function`. Each time the paint function is
+    called, `fn` will contain the frame number - 0, 1 etc
+    """
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
     for i in range(count):
         surface = cairo.ImageSurface(fmt, width, height)
@@ -141,14 +212,25 @@ def make_image_frames(draw, width, height, count, channels=3):
         yield a
 
 def make_image_frame(draw, width, height, channels=3):
-    '''
-    Create a numpy frame file using cairo
-    :param draw: the draw function
-    :param width: width in pixels, int
-    :param height: height in pixels, int
-    :param channels: 3 for rgb, 4 for rgba
-    :return:
-    '''
+    """
+    Used to create a single image as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, channels).
+
+    **Parameters**
+
+    * `draw`: function - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image that will be created, in pixels.
+    * `pixel_height`: int - The height of the image that will be created, in pixels.
+    * `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+
+    **Returns**
+    A frame.
+
+    **Usage**
+    `make_image_frame` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the
+    context. The image is returned as a NumPy frame.
+
+    The draw function must have the signature described for `example_draw_function`.
+    """
     fmt = cairo.FORMAT_ARGB32 if channels==4 else cairo.FORMAT_RGB24
     surface = cairo.ImageSurface(fmt, width, height)
     ctx = cairo.Context(surface)
@@ -164,14 +246,27 @@ def make_image_frame(draw, width, height, channels=3):
 
 
 def make_svg(outfile, draw, width, height):
-    '''
-    Create an SVG file using cairo
-    :param outfile: Name of output file
-    :param width: width in pixels, int
-    :param height: height in pixels, int
-    :param pixelSize: size in pixels tuple (x, y)
-    :return:
-    '''
+    """
+    Used to create a single SVG image. This function is similar to `make_image` except that it returns an SVG (vector
+    image) instead of a PNG (bitmap image).
+
+    **Parameters**
+
+    * `outfile`: str - The path and filename for the output SVG file. The '.svg' extension is optional, it will be added
+    if it isn't present.
+    * `draw`: function - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image that will be created, in pixels.
+    * `pixel_height`: int - The height of the image that will be created, in pixels.
+
+    **Returns**
+    None
+
+    **Usage**
+    `make_svg` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the
+    context. It then stores the image as a PNG file.
+
+    The draw function must have the signature described for `example_draw_function`.
+    """
     if outfile.lower().endswith('.svg'):
         outfile = outfile[:-4]
     surface = cairo.SVGSurface(outfile + '.svg', width, height)
@@ -179,4 +274,24 @@ def make_svg(outfile, draw, width, height):
     draw(ctx, width, height, 0, 1)
     ctx.show_page()
 
+def example_draw_function(image, pixel_width, pixel_height, frame_no, frame_count):
+    """
+    This is an example paint function
+    `make_bitmap_frame` except it creates `count` frames instead of just one.
+
+    **Parameters**
+
+    * `image`: PIL Image object - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image in pixels.
+    * `pixel_height`: int - The height of the image in pixels.
+    * `frame_no`: int - the number of the current frame. For single images this will always be 0. For animations this
+                        paint function will be called `frame_count` times (once for each frame) with `frame_no` incrementing
+                        by 1 each time (ie it counts from 0 to `frame_count` - 1.
+    * `frame_count`: int - The total number of frames being created.For single images this will always be 0. For animations
+                           this will be set to the total number of frames in the animation.
+
+    **Returns**
+    None
+    """
+    pass
 

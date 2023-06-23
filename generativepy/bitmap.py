@@ -169,7 +169,8 @@ def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
     None
 
     **Usage**
-    `make_bitmap` creates a PIL Image object, then calls the user supplied `paint` function to fill the image.
+    `make_bitmap` creates a PIL Image object, then calls the user supplied `paint` function to fill the image. It then
+    stores the image as a PNG file.
 
     The paint function must have the signature described for `example_paint_function`.
     """
@@ -201,7 +202,7 @@ def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
     `make_bitmaps` creates a PIL Image object, then calls the user supplied `paint` function to fill the
     image. It repeats this process `count` times to create a sequence of image files.
 
-    The image file names will be stored in numbered files. For example if `outfile` is "myfolder/myname.png" the files
+    The image files are stored in numbered files. For example if `outfile` is "myfolder/myname.png" the files
     will be saved as "myfolder/myname00000000.png", "myfolder/myname00000001.png" and so on.
 
     The paint function must have the signature described for `example_paint_function`. Each time the paint function is
@@ -229,7 +230,8 @@ def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
     A frame.
 
     **Usage**
-    `make_bitmap_frame` creates a PIL Image object, then calls the user supplied `paint` function to fill the image.
+    `make_bitmap_frame` creates a PIL Image object, then calls the user supplied `paint` function to fill the image. The
+    image is returned as a NumPy frame.
 
     The paint function must have the signature described for `example_paint_function`.
     """
@@ -258,6 +260,8 @@ def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
     `make_bitmaps` creates a PIL Image object, then calls the user supplied `paint` function to fill the
     image. It repeats this process `count` times to create a sequence of frames.
 
+    The function returns a lazy iterator. When this iterator is evaluated, the image frames are created on demand.
+
     The paint function must have the signature described for `example_paint_function`. Each time the paint function is
     called, `fn` will contain the frame number - 0, 1 etc
     """
@@ -267,3 +271,23 @@ def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
         frame = np.copy(np.asarray(image))
         yield frame
 
+def example_paint_function(image, pixel_width, pixel_height, frame_no, frame_count):
+    """
+    This is an example paint function
+    `make_bitmap_frame` except it creates `count` frames instead of just one.
+
+    **Parameters**
+
+    * `image`: PIL Image object - A drawing function object, see below.
+    * `pixel_width`: int - The width of the image in pixels.
+    * `pixel_height`: int - The height of the image in pixels.
+    * `frame_no`: int - the number of the current frame. For single images this will always be 0. For animations this
+                        paint function will be called `frame_count` times (once for each frame) with `frame_no` incrementing
+                        by 1 each time (ie it counts from 0 to `frame_count` - 1.
+    * `frame_count`: int - The total number of frames being created.For single images this will always be 0. For animations
+                           this will be set to the total number of frames in the animation.
+
+    **Returns**
+    None
+    """
+    pass
