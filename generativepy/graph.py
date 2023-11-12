@@ -435,3 +435,20 @@ class Plot(Shape):
             self.points.append(self.axes.transform_from_graph((r*math.cos(theta), r*math.sin(theta))))
         return self
 
+    def of_parametric_function(self, fx, fy, extent=(0, 1), precision=100):
+        '''
+        Plot a parametric function x = fx(t), y = ft(t).
+        :param fx: x as a function of t. It must take a single argument
+        :param fy: y as a function of t. It must take a single argument
+        :param extent: the range of t values to plot. If not supplied the range 0 to 1 is used.
+        :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+        :return:
+        '''
+        self.points = []
+        for t in np.linspace(extent[0], extent[1], precision):
+            x = fx(t)
+            y = fy(t)
+            self.points.append(self.axes.transform_from_graph((x, y)))
+        return self
+
+
