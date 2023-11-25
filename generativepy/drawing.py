@@ -80,7 +80,7 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
     None.
 
     **Usage**
-    This function maps performs a scaling to set the drawing coordinates. This is optional, but in generative art you
+    This function performs a scaling to set the drawing coordinates. This is optional, but in generative art you
     will often be using functions that work at a particular scale. It is very useful to be able to set your drawing
     coordinates to maths this, so you don't need to worry about scaling values when you draw.
 
@@ -276,7 +276,7 @@ def make_svg(outfile, draw, width, height):
 
 def example_draw_function(image, pixel_width, pixel_height, frame_no, frame_count):
     """
-    This is an example paint function. It is a dummy function used to document the required parameters.
+    This is an example draw function for use with `make_image` and similar functions. It is a dummy function used to document the required parameters.
 
     **Parameters**
 
