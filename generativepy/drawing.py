@@ -274,13 +274,13 @@ def make_svg(outfile, draw, width, height):
     draw(ctx, width, height, 0, 1)
     ctx.show_page()
 
-def example_draw_function(image, pixel_width, pixel_height, frame_no, frame_count):
+def example_pycairo_draw_function(ctx, pixel_width, pixel_height, frame_no, frame_count):
     """
     This is an example draw function for use with `make_image` and similar functions. It is a dummy function used to document the required parameters.
 
     **Parameters**
 
-    * `image`: PIL Image object - A drawing function object, see below.
+    * `ctx`: PyCairo context object - The context object that the image will be drawn on.
     * `pixel_width`: int - The width of the image in pixels.
     * `pixel_height`: int - The height of the image in pixels.
     * `frame_no`: int - the number of the current frame. For single images this will always be 0. For animations this
