@@ -2410,12 +2410,13 @@ class Turtle():
 
         **Parameters**
 
-        * `pattern`:  the fill `Pattern` or `Color` to use for theline, None for default
+        * `color`: `Color` or sequence of `Color` objects - The `Color` to use for the line, None for default. If a sequence of colours is provided, each
+        new `forward` call will cycle through the colors in sequence.
         * `line_width`: width of stroke line. None for default
         * dash`: sequence, dash patter of line. None for default
         * cap`: line end style, None for default.
 
-        These parameters are as described for the `StrokeParams` object.
+        These parameters are as described for the `StrokeParams` object, except that the `color` parameter can accept a sequnce..
 
         **Returns**
         self
