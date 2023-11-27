@@ -4,28 +4,43 @@
 # License: MIT
 import math
 
+
 def isclose(a, b, rel_tol=1e-09, abs_tol=1e-12):
     """
     Check if two values a and b are equal to within a given tolerance
-    :param a:
-    :param b:
-    :param rel_tol: Tolerance as a fraction of the absolute value of a or b (whichever is largest)
-    :param abs_tol: Tolerance as an absolute value
-    :return:
+
+    **Parameters**
+
+    * `a`: number - First value
+    * `b`: number - Second value
+    * `rel_tol`: number - Tolerance as a fraction of the absolute value of a or b (whichever is largest)
+    * `abs_tol`: number - Tolerance as an absolute value
+
+    **Returns**
+
+    True if the numbers are close, false otherwise.
     """
-    return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+    return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
+
 
 class Matrix():
     """
     Class to represent a 2D transform matrix:
+
+    ```
     | xx xy xt |
     | yx yy yt |
+    ```
     """
 
     @staticmethod
     def unit():
         """
         Create a unit matrix
+
+        **Returns**
+
+        The unit matrix.
         """
         return Matrix(1, 0, 0, 0, 1, 0)
 
@@ -33,9 +48,15 @@ class Matrix():
     def scale(scale_x, scale_y=None):
         """
         Create a scaling matrix
-        :param scale_x: Scale factor in x direction
-        :param scale_y: Scale factor in y direction, defaults to scale_x
-        :return: New matrix
+
+        **Parameters**
+
+        * `scale_x`: Scale factor in x direction
+        * `scale_y`: Scale factor in y direction, defaults to scale_x
+
+        **Returns**
+
+        New matrix
         """
         if scale_y is None:
             scale_y = scale_x
@@ -45,9 +66,15 @@ class Matrix():
     def translate(x, y):
         """
         Create a translation matrix
-        :param x: Translation in x direction
-        :param y: Translation in y direction
-        :return: New matrix
+
+        **Parameters**
+
+        * `x`: Translation in x direction
+        * `y`: Translation in y direction
+
+        **Returns**
+
+        New matrix
         """
         return Matrix(1, 0, x, 0, 1, y)
 
@@ -55,8 +82,14 @@ class Matrix():
     def rotate(angle):
         """
         Create a rotation matrix
-        :param angle: Angle in radians, measured counterclockwise from positive x direction
-        :return: New matrix
+
+        **Parameters**
+
+        * `angle`: Angle in radians, measured counterclockwise from positive x direction
+
+        **Returns**
+
+        New matrix
         """
         c = math.cos(angle)
         s = math.sin(angle)
@@ -66,18 +99,23 @@ class Matrix():
     def multiply(p, q):
         """
         Multiply two matrices
-        :param a: First matrix
-        :param b: Second matrix
-        :return: New matrix
-        """
-        a = p[0]*q[0] + p[1]*q[3]
-        b = p[0]*q[1] + p[1]*q[4]
-        c = p[0]*q[2] + p[1]*q[5] + p[2]
-        d = p[3]*q[0] + p[4]*q[3]
-        e = p[3]*q[1] + p[4]*q[4]
-        f = p[3]*q[2] + p[4]*q[5] + p[5]
-        return Matrix(a, b, c, d, e, f)
 
+        **Parameters**
+
+        * `a`: First matrix
+        * `b`: Second matrix
+
+        **Returns**
+
+        New matrix
+        """
+        a = p[0] * q[0] + p[1] * q[3]
+        b = p[0] * q[1] + p[1] * q[4]
+        c = p[0] * q[2] + p[1] * q[5] + p[2]
+        d = p[3] * q[0] + p[4] * q[3]
+        e = p[3] * q[1] + p[4] * q[4]
+        f = p[3] * q[2] + p[4] * q[5] + p[5]
+        return Matrix(a, b, c, d, e, f)
 
     def __init__(self, xx, xy, xt, yx, yy, yt):
         self.matrix = (xx, xy, xt, yx, yy, yt)
@@ -107,7 +145,7 @@ class Matrix():
     def __mul__(self, other):
         # matrix * scalar
         if isinstance(other, (int, float)):
-            return Matrix(*[other*a for a in self])
+            return Matrix(*[other * a for a in self])
         if isinstance(other, Matrix):
             return Matrix.multiply(self, other)
         return NotImplemented
@@ -138,21 +176,26 @@ class Matrix():
         return repr(self)
 
 
-
 class Vector():
     """
     Class to represent a 2-vector including most of its common operations
     This is based on easy_vector https://github.com/DariusMontez/easy_vector
-    The main changes are to make the object immutable, and measuring angle sin radians rather than degrees
+    The main changes are to make the object immutable, and measuring angles in radians rather than degrees
     """
 
     @staticmethod
     def polar(length, angle):
         """
         Create a vector based on a length and angle
-        :param length: Length of vector
-        :param angle: Angle in radians, measured counterclockwise from positive x direction
-        :return: New vector
+
+        **Parameters**
+
+        * `length`: Length of vector
+        * `angle`: Angle in radians, measured counterclockwise from positive x direction
+
+        **Returns**
+
+        New vector
         """
         x = length * math.cos(angle)
         y = length * math.sin(angle)
@@ -162,16 +205,37 @@ class Vector():
     def matrix_premultiply(m, v):
         """
         Multiply a matrix (first) and a vector (second)
-        :param m: matrix
-        :param v: vector
-        :return: New vector
+
+        **Parameters**
+
+        * `m`: matrix
+        * `v`: vector
+
+        **Returns**
+
+        New vector
         """
-        a = m[0]*v[0] + m[1]*v[1] + m[2]
-        b = m[3]*v[0] + m[4]*v[1] + m[5]
+        a = m[0] * v[0] + m[1] * v[1] + m[2]
+        b = m[3] * v[0] + m[4] * v[1] + m[5]
         return Vector(a, b)
 
     def __init__(self, *args):
-        # first arg may be an iterable (list, tuple, etc...)
+        """
+        **Parameters**
+
+        Either 2 numbers to create vector (a, b):
+
+        * `a`: number
+        * `b`: number
+
+        Or an array/tuple of numbers:
+
+        * `v`: (number, number)
+
+        **Returns**
+
+        Self
+        """
         if len(args) == 1 and hasattr(args[0], "__iter__") and len(args[0]) == 2:
             self.coords = tuple(args[0])
         elif len(args) == 2 and isinstance(args[0], (int, float)) and isinstance(args[1], (int, float)):
@@ -180,32 +244,88 @@ class Vector():
             raise ValueError("Vector requires a sequence of length 2, or 2 numbers")
 
     def transform(self, m):
-        return m*self
+        """
+        Transform this vector by a matrix. The vector is pre-multiplied by the matrix
 
-    def scale(self, scale_x, scale_y=0):
-        return Matrix.scale(scale_x, scale_y)*self
+        **Parameters**
+
+        * `m`: matrix
+
+        **Returns**
+
+        New transformed vector
+        """
+        return m * self
+
+    def scale(self, scale_x, scale_y=None):
+        """
+        Scale this vector by a factor.
+
+        **Parameters**
+
+        * `scale_x`: scale factor in x direction.
+        * `scale_y`: scale factor in y direction. If this is None, scale by `scale_x` in both directions.
+
+        **Returns**
+
+        New scaled vector
+        """
+        return Matrix.scale(scale_x, scale_y) * self
 
     def translate(self, x, y):
-        return Matrix.translate(x, y)*self
+        """
+        Translate this vector by (x, y),
+
+        **Parameters**
+
+        * `x`: translation amount in x direction.
+        * `y`: translation amount in y direction.
+
+        **Returns**
+
+        New translated vector
+        """
+        return Matrix.translate(x, y) * self
 
     def rotate(self, angle):
-        return Matrix.rotate(angle)*self
+        """
+        Rotate this vector by (x, y),
+
+        **Parameters**
+
+        * `x`: rotation amount in x direction.
+        * `y`: rotation amount in y direction.
+
+        **Returns**
+
+        New rotated vector
+        """
+        return Matrix.rotate(angle) * self
 
     def lerp(self, other, factor):
         """
-        Interpolate between this vecto and other.
+        Interpolate between this vector and other.
+
+        **Parameters**
+
+        * `other`: Vector - the other vector
+        * `factor`: number - The interpolation amount.
+
         Interplations factor:
-            0 - result is self
-            1 - result is other
-            0 to 1 - result between self and other
-            > 1 - result extensds beyond other
-            < 0 - result extends backwards before other
-        @param other: Other vector
-        @param factor: Interpolation factor
-        @return:
+
+        * 0 - result is self
+        * 1 - result is other
+        * 0 to 1 - result between self and other
+        * > 1 - result extensds beyond other
+        * < 0 - result extends backwards before other
+
+        **Returns**
+
+        New rotated vector
         """
 
-        return Vector((1 - factor)*self.x + factor*other.x, (1 - factor)*self.y + factor*other.y)
+        return Vector((1 - factor) * self.x + factor * other.x, (1 - factor) * self.y + factor * other.y)
+
     def __iter__(self):
         return iter(self.coords)
 
@@ -242,7 +362,6 @@ class Vector():
             return Vector.matrix_premultiply(other, self)
         return NotImplemented
 
-
     def __truediv__(self, other):
 
         # vector / scalar
@@ -259,26 +378,40 @@ class Vector():
         else:
             return NotImplemented
 
-
     @property
     def x(self):
+        """
+        Read-only property returns x component of vector.
+        """
         return self.coords[0]
 
     @property
     def y(self):
+        """
+        Read-only property returns y component of vector.
+        """
         return self.coords[1]
 
     @property
     def length(self):
-        return math.sqrt(self.x**2 + self.y**2)
+        """
+        Read-only property returns length of vector.
+        """
+        return math.sqrt(self.x ** 2 + self.y ** 2)
 
     @property
     def angle(self):
+        """
+        Read-only property returns angle of vector.
+        """
         angle = math.atan2(self.y, self.x)
         return angle
 
     @property
     def unit(self):
+        """
+        Read-only property returns a unit vector with the same angle as this vector
+        """
         return self / self.length
 
     # String representation
