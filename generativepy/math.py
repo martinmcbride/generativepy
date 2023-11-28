@@ -3,7 +3,12 @@
 # Copyright (C) 2023, Martin McBride
 # License: MIT
 import math
+"""
+The math module provides basic implementation of 2D vectors and matrices.
 
+There are other Python matrix libraries, but this library is geared towards vector graphics, and provides features such
+as polar vectors and vector lerp (linear interpolation) that are useful for maths visualisation and animation.
+"""
 
 def isclose(a, b, rel_tol=1e-09, abs_tol=1e-12):
     """
