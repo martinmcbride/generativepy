@@ -15,10 +15,21 @@ from generativepy.geometry import FillParameters, StrokeParameters
 
 class TableLayout():
     """
-    Table layout can be used to layout other elements in a grid, without draewing the table. Doesn't require a ctx
+    Table layout can be used to layout other elements in a grid, without drawing the table. Doesn't require a ctx.
     """
 
     def __init__(self, position):
+        """
+        Initialise the table layout.
+
+        **Parameters**
+
+        * `position`: (number, number) - The (x, y) position of the top left corner of the table
+        
+        **Returns**
+        
+        self
+        """
         self.position = position
         self.rows = [100]
         self.cols = [100]
@@ -28,9 +39,15 @@ class TableLayout():
     def of_rows_cols(self, rows, cols):
         """
         Set the size and number of rows and columns
-        :param rows: A list of the height of each row in user space units. The length of the list controls the number of rows.
-        :param cols: A list of the width of each loum in user space units. The length of the list controls the number of columns.
-        :return:
+
+        **Parameters**
+
+        `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
+        `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
+
+        **Returns**
+
+        self
         """
         self.rows = rows
         self.cols = cols
@@ -41,9 +58,15 @@ class TableLayout():
     def get(self, row, col):
         """
         Get the position of the centre of cell (row, col)
-        :param row:
-        :param col:
-        :return: (x, y) position of the centre of the cell.
+
+        **Parameters**
+
+        `row`: int - Row number.
+        `col`: int - Column number.
+
+        **Returns**
+
+        (x, y) position of the centre of the cell.
         """
         return self.position[0]+(self.col_pos[col]+self.col_pos[col+1])/2, self.position[1]+(self.row_pos[row]+self.row_pos[row+1])/2
 
@@ -60,10 +83,22 @@ class Table:
     Draw a table.
 
     A table has rows and columns with customisable width and height. The table can return the coordinates of the centre
-    point of any cell, allowing text or other itesm to be positioned there.
+    point of any cell, allowing text or other items to be positioned there.
     '''
 
     def __init__(self, ctx, position):
+        """
+        Initialise the table layout.
+
+        **Parameters**
+
+        * `position`: (number, number) - The (x, y) position of the top left corner of the table
+        * `ctx`: Pycairo drawing context - The context to draw on.
+
+        **Returns**
+
+        self
+        """
         self.ctx = ctx
         self.appearance = TableAppearance()
         self.table_layout = TableLayout(position)
@@ -71,9 +106,15 @@ class Table:
     def of_rows_cols(self, rows, cols):
         """
         Set the size and number of rows and columns
-        :param rows: A list of the height of each row in user space units. The length of the list controls the number of rows.
-        :param cols: A list of the width of each loum in user space units. The length of the list controls the number of columns.
-        :return:
+
+        **Parameters**
+
+        `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
+        `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
+
+        **Returns**
+
+        self
         """
         self.table_layout.of_rows_cols(rows, cols)
         return self
@@ -81,8 +122,14 @@ class Table:
     def background(self, pattern):
         '''
         Sets the entire table background
-        :param pattern: color or fill pattern
-        :return: self
+
+        **Parameters**
+
+        * `pattern`: the fill `Pattern` or `Color` to use.
+
+        **Returns**
+
+        self
         '''
         self.appearance.background = FillParameters(pattern)
         return self
@@ -90,21 +137,26 @@ class Table:
     def linestyle(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):
         '''
         Sets the line style of the whole table
-        :param pattern:  the fill pattern or color to use for the outline, None for default
-        :param line_width: width of stroke line, None for default
-        :param dash: dash pattern of line, as for Pycairo, None for default
-        :param cap: line end style, None for default
-        :param join: line join style, None for default
-        :param miter_limit: mitre limit, None for default
-        :return: self
+
+        **Parameters**
+
+        * `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
+        * `line_width`: width of stroke line. None for default
+        * dash`: sequence, dash patter of line. None for default
+        * cap`: line end style, None for default.
+        * join`: line join style, None for default.
+        * miter_limit`: mitre limit, number, None for default
+
+        **Returns**
+
+        self
         '''
         self.appearance.lines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
 
     def draw(self):
         '''
-        Draw the table
-        :return:
+        Draw the table on the supplied context. This only draws the table itself. The contents must be drawn separately.
         '''
 
         width = sum(self.table_layout.cols)
@@ -128,8 +180,14 @@ class Table:
     def get(self, row, col):
         """
         Get the position of the centre of cell (row, col)
-        :param row:
-        :param col:
-        :return: (x, y) position of the centre of the cell.
+
+        **Parameters**
+
+        `row`: int - Row number.
+        `col`: int - Column number.
+
+        **Returns**
+
+        (x, y) position of the centre of the cell.
         """
         return self.table_layout.get(row, col)
