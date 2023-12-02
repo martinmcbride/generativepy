@@ -2,24 +2,15 @@
 
 Generative art and graphing library for creating images and animations.
 
-## Version 4.0 notes
+## Version 23.11 notes
 
 3D drawing is likely to change in a future release. The rest of the library is reasonably stable. 
 
-* Allow images to eb preloaded for `Image` objects, to avoid frequent file reloads when creating animations.
-* Add shapes2d module representing abstract shapes.
-* Add math module with 2D vector and matrix classes.
-* Add `ORANGE`, `CYAN` to `ArtisticColorScheme`.
-* Add table module for table layouts.
-* MINOR BREAKING CHANGE - Extra warning if some scenes don't have audio (behaviour change if not all audio present).
-* BREAKING CHANGE - Tween use absolute time and a global frame rate. New methods wait_d and to_d for relative times.
-* BREAKING CHANGE - Remove count for Tween set method. This didn't work well with absolute times. Use `set` followed by `wait` or `wait_d` to set and hold a value.
-* BREAKING CHANGE - Improve geometry3d.
-* Fix colour depth problem in geometry3d (previously r, g, b values were forced to either 0% to 100%)
-* Allow special formatting of graph tick text labels
-* Allow tick label positions to be controlled in graph `Axes`.
-* Allow extra Latex packages to be specified in `formulas` module.
-* Fix bug in `formulas` module when function could hang if Latex formula was incorrect.
+* Switched to date based versioning
+* Add parametric plots to the graph module 
+* Allow The Turtle class to accept a list of colours, and cycle through the list as the turtle draws a path.
+* Update geometry.Transform class to use generativepy matrix order rather than PyCairo matrix order.
+* Add unit matrix to math module
 
 ## Usage
 
