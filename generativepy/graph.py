@@ -57,7 +57,11 @@ class Axes:
         '''
         Sets the start value of the axes
         :param start: (x, y) value of bottom left corner of axes
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.start = start
         return self
@@ -66,7 +70,11 @@ class Axes:
         '''
         Sets the range of the axes
         :param extent: (x, y) range of axes
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.extent = extent
         return self
@@ -76,7 +84,11 @@ class Axes:
         Sets the scale of the features. For example a value of 2 will make all the gridlines and label text
         on the axes twice as big. This is a quick way of resizing everything in one go.
         :param scale: scale facor
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.appearance.featurescale = scale
         return self
@@ -85,7 +97,11 @@ class Axes:
         '''
         Set divisons spacing
         :param divisions: (x, y) spacing divisions in each direction
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.divisions = divisions
         return self
@@ -99,7 +115,11 @@ class Axes:
         '''
         Draw subdivision lines on graph
         :param factor: (x, y) Number of subdivisions per division in each direction
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.subdivisons = True
         self.subdivisionfactor = factor
@@ -109,7 +129,11 @@ class Axes:
         '''
         Sets the entire graph background
         :param pattern: color or fill pattern
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.appearance.background = FillParameters(pattern)
         return self
@@ -118,7 +142,10 @@ class Axes:
         '''
         Sets the color of the axes text
         :param pattern: color or pattern
-        :return: self
+                
+        **Returns**
+
+        self
         '''
         self.appearance.textcolor = pattern
         return self
@@ -130,7 +157,10 @@ class Axes:
         :param weight: Font weight
         :param slant: Font slant
         :param size: Font size in units. This will be multiplied by the featurescale value.
-        :return:
+
+        **Returns**
+
+        self
         '''
         self.appearance.fontparams = FontParameters(font, weight, slant, size)
         return self
@@ -144,7 +174,11 @@ class Axes:
         :param cap: line end style, None for default
         :param join: line join style, None for default
         :param miter_limit: mitre limit, None for default
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.appearance.axislines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -158,7 +192,11 @@ class Axes:
         :param cap: line end style, None for default
         :param join: line join style, None for default
         :param miter_limit: mitre limit, None for default
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.appearance.divlines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -172,7 +210,11 @@ class Axes:
         :param cap: line end style, None for default
         :param join: line join style, None for default
         :param miter_limit: mitre limit, None for default
-        :return: self
+                
+        **Returns**
+
+        self
+
         '''
         self.appearance.subdivlines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -180,7 +222,6 @@ class Axes:
     def draw(self):
         '''
         Draw the axes
-        :return:
         '''
 
         self.ctx.new_path()
@@ -282,7 +323,6 @@ class Axes:
     def clip(self):
         '''
         Set the clip region to the axes area.
-        :return:
         '''
         self.ctx.rectangle(*self.position, self.width, self.height)
         self.ctx.save()
@@ -291,7 +331,6 @@ class Axes:
     def unclip(self):
         '''
         Undo a previous clip()
-        :return:
         '''
         self.ctx.restore()
 
@@ -347,7 +386,10 @@ class Axes:
     def transform_from_graph(self, point):
         '''
         Scale the ctx so that point (x, y) will be correctly positioned in the axes coordinates
-        :return:
+
+        **Returns**
+
+        x, y
         '''
         x = ((point[0] - self.start[0]) * self.width / self.extent[0]) + self.position[0]
         y = self.height + self.position[1] - ((point[1] - self.start[1]) * self.height / self.extent[1])
@@ -399,7 +441,10 @@ class Plot(Shape):
         :param fn: the function to plot. It must take a single argument
         :param extent: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
         :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        :return:
+
+        **Returns**
+
+        self
         '''
         self.points = []
         for x in np.linspace(self.axes.start[0], self.axes.start[0] + self.axes.extent[0], precision):
@@ -413,7 +458,10 @@ class Plot(Shape):
         :param fn: the function to plot. It must take a single argument
         :param extent: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
         :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        :return:
+
+        **Returns**
+
+        self
         '''
         self.points = []
         for y in np.linspace(self.axes.start[1], self.axes.start[1] + self.axes.extent[1], precision):
@@ -427,7 +475,10 @@ class Plot(Shape):
         :param fn: the function to plot. It must take a single argument
         :param extent: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
         :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        :return:
+
+        **Returns**
+
+        self
         '''
         self.points = []
         for theta in np.linspace(extent[0], extent[1], precision):
@@ -442,7 +493,10 @@ class Plot(Shape):
         :param fy: y as a function of t. It must take a single argument
         :param extent: the range of t values to plot. If not supplied the range 0 to 1 is used.
         :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        :return:
+
+        **Returns**
+
+        self
         '''
         self.points = []
         for t in np.linspace(extent[0], extent[1], precision):
