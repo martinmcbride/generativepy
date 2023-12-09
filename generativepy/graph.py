@@ -56,7 +56,10 @@ class Axes:
     def of_start(self, start):
         '''
         Sets the start value of the axes
-        :param start: (x, y) value of bottom left corner of axes
+
+        **Parameters**
+
+        * `start` (x, y) value of bottom left corner of axes
                 
         **Returns**
 
@@ -69,7 +72,10 @@ class Axes:
     def of_extent(self, extent):
         '''
         Sets the range of the axes
-        :param extent: (x, y) range of axes
+
+        **Parameters**
+
+        * `extent` (x, y) range of axes
                 
         **Returns**
 
@@ -83,7 +89,10 @@ class Axes:
         '''
         Sets the scale of the features. For example a value of 2 will make all the gridlines and label text
         on the axes twice as big. This is a quick way of resizing everything in one go.
-        :param scale: scale facor
+
+        **Parameters**
+
+        * `scale` scale factor
                 
         **Returns**
 
@@ -96,7 +105,10 @@ class Axes:
     def with_divisions(self, divisions):
         '''
         Set divisons spacing
-        :param divisions: (x, y) spacing divisions in each direction
+
+        **Parameters**
+
+        * `divisions` (x, y) spacing divisions in each direction
                 
         **Returns**
 
@@ -114,7 +126,10 @@ class Axes:
     def with_subdivisions(self, factor):
         '''
         Draw subdivision lines on graph
-        :param factor: (x, y) Number of subdivisions per division in each direction
+
+        **Parameters**
+
+        * `factor` (x, y) Number of subdivisions per division in each direction
                 
         **Returns**
 
@@ -128,7 +143,10 @@ class Axes:
     def background(self, pattern):
         '''
         Sets the entire graph background
-        :param pattern: color or fill pattern
+
+        **Parameters**
+
+        * `pattern` color or fill pattern
                 
         **Returns**
 
@@ -141,7 +159,10 @@ class Axes:
     def text_color(self, pattern):
         '''
         Sets the color of the axes text
-        :param pattern: color or pattern
+
+        **Parameters**
+
+        * `pattern` color or pattern
                 
         **Returns**
 
@@ -153,10 +174,13 @@ class Axes:
     def text_style(self, font="arial", weight=FONT_WEIGHT_BOLD, slant=FONT_SLANT_NORMAL, size=15):
         '''
         Set the style of the axis text
-        :param font: Font name
-        :param weight: Font weight
-        :param slant: Font slant
-        :param size: Font size in units. This will be multiplied by the featurescale value.
+
+        **Parameters**
+
+        * `font` Font name
+        * `weight` Font weight
+        * `slant` Font slant
+        * `size` Font size in units. This will be multiplied by the featurescale value.
 
         **Returns**
 
@@ -168,12 +192,15 @@ class Axes:
     def axis_linestyle(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):
         '''
         Sets the style of the axis lines
-        :param pattern:  the fill pattern or color to use for the outline, None for default
-        :param line_width: width of stroke line, None for default
-        :param dash: dash patter of line, as for Pycairo, None for default
-        :param cap: line end style, None for default
-        :param join: line join style, None for default
-        :param miter_limit: mitre limit, None for default
+
+        **Parameters**
+
+        * `pattern`  the fill pattern or color to use for the outline, None for default
+        * `line_width` width of stroke line, None for default
+        * `dash` dash patter of line, as for Pycairo, None for default
+        * `cap` line end style, None for default
+        * `join` line join style, None for default
+        * `miter_limit` mitre limit, None for default
                 
         **Returns**
 
@@ -186,12 +213,15 @@ class Axes:
     def division_linestyle(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):
         '''
         Sets the style of the division lines
-        :param pattern:  the fill pattern or color to use for the outline, None for default
-        :param line_width: width of stroke line, None for default
-        :param dash: dash patter of line, as for Pycairo, None for default
-        :param cap: line end style, None for default
-        :param join: line join style, None for default
-        :param miter_limit: mitre limit, None for default
+
+        **Parameters**
+
+        * `pattern`  the fill pattern or color to use for the outline, None for default
+        * `line_width` width of stroke line, None for default
+        * `dash` dash patter of line, as for Pycairo, None for default
+        * `cap` line end style, None for default
+        * `join` line join style, None for default
+        * `miter_limit` mitre limit, None for default
                 
         **Returns**
 
@@ -204,12 +234,15 @@ class Axes:
     def subdivision_linestyle(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):
         '''
         Sets the style of the subdivision lines
-        :param pattern:  the fill pattern or color to use for the outline, None for default
-        :param line_width: width of stroke line, None for default
-        :param dash: dash patter of line, as for Pycairo, None for default
-        :param cap: line end style, None for default
-        :param join: line join style, None for default
-        :param miter_limit: mitre limit, None for default
+
+        **Parameters**
+
+        * `pattern`  the fill pattern or color to use for the outline, None for default
+        * `line_width` width of stroke line, None for default
+        * `dash` dash patter of line, as for Pycairo, None for default
+        * `cap` line end style, None for default
+        * `join` line join style, None for default
+        * `miter_limit` mitre limit, None for default
                 
         **Returns**
 
@@ -345,10 +378,16 @@ class Axes:
     def _contains(self, values, value, tolerance):
         '''
         Return true if the sequence values contains the value to within a given tolerance
-        :param values:
-        :param value:
-        :param tolerance:
-        :return:
+
+        **Parameters**
+
+        * `values`
+        * `value`
+        * `tolerance`
+
+        **Returns**
+
+        Result
         '''
         for v in values:
             if abs(value - v) < tolerance:
@@ -371,10 +410,16 @@ class Axes:
         Formats a division value into a string.
         If the division spacing is an integer, the string will be an integer (no dp).
         If the division spacing is float, the string will be a float with a suitable number of decimal places
-        :param value: value to be formatted
-        :param div: division spacing
-        :param formatter: formatting function, accepts vale and div, returns a formatted value string
-        :return: string representation of the value
+
+        **Parameters**
+
+        * `value` value to be formatted
+        * `div` division spacing
+        * `formatter` formatting function, accepts vale and div, returns a formatted value string
+
+        **Returns**
+
+        String representation of the value
         """
         if formatter:
             return formatter(value, div)
@@ -424,13 +469,19 @@ class Plot(Shape):
         '''
         Stroke overrides the Shape stroke() method. It clips the stroke to the area of the axes. This ensures that if
         the curve goes out of range it will not interfere with other parts of the image.
-        :param pattern:
-        :param line_width:
-        :param dash:
-        :param cap:
-        :param join:
-        :param miter_limit:
-        :return:
+
+        **Parameters**
+
+        * `pattern`
+        * `line_width`
+        * `dash`
+        * `cap`
+        * `join`
+        * `miter_limit`
+
+        **Returns**
+
+        self
         '''
         super().stroke(pattern, line_width, dash, cap, join, miter_limit)
 
@@ -438,9 +489,12 @@ class Plot(Shape):
     def of_function(self, fn, extent=None, precision=100):
         '''
         Plot a function y = fn(x)
-        :param fn: the function to plot. It must take a single argument
-        :param extent: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
-        :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+
+        **Parameters**
+
+        * `fn` the function to plot. It must take a single argument
+        * `extent` the range of x values to plot. If not supplied, the plot will use the full range of the axes.
+        * `precision` number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
 
         **Returns**
 
@@ -455,9 +509,12 @@ class Plot(Shape):
     def of_xy_function(self, fn, extent=None, precision=100):
         '''
         Plot a function x = fn(y)
-        :param fn: the function to plot. It must take a single argument
-        :param extent: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
-        :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+
+        **Parameters**
+
+        * `fn` the function to plot. It must take a single argument
+        * `extent` the range of y values to plot. If not supplied, the plot will use the full range of the axes.
+        * `precision` number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
 
         **Returns**
 
@@ -472,9 +529,12 @@ class Plot(Shape):
     def of_polar_function(self, fn, extent=(0, 2*math.pi), precision=100):
         '''
         Plot a polar function r = fn(theta). theta is measured in radians
-        :param fn: the function to plot. It must take a single argument
-        :param extent: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
-        :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+
+        **Parameters**
+
+        * `fn` the function to plot. It must take a single argument
+        * `extent` the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
+        * `precision` number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
 
         **Returns**
 
@@ -489,10 +549,13 @@ class Plot(Shape):
     def of_parametric_function(self, fx, fy, extent=(0, 1), precision=100):
         '''
         Plot a parametric function x = fx(t), y = ft(t).
-        :param fx: x as a function of t. It must take a single argument
-        :param fy: y as a function of t. It must take a single argument
-        :param extent: the range of t values to plot. If not supplied the range 0 to 1 is used.
-        :param precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+
+        **Parameters**
+
+        * `fx` x as a function of t. It must take a single argument
+        * `fy` y as a function of t. It must take a single argument
+        * `extent` the range of t values to plot. If not supplied the range 0 to 1 is used.
+        * `precision` number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
 
         **Returns**
 
