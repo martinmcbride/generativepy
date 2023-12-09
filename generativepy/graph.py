@@ -501,9 +501,13 @@ class Plot(Shape):
         self
         '''
         self.points = []
-        for x in np.linspace(self.axes.start[0], self.axes.start[0] + self.axes.extent[0], precision):
-            if not extent or extent[0] <= x <= extent[1]:
-                self.points.append(self.axes.transform_from_graph((x, fn(x))))
+        start = self.axes.start[0]
+        end = self.axes.start[0] + self.axes.extent[0]
+        if extent:
+            start = max(start, extent[0])
+            end = min(end, extent[1])
+        for x in np.linspace(start, end, precision):
+            self.points.append(self.axes.transform_from_graph((x, fn(x))))
         return self
 
     def of_xy_function(self, fn, extent=None, precision=100):
@@ -521,9 +525,13 @@ class Plot(Shape):
         self
         '''
         self.points = []
-        for y in np.linspace(self.axes.start[1], self.axes.start[1] + self.axes.extent[1], precision):
-            if not extent or extent[0] <= y <= extent[1]:
-                self.points.append(self.axes.transform_from_graph((fn(y), y)))
+        start = self.axes.start[1]
+        end = self.axes.start[1] + self.axes.extent[0]
+        if extent:
+            start = max(start, extent[0])
+            end = min(end, extent[1])
+        for y in np.linspace(start, end, precision):
+            self.points.append(self.axes.transform_from_graph((fn(y), y)))
         return self
 
     def of_polar_function(self, fn, extent=(0, 2*math.pi), precision=100):

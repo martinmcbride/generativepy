@@ -18,6 +18,7 @@ def compare_images(path1, path2):
                 return False
             diff = ImageChops.difference(im1, im2)
             if diff.getbbox():
+                diff.save(path1+"difference.png")
                 return False
 
     return True

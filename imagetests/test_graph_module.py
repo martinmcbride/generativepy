@@ -56,6 +56,32 @@ class TestGraphImages(unittest.TestCase):
 
         self.assertTrue(run_image_test('test_graph_multiple.png', creator))
 
+    def test_graph_extent(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
+            axes.draw()
+
+            # Add various curves
+            formula1 = lambda x: math.sin(x)
+            formula2 = lambda x: math.sin(x) + 2
+            formula3 = lambda x: math.sin(x) - 2
+
+            axes.clip()
+            Plot(axes).of_function(formula1, [-7, 1]).stroke(Color(0, 1, 1), line_width=4)
+            Plot(axes).of_function(formula2, [-3, 2]).stroke(Color(1, 0, 1), line_width=4)
+            Plot(axes).of_function(formula3, [-2, 7]).stroke(Color(1, 1, 0), line_width=4)
+            Plot(axes).of_xy_function(formula1, [-7, 1]).stroke(Color(0, 1, 1), line_width=4)
+            Plot(axes).of_xy_function(formula2, [-3, 2]).stroke(Color(1, 0, 1), line_width=4)
+            Plot(axes).of_xy_function(formula3, [-2, 7]).stroke(Color(1, 1, 0), line_width=4)
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test('test_graph_extent.png', creator))
+
     def test_graph_dashed_line(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(1))
