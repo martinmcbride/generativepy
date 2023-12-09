@@ -82,6 +82,36 @@ class TestGraphImages(unittest.TestCase):
 
         self.assertTrue(run_image_test('test_graph_extent.png', creator))
 
+    def test_graph_filled(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            axes = Axes(ctx, (50, 50), 500, 500).of_start((-5, -5))
+            axes.draw()
+
+            # Add various curves
+            formula1 = lambda x: math.sin(x)
+            formula2 = lambda x: 2*x
+            formula3 = lambda x: 4*math.cos(x)
+            formula4 = lambda x: 4*math.sin(x)
+
+
+            axes.clip()
+            Plot(axes).of_function(formula1).stroke(Color("cyan"), line_width=4)
+            Plot(axes).of_function(formula1, [-2, -1], close=((-1, 0), (-2, 0))).fill(Color("cyan", 0.5)).stroke(Color("cyan"), line_width=4)
+            Plot(axes).of_xy_function(formula1).stroke(Color("red"), line_width=4)
+            Plot(axes).of_xy_function(formula1, [-2, -1], close=((0, -1), (0, -2))).fill(Color("red", 0.5)).stroke(Color("red"), line_width=4)
+            Plot(axes).of_polar_function(formula2).stroke(Color("orange"), line_width=4)
+            Plot(axes).of_polar_function(formula2, [1, 2], close=((0, 0),)).fill(Color("orange", 0.5)).stroke(Color("orange"), line_width=4)
+            Plot(axes).of_parametric_function(formula3, formula4, (0, math.pi*2)).stroke(Color("blue"), line_width=4)
+            Plot(axes).of_parametric_function(formula3, formula4, (5.5, 6), close=((0, 0),)).fill(Color("blue", 0.5)).stroke(Color("blue"), line_width=4)
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test('test_graph_filled.png', creator))
+
     def test_graph_dashed_line(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(1))

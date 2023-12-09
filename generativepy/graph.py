@@ -2,6 +2,7 @@
 # Created: 2019-06-04
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+import itertools
 
 import cairo
 import math
@@ -450,6 +451,7 @@ class Plot(Shape):
         super().__init__(axes.ctx)
         self.axes = axes
         self.points = []
+        self.closed = False
 
     def add(self):
         self._do_path_()
@@ -461,7 +463,7 @@ class Plot(Shape):
                 first = False
             else:
                 self.ctx.line_to(*p)
-        if self.final_close:
+        if self.closed or self.final_close:
             self.ctx.close_path()
         return self
 
@@ -486,7 +488,7 @@ class Plot(Shape):
         super().stroke(pattern, line_width, dash, cap, join, miter_limit)
 
 
-    def of_function(self, fn, extent=None, precision=100):
+    def of_function(self, fn, extent=None, precision=100, close=()):
         '''
         Plot a function y = fn(x)
 
@@ -506,11 +508,13 @@ class Plot(Shape):
         if extent:
             start = max(start, extent[0])
             end = min(end, extent[1])
-        for x in np.linspace(start, end, precision):
-            self.points.append(self.axes.transform_from_graph((x, fn(x))))
+        self.points += [self.axes.transform_from_graph((x, fn(x))) for x in np.linspace(start, end, precision)]
+        if close:
+            self.points += [self.axes.transform_from_graph(p) for p in close]
+            self.closed = True
         return self
 
-    def of_xy_function(self, fn, extent=None, precision=100):
+    def of_xy_function(self, fn, extent=None, precision=100, close=()):
         '''
         Plot a function x = fn(y)
 
@@ -530,11 +534,13 @@ class Plot(Shape):
         if extent:
             start = max(start, extent[0])
             end = min(end, extent[1])
-        for y in np.linspace(start, end, precision):
-            self.points.append(self.axes.transform_from_graph((fn(y), y)))
+        self.points += [self.axes.transform_from_graph((fn(y), y)) for y in np.linspace(start, end, precision)]
+        if close:
+            self.points += [self.axes.transform_from_graph(p) for p in close]
+            self.closed = True
         return self
 
-    def of_polar_function(self, fn, extent=(0, 2*math.pi), precision=100):
+    def of_polar_function(self, fn, extent=(0, 2*math.pi), precision=100, close=()):
         '''
         Plot a polar function r = fn(theta). theta is measured in radians
 
@@ -552,9 +558,12 @@ class Plot(Shape):
         for theta in np.linspace(extent[0], extent[1], precision):
             r = fn(theta)
             self.points.append(self.axes.transform_from_graph((r*math.cos(theta), r*math.sin(theta))))
+        if close:
+            self.points += [self.axes.transform_from_graph(p) for p in close]
+            self.closed = True
         return self
 
-    def of_parametric_function(self, fx, fy, extent=(0, 1), precision=100):
+    def of_parametric_function(self, fx, fy, extent=(0, 1), precision=100, close=()):
         '''
         Plot a parametric function x = fx(t), y = ft(t).
 
@@ -574,6 +583,9 @@ class Plot(Shape):
             x = fx(t)
             y = fy(t)
             self.points.append(self.axes.transform_from_graph((x, y)))
+        if close:
+            self.points += [self.axes.transform_from_graph(p) for p in close]
+            self.closed = True
         return self
 
 
