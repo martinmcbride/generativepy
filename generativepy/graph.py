@@ -497,7 +497,7 @@ class Plot(Shape):
         * `fn`: the function to plot. It must take a single argument
         * `extent`: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
         * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined is axes coordinates, that will be added
+        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
         to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         **Returns**
@@ -525,7 +525,7 @@ class Plot(Shape):
         * `fn`: the function to plot. It must take a single argument
         * `extent`: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
         * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined is axes coordinates, that will be added
+        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
         to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         **Returns**
@@ -553,7 +553,7 @@ class Plot(Shape):
         * `fn`: the function to plot. It must take a single argument
         * `extent`: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
         * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined is axes coordinates, that will be added
+        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
         to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         **Returns**
@@ -579,7 +579,7 @@ class Plot(Shape):
         * `fy`: y as a function of t. It must take a single argument
         * `extent`: the range of t values to plot. If not supplied the range 0 to 1 is used.
         * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined is axes coordinates, that will be added
+        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
         to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         **Returns**
