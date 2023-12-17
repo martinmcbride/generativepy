@@ -3,9 +3,12 @@
 # Copyright (C) 2022, Martin McBride
 # License: MIT
 
-from vapory import Camera
+from generativepy.color import Color
+from vapory import Camera, LightSource, Background, Scene
 import math
 
+def get_color(color):
+    return color[0], color[1], color[2]
 
 def standard_camera(distance=5, angle=0, elevation=0, lookat=[0, 0, 0]):
     return Camera(
@@ -16,6 +19,17 @@ def standard_camera(distance=5, angle=0, elevation=0, lookat=[0, 0, 0]):
         "look_at",
         lookat,
     )
+
+def standard_lights(color=Color(1)):
+    light1 = LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5])
+    light2 = LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5])
+    return [light1, light2]
+
+def scene(camera, lights, objects, bgcolor=Color(1)):
+    content = [Background("color", get_color(bgcolor))]
+    content.extend(lights)
+    content.extend(objects)
+    return Scene(camera, content)
 
 def make_povray_image(outfile, draw, width, height):
     """
