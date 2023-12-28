@@ -1,12 +1,13 @@
 import math
 import unittest
-from vapory import Texture, Pigment, Finish, Box
+from vapory import Texture, Pigment, Finish, Box, Sphere
 
 from generativepy.povray import (
     Camera3d,
-    scene,
+    Scene3d,
     Lights3d,
     make_povray_image,
+    get_color,
 )
 from image_test_helper import run_image_test
 from generativepy.color import Color
@@ -21,15 +22,12 @@ def draw_block(pixel_width, pixel_height, frame_no, frame_count):
     elevation = math.radians(-40)
     distance = 5
     camera = Camera3d().polar_position(distance, theta, elevation).get()
-    lights = Lights3d().standard(Color("red")).get()
-    texture = Texture(Pigment("color", [0, 0, 1]), Finish("phong", 1))
-    box = Box([-1, -1, -1], [1, 1, 1], texture)
+    lights = Lights3d().standard(Color(1)).get()
+    texture = Texture(Pigment("color", get_color(Color("blue"))), Finish("phong", 1))
+    # box = Box([-1, -1, -1], [1, 1, 1], texture)
+    box = Sphere([0, 0, 0], 1, texture)
 
-    return scene(
-        camera,
-        lights,
-        [box],
-    )
+    return Scene3d().camera(camera).add(lights).add([box]).get()
 
 
 class TestPovrayModule(unittest.TestCase):

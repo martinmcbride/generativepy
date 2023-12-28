@@ -53,7 +53,7 @@ class Lights3d:
     def standard(self, color=Color(1)):
         self.lights = (
             LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5]),
-            LightSource([0, 0, 0], "color", get_color(color), "translate", [-5, 5, 5])
+            LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, -5])
         )
         return self
 
@@ -67,12 +67,28 @@ class Lights3d:
     def get(self):
         return self.lights
 
+class Scene3d:
 
-def scene(camera, lights, objects, bgcolor=Color(1)):
-    content = [Background("color", get_color(bgcolor))]
-    content.extend(lights)
-    content.extend(objects)
-    return Scene(camera, content)
+    def __init__(self):
+        self.camera_item = None
+        self.background_color = Color(1)
+        self.content = []
+
+    def camera(self, camera):
+        self.camera_item = camera
+        return self
+
+    def background(self, color):
+        self.background_color = Color(1)
+        return self
+
+    def add(self, items):
+        self.content.extend(items)
+        return self
+
+    def get(self):
+        return Scene(self.camera_item, [Background("color", get_color(self.background_color))] + self.content)
+
 
 def make_povray_image(outfile, draw, width, height):
     """
