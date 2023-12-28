@@ -10,7 +10,7 @@ import math
 def get_color(color):
     return color[0], color[1], color[2]
 
-class Camera3D():
+class Camera3d:
 
     def __init__(self):
         self.x = 5
@@ -30,6 +30,12 @@ class Camera3D():
         self.z = distance * math.sin(elevation)
         return self
 
+    def standard_plot(self):
+        self.x = 5
+        self.y = 1
+        self.z = -5
+        return self
+
     def get(self):
         return Camera(
             "location",
@@ -38,10 +44,29 @@ class Camera3D():
             self.lookat
         )
 
-def standard_lights(color=Color(1)):
-    light1 = LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5])
-    light2 = LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, -5])
-    return [light1, light2]
+
+class Lights3d:
+
+    def __init__(self):
+        self.lights = ()
+
+    def standard(self, color=Color(1)):
+        self.lights = (
+            LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5]),
+            LightSource([0, 0, 0], "color", get_color(color), "translate", [-5, 5, 5])
+        )
+        return self
+
+    def standard_plot(self, color=Color(1)):
+        self.lights = (
+            LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5]),
+            LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, -5])
+        )
+        return self
+
+    def get(self):
+        return self.lights
+
 
 def scene(camera, lights, objects, bgcolor=Color(1)):
     content = [Background("color", get_color(bgcolor))]
