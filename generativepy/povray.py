@@ -2,6 +2,7 @@
 # Created: 2023-12-02
 # Copyright (C) 2022, Martin McBride
 # License: MIT
+import numpy as np
 
 from generativepy.color import Color
 from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Finish, Cylinder, Union
@@ -121,6 +122,36 @@ class Axes3d:
         return self._make_axes()
 
 
+class Plot3dZofXY:
+
+    def __init__(self):
+        self.start = [-2, -2]
+        self.end = [2, 2]
+        self.steps = 20
+        self.func = lambda x, y: 1+0.5*math.cos(2*x + 2*y)
+
+    def function(self, f):
+        self.func = f
+
+    def get(self):
+        # t1 = "triangle {<-1, -1, -1>, <-1, 1, 0>, <1, -1, 0>}"
+        # t2 = "triangle {<1, 1, 0.5>, <-1, 1, 0>, <1, -1, 0>}"
+        # s = r"mesh {" + t1 + t2 + " texture {pigment { color rgb<0, 0, 1> } finish { phong 1 } } }"
+        # return s
+        x = np.linspace(self.start[0], self.end[0], self.steps)
+        y = np.linspace(self.start[1], self.end[1], self.steps)
+        xx, yy = np.meshgrid(x, y)
+        vf = np.vectorize(self.func)
+        ff = vf(xx, yy)
+        squares = ["mesh {\n"]
+        for i in range(self.steps - 1):
+            for j in range(self.steps - 1):
+                squares.append("triangle {" f"<{xx[i+1, j]}, {yy[i+1, j]}, {ff[i+1, j]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,<{xx[i, j+1]}, {yy[i, j+1]}, {ff[i, j+1]}>"+ "}\n")
+                squares.append("triangle {" f"<{xx[i+1, j+1]}, {yy[i+1, j+1]}, {ff[i+1, j+1]}>,<{xx[i+1, j]}, {yy[i+1, j]}, {ff[i+1, j]}>,<{xx[i, j+1]}, {yy[i, j+1]}, {ff[i, j+1]}>"+ "}\n")
+        squares.append("texture {pigment { color rgb<0.9, 0, 0> } finish { ambient 0.2 diffuse 0.7 } } rotate <-90, 0, 0> translate<0, -1, 0>}")
+        return " ".join(squares)
+
+
 def make_povray_image(outfile, draw, width, height):
     """
     Used to create a single PNG image of a 3D povray scene.
@@ -147,6 +178,7 @@ def make_povray_image(outfile, draw, width, height):
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
     scene = draw(width, height, 0, 1)
+    print(scene)
     scene.render(outfile + '.png', width=width, height=height)
 
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
