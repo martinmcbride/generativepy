@@ -4,7 +4,7 @@
 # License: MIT
 
 from generativepy.color import Color
-from vapory import Camera, LightSource, Background, Scene
+from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Finish, Cylinder, Union
 import math
 
 def get_color(color):
@@ -88,6 +88,37 @@ class Scene3d:
 
     def get(self):
         return Scene(self.camera_item, [Background("color", get_color(self.background_color))] + self.content)
+
+class Axes3d:
+
+    def __init__(self):
+        self.start = [-2, -2, -2]
+        self.end = [2, 2, 2]
+        self.axis_thickness = 0.03
+        self.axis_colors = [Color("red"), Color("green"), Color("blue")]
+
+    def _make_axis(self, axis, color=[1, 0, 0]):
+        texture = Texture(Pigment("color", color), Finish("phong", 1))
+        startxyz = [0] * 3
+        endxyz= [0] * 3
+        startxyz[axis] = self.start[axis]
+        endxyz[axis] = self.end[axis]
+        return Cylinder(startxyz, endxyz, self.axis_thickness, texture)
+
+    def _make_axes(self):
+        axes = [self._make_axis(i, get_color(self.axis_colors[i])) for i in range(3)]
+        return Union(
+            axes[0],
+            axes[1],
+            axes[2],
+            "rotate",
+            [-90, 0, 0],
+            "translate",
+            [0, -1, 0],
+        )
+
+    def get(self):
+        return self._make_axes()
 
 
 def make_povray_image(outfile, draw, width, height):
