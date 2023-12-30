@@ -9,7 +9,7 @@ from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Fin
 import math
 
 def get_color(color):
-    return color[0], color[1], color[2]
+    return color[0], color[1], color[2], 1 - color[3]
 
 class Camera3d:
 
@@ -127,8 +127,9 @@ class Plot3dZofXY:
     def __init__(self):
         self.start = [-2, -2]
         self.end = [2, 2]
-        self.steps = 20
-        self.func = lambda x, y: 1+0.5*math.cos(2*x + 2*y) + (y-2*x)/4
+        self.steps = 40
+        self.grid_factor = 5
+        self.func = lambda x, y: math.cos((x**2 + y**2)/2)
         self.color = Color("blue")
         self.line_color = Color("black")
         self.line_thickness = 0.03
@@ -152,7 +153,20 @@ class Plot3dZofXY:
         mesh.append(str(texture))
         mesh.append("rotate <-90, 0, 0> translate<0, -1, 0>}")
         squares = " ".join(mesh)
-        return " ".join(("union {", squares, "}"))
+
+        grid = ["union {\n"]
+        for i in range(self.steps - 1):
+            for j in range(self.steps - 1):
+                if not j % self.grid_factor:
+                    grid.append("cylinder {" f"<{xx[i + 1, j]}, {yy[i + 1, j]}, {ff[i + 1, j]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,{self.line_thickness}"+ "}\n")
+                if not i % self.grid_factor:
+                    grid.append("cylinder {" f"<{xx[i, j + 1]}, {yy[i, j + 1]}, {ff[i, j + 1]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,{self.line_thickness}"+ "}\n")
+        texture = Texture(Pigment("color", get_color(self.line_color)), Finish("phong", 1))
+        grid.append(str(texture))
+        grid.append("rotate <-90, 0, 0> translate<0, -1, 0>}")
+        lines = " ".join(grid)
+
+        return " ".join(("union {", squares, lines, "}"))
 
 
 def make_povray_image(outfile, draw, width, height):
