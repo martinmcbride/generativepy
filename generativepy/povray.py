@@ -5,6 +5,7 @@
 import numpy as np
 
 from generativepy.color import Color
+from generativepy.math import Vector as V
 from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Finish, Cylinder, Union
 import math
 
@@ -93,10 +94,39 @@ class Scene3d:
 class Axes3d:
 
     def __init__(self):
-        self.start = [-2, -2, -2]
-        self.end = [2, 2, 2]
+        self.start = [-2]*3
+        self.end = [2]*3
+        self.divs = [[1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
         self.axis_thickness = 0.03
         self.axis_colors = [Color("red"), Color("green"), Color("blue")]
+
+    def _make_xy_planes(self, color=[1, 0, 0]):
+        texture = Texture(Pigment("color", color), Finish("phong", 1))
+        items = []
+
+        xstart = [p for p in self.divs[0]]
+        xend = xstart
+        ystart = [self.start[1] for p in self.divs[0]]
+        yend = [self.end[1] for p in self.divs[0]]
+        zstart = [self.start[2] for p in self.divs[0]]
+        zend = zstart
+        for i, _ in enumerate(self.divs[0]):
+            start = (xstart[i], ystart[i], zstart[i])
+            end = (xend[i], yend[i], zend[i])
+            items.append(Cylinder(start, end, self.axis_thickness, texture))
+
+        xstart = [self.start[0] for p in self.divs[1]]
+        xend = [self.end[0] for p in self.divs[1]]
+        ystart = [p for p in self.divs[1]]
+        yend = ystart
+        zstart = [self.start[2] for p in self.divs[1]]
+        zend = zstart
+        for i, _ in enumerate(self.divs[0]):
+            start = (xstart[i], ystart[i], zstart[i])
+            end = (xend[i], yend[i], zend[i])
+            items.append(Cylinder(start, end, self.axis_thickness, texture))
+
+        return items
 
     def _make_axis(self, axis, color=[1, 0, 0]):
         texture = Texture(Pigment("color", color), Finish("phong", 1))
@@ -112,6 +142,7 @@ class Axes3d:
             axes[0],
             axes[1],
             axes[2],
+            *self._make_xy_planes(),
             "rotate",
             [-90, 0, 0],
             "translate",
@@ -129,7 +160,7 @@ class Plot3dZofXY:
         self.end = [2, 2]
         self.steps = 40
         self.grid_factor = 5
-        self.func = lambda x, y: math.cos((x**2 + y**2)/2)
+        self.func = lambda x, y: math.cos(math.sqrt((x**2 + y**2))*2)
         self.color = Color("blue")
         self.line_color = Color("black")
         self.line_thickness = 0.03
