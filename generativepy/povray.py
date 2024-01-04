@@ -6,7 +6,7 @@ import numpy as np
 
 from generativepy.color import Color
 from generativepy.math import Vector as V
-from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Finish, Cylinder, Union
+from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Finish, Cylinder, Union, Text
 import math
 
 def get_color(color):
@@ -203,12 +203,38 @@ class Axes3d:
 
         return items
 
+    def _make_text_item(self, text, pos):
+        return Text(
+        "ttf",
+             '"/usr/share/fonts/truetype/msttcorefonts/ariali.ttf"',
+             f'"{text}"',
+             0.1,
+             0,
+            "rotate"
+            [-90, 0, 0],
+            "scale",
+            0.4,
+        )
+
+    def _make_labels(self):
+        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
+        items = []
+
+        for p in self.divs[0]:
+            text = Text(
+        "ttf", '"/usr/share/fonts/truetype/msttcorefonts/ariali.ttf"', '"abcdefg"', 0.1, 0
+            )
+            items.append('text {ttf "/usr/share/fonts/truetype/msttcorefonts/ariali.ttf" "1.0" 0.1 0 rotate <90, 0, 0> scale 0.4}')
+
+        return items
+
     def _make_axes(self):
         return Union(
             *self._make_xy_planes(),
             *self._make_xz_planes(),
             *self._make_yz_planes(),
             *self._make_axis_box(),
+            *self._make_labels(),
             "rotate",
             [-90, 0, 0],
             "translate",
@@ -293,7 +319,7 @@ def make_povray_image(outfile, draw, width, height):
         outfile = outfile[:-4]
     scene = draw(width, height, 0, 1)
     print(scene)
-    scene.render(outfile + '.png', width=width, height=height)
+    scene.render(outfile + '.png', width=width, height=height, antialiasing=0.001)
 
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
     """
