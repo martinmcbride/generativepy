@@ -96,12 +96,12 @@ class Axes3d:
     def __init__(self):
         self.start = [-2]*3
         self.end = [2]*3
-        self.divs = [[1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
+        self.divs = [[-1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
         self.axis_thickness = 0.03
-        self.axis_colors = [Color("red"), Color("green"), Color("blue")]
+        self.axis_color = Color("black")
 
-    def _make_xy_planes(self, color=[1, 0, 0]):
-        texture = Texture(Pigment("color", color), Finish("phong", 1))
+    def _make_xy_planes(self):
+        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
         items = []
 
         xstart = [p for p in self.divs[0]]
@@ -128,21 +128,87 @@ class Axes3d:
 
         return items
 
-    def _make_axis(self, axis, color=[1, 0, 0]):
-        texture = Texture(Pigment("color", color), Finish("phong", 1))
-        startxyz = [0] * 3
-        endxyz= [0] * 3
-        startxyz[axis] = self.start[axis]
-        endxyz[axis] = self.end[axis]
-        return Cylinder(startxyz, endxyz, self.axis_thickness, texture)
+    def _make_xz_planes(self):
+        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
+        items = []
+
+        xstart = [p for p in self.divs[0]]
+        xend = xstart
+        ystart = [self.start[1] for p in self.divs[0]]
+        yend = ystart
+        zstart = [self.start[2] for p in self.divs[0]]
+        zend = [self.end[2] for p in self.divs[0]]
+        for i, _ in enumerate(self.divs[0]):
+            start = (xstart[i], ystart[i], zstart[i])
+            end = (xend[i], yend[i], zend[i])
+            items.append(Cylinder(start, end, self.axis_thickness, texture))
+
+        xstart = [self.start[0] for p in self.divs[2]]
+        xend = [self.end[0] for p in self.divs[2]]
+        ystart = [self.start[1] for p in self.divs[2]]
+        yend = ystart
+        zstart = [p for p in self.divs[2]]
+        zend = zstart
+        for i, _ in enumerate(self.divs[0]):
+            start = (xstart[i], ystart[i], zstart[i])
+            end = (xend[i], yend[i], zend[i])
+            items.append(Cylinder(start, end, self.axis_thickness, texture))
+
+        return items
+
+    def _make_yz_planes(self):
+        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
+        items = []
+
+        xstart = [self.start[0] for p in self.divs[2]]
+        xend = xstart
+        ystart = [self.start[1] for p in self.divs[2]]
+        yend = [self.end[1] for p in self.divs[2]]
+        zstart = [p for p in self.divs[2]]
+        zend = zstart
+        for i, _ in enumerate(self.divs[0]):
+            start = (xstart[i], ystart[i], zstart[i])
+            end = (xend[i], yend[i], zend[i])
+            items.append(Cylinder(start, end, self.axis_thickness, texture))
+
+        xstart = [self.start[0] for p in self.divs[1]]
+        xend = xstart
+        ystart = [p for p in self.divs[1]]
+        yend = ystart
+        zstart = [self.start[2] for p in self.divs[1]]
+        zend = [self.end[2] for p in self.divs[1]]
+        for i, _ in enumerate(self.divs[0]):
+            start = (xstart[i], ystart[i], zstart[i])
+            end = (xend[i], yend[i], zend[i])
+            items.append(Cylinder(start, end, self.axis_thickness, texture))
+
+        return items
+
+    def _make_axis_box(self):
+        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
+        sx, sy, sz = self.start
+        ex, ey, ez = self.end
+        print(sx, sy, sz, ex, ey, ez)
+        items = [
+            Cylinder((sx, sy, sz), (ex, sy, sz), self.axis_thickness, texture),
+            Cylinder((sx, sy, sz), (sx, ey, sz), self.axis_thickness, texture),
+            Cylinder((sx, sy, sz), (sx, sy, ez), self.axis_thickness, texture),
+            Cylinder((ex, sy, sz), (ex, ey, sz), self.axis_thickness, texture),
+            Cylinder((ex, sy, sz), (ex, sy, ez), self.axis_thickness, texture),
+            Cylinder((sx, ey, sz), (ex, ey, sz), self.axis_thickness, texture),
+            Cylinder((sx, ey, sz), (sx, ey, ez), self.axis_thickness, texture),
+            Cylinder((sx, sy, ez), (ex, sy, ez), self.axis_thickness, texture),
+            Cylinder((sx, sy, ez), (sx, ey, ez), self.axis_thickness, texture),
+        ]
+
+        return items
 
     def _make_axes(self):
-        axes = [self._make_axis(i, get_color(self.axis_colors[i])) for i in range(3)]
         return Union(
-            axes[0],
-            axes[1],
-            axes[2],
             *self._make_xy_planes(),
+            *self._make_xz_planes(),
+            *self._make_yz_planes(),
+            *self._make_axis_box(),
             "rotate",
             [-90, 0, 0],
             "translate",
