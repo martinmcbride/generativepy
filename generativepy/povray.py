@@ -96,9 +96,8 @@ class Axes3d:
     def __init__(self):
         self.start = [-2]*3
         self.end = [2]*3
-#        self.divs = [[-1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
-        self.divs = [[-1, 0, 1]]*3
-        self.axis_thickness = 0.03
+        self.divs = [[-1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
+        self.axis_thickness = 0.02
         self.axis_color = Color("black")
 
     def _make_xy_planes(self):
@@ -216,7 +215,7 @@ class Axes3d:
             "translate",
             offset,
             "scale",
-            0.4,
+            0.2,
         )
         return Union(text, "translate",
             pos,)
@@ -226,7 +225,11 @@ class Axes3d:
         items = []
 
         for p in self.divs[0]:
-            items.append(self._make_text_item(p, (p, 2, -2), (0, 1, 0)))
+            items.append(self._make_text_item(p, (p, 2, -2), (-0.5, 0, -1)))
+        for p in self.divs[1]:
+            items.append(self._make_text_item(p, (2, p, -2), (0, 0, -1)))
+        for p in self.divs[1]:
+            items.append(self._make_text_item(p, (2, -2, p), (0.5, 0, 0)))
 
         return items
 
