@@ -15,15 +15,25 @@ import logging
 
 
 '''
-The movie functions operate pn lazy sequences of images. The images are stored as numpy arrays.
+The movie functions operate on lazy sequences of images. The images are stored as numpy arrays.
 '''
 
 def normalise_array(array):
     """
     If greyscale array has a shape [a, b, 1] it must be normalised to [a, b] otherwise
-    the pillow fromarray function will give n#an error
-    :param array: The array
-    :return: squeezed array if necessary, else the original array
+    the pillow fromarray function will give an error.
+
+    This function first checks if normalisation is necessary, and then creates a new normalised array if
+    required.
+
+    **Parameters**
+
+    * `array`, numpy array - the image data as a numpy array.
+
+    **Returns**
+
+    Normalised array. This will either be a new array (if normalisation was required) or the original array (if
+    no normalisation was required).
     """
     if array.ndim == 3 and array.shape[2] == 1:
         return np.squeeze(array, axis=2)
