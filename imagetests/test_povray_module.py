@@ -8,6 +8,7 @@ from generativepy.povray import (
     Lights3d,
     make_povray_image,
     get_color,
+    Axes3d,
 )
 from image_test_helper import run_image_test
 from generativepy.color import Color
@@ -17,22 +18,47 @@ Test each function of the povray module
 """
 
 
-def draw_block(pixel_width, pixel_height, frame_no, frame_count):
-    theta = math.radians(20)
-    elevation = math.radians(-40)
-    distance = 5
-    camera = Camera3d().polar_position(distance, theta, elevation).get()
-    lights = Lights3d().standard(Color(1)).get()
-    texture = Texture(Pigment("color", get_color(Color("blue"))), Finish("phong", 1))
-    # box = Box([-1, -1, -1], [1, 1, 1], texture)
-    box = Sphere([0, 0, 0], 1, texture)
-
-    return Scene3d().camera(camera).add(lights).add([box]).get()
-
-
 class TestPovrayModule(unittest.TestCase):
     def test_povray_scene(self):
+        def draw(pixel_width, pixel_height, frame_no, frame_count):
+            theta = math.radians(20)
+            elevation = math.radians(-40)
+            distance = 5
+            camera = Camera3d().polar_position(distance, theta, elevation).get()
+            lights = Lights3d().standard(Color(1)).get()
+            texture = Texture(
+                Pigment("color", get_color(Color("blue"))), Finish("phong", 1)
+            )
+            box = Sphere([0, 0, 0], 1, texture)
+
+            return Scene3d().camera(camera).add(lights).add([box]).get()
+
         def creator(file):
-            make_povray_image(file, draw_block, 500, 500)
+            make_povray_image(file, draw, 500, 500)
 
         self.assertTrue(run_image_test("test_povray_scene.png", creator))
+
+
+    def test_povray_axes(self):
+        def draw(pixel_width, pixel_height, frame_no, frame_count):
+            camera = Camera3d().standard_plot().get()
+            lights = Lights3d().standard_plot().get()
+            axes = Axes3d().get()
+            return Scene3d().camera(camera).add(lights).add([axes]).get()
+
+        def creator(file):
+            make_povray_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test("test_povray_axes.png", creator))
+
+    def test_povray_non_default_axes(self):
+        def draw(pixel_width, pixel_height, frame_no, frame_count):
+            camera = Camera3d().standard_plot().get()
+            lights = Lights3d().standard_plot().get()
+            axes = Axes3d().division_linestyle(Color("magenta", 0.01)).get()
+            return Scene3d().camera(camera).add(lights).add([axes]).get()
+
+        def creator(file):
+            make_povray_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test("test_povray_non_default_axes.png", creator))

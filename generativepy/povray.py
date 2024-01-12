@@ -98,10 +98,16 @@ class Axes3d:
         self.end = [2]*3
         self.divs = [[-1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
         self.axis_thickness = 0.02
-        self.axis_color = Color("black")
+        self.color = Color("blue").light1
+        self.texture = None
+
+    def division_linestyle(self, pattern=Color(0), line_width=None):
+        self.color = pattern
+        if line_width is not None:
+            self.axis_thickness = line_width
+        return self
 
     def _make_xy_planes(self):
-        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
         items = []
 
         xstart = [p for p in self.divs[0]]
@@ -113,7 +119,7 @@ class Axes3d:
         for i, _ in enumerate(self.divs[0]):
             start = (xstart[i], ystart[i], zstart[i])
             end = (xend[i], yend[i], zend[i])
-            items.append(Cylinder(start, end, self.axis_thickness, texture))
+            items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         xstart = [self.start[0] for p in self.divs[1]]
         xend = [self.end[0] for p in self.divs[1]]
@@ -124,12 +130,11 @@ class Axes3d:
         for i, _ in enumerate(self.divs[0]):
             start = (xstart[i], ystart[i], zstart[i])
             end = (xend[i], yend[i], zend[i])
-            items.append(Cylinder(start, end, self.axis_thickness, texture))
+            items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         return items
 
     def _make_xz_planes(self):
-        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
         items = []
 
         xstart = [p for p in self.divs[0]]
@@ -141,7 +146,7 @@ class Axes3d:
         for i, _ in enumerate(self.divs[0]):
             start = (xstart[i], ystart[i], zstart[i])
             end = (xend[i], yend[i], zend[i])
-            items.append(Cylinder(start, end, self.axis_thickness, texture))
+            items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         xstart = [self.start[0] for p in self.divs[2]]
         xend = [self.end[0] for p in self.divs[2]]
@@ -152,12 +157,11 @@ class Axes3d:
         for i, _ in enumerate(self.divs[0]):
             start = (xstart[i], ystart[i], zstart[i])
             end = (xend[i], yend[i], zend[i])
-            items.append(Cylinder(start, end, self.axis_thickness, texture))
+            items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         return items
 
     def _make_yz_planes(self):
-        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
         items = []
 
         xstart = [self.start[0] for p in self.divs[2]]
@@ -169,7 +173,7 @@ class Axes3d:
         for i, _ in enumerate(self.divs[0]):
             start = (xstart[i], ystart[i], zstart[i])
             end = (xend[i], yend[i], zend[i])
-            items.append(Cylinder(start, end, self.axis_thickness, texture))
+            items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         xstart = [self.start[0] for p in self.divs[1]]
         xend = xstart
@@ -180,38 +184,37 @@ class Axes3d:
         for i, _ in enumerate(self.divs[0]):
             start = (xstart[i], ystart[i], zstart[i])
             end = (xend[i], yend[i], zend[i])
-            items.append(Cylinder(start, end, self.axis_thickness, texture))
+            items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         return items
 
     def _make_axis_box(self):
-        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
         sx, sy, sz = self.start
         ex, ey, ez = self.end
-        print(sx, sy, sz, ex, ey, ez)
         items = [
-            Cylinder((sx, sy, sz), (ex, sy, sz), self.axis_thickness, texture),
-            Cylinder((sx, sy, sz), (sx, ey, sz), self.axis_thickness, texture),
-            Cylinder((sx, sy, sz), (sx, sy, ez), self.axis_thickness, texture),
-            Cylinder((ex, sy, sz), (ex, ey, sz), self.axis_thickness, texture),
-            Cylinder((ex, sy, sz), (ex, sy, ez), self.axis_thickness, texture),
-            Cylinder((sx, ey, sz), (ex, ey, sz), self.axis_thickness, texture),
-            Cylinder((sx, ey, sz), (sx, ey, ez), self.axis_thickness, texture),
-            Cylinder((sx, sy, ez), (ex, sy, ez), self.axis_thickness, texture),
-            Cylinder((sx, sy, ez), (sx, ey, ez), self.axis_thickness, texture),
+            Cylinder((sx, sy, sz), (ex, sy, sz), self.axis_thickness, self.texture),
+            Cylinder((sx, sy, sz), (sx, ey, sz), self.axis_thickness, self.texture),
+            Cylinder((sx, sy, sz), (sx, sy, ez), self.axis_thickness, self.texture),
+            Cylinder((ex, sy, sz), (ex, ey, sz), self.axis_thickness, self.texture),
+            Cylinder((ex, sy, sz), (ex, sy, ez), self.axis_thickness, self.texture),
+            Cylinder((sx, ey, sz), (ex, ey, sz), self.axis_thickness, self.texture),
+            Cylinder((sx, ey, sz), (sx, ey, ez), self.axis_thickness, self.texture),
+            Cylinder((sx, sy, ez), (ex, sy, ez), self.axis_thickness, self.texture),
+            Cylinder((sx, sy, ez), (sx, ey, ez), self.axis_thickness, self.texture),
         ]
 
         return items
 
-    def _make_text_item(self, text, pos, offset):
+    def _make_text_item(self, text, pos, offset, rotation=(90, 0, 0)):
         text = Text(
         "ttf",
              '"/usr/share/fonts/truetype/msttcorefonts/ariali.ttf"',
              f'"{text}"',
              0.1,
              0,
+            self.texture,
             "rotate",
-            [90, 0, 0],
+            rotation,
             "translate",
             offset,
             "scale",
@@ -221,11 +224,10 @@ class Axes3d:
             pos,)
 
     def _make_labels(self):
-        texture = Texture(Pigment("color", get_color(self.axis_color)), Finish("phong", 1))
         items = []
 
         for p in self.divs[0]:
-            items.append(self._make_text_item(p, (p, 2, -2), (-0.5, 0, -1)))
+            items.append(self._make_text_item(p, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
         for p in self.divs[1]:
             items.append(self._make_text_item(p, (2, p, -2), (0, 0, -1)))
         for p in self.divs[1]:
@@ -243,10 +245,11 @@ class Axes3d:
             "rotate",
             [-90, 0, 0],
             "translate",
-            [0, 0, 0],
+            [0, 0.5, 0],
         )
 
     def get(self):
+        self.texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", get_color(Color("blue").light1)))
         return self._make_axes()
 
 
@@ -323,7 +326,6 @@ def make_povray_image(outfile, draw, width, height):
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
     scene = draw(width, height, 0, 1)
-    print(scene)
     scene.render(outfile + '.png', width=width, height=height, antialiasing=0.001)
 
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
