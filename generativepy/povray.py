@@ -91,6 +91,7 @@ class Scene3d:
     def get(self):
         return Scene(self.camera_item, [Background("color", get_color(self.background_color))] + self.content)
 
+
 class Axes3d:
 
     def __init__(self):
@@ -103,8 +104,8 @@ class Axes3d:
         self.div_positions = None
         self.axis_thickness = 0.02
         self.color = Color("blue").light1
-        self.label_round = [1]*3
         self.texture = None
+        self.division_formatters = [None]*3
 
     def of_start(self, start):
         self.start = tuple(start)
@@ -116,6 +117,10 @@ class Axes3d:
 
     def with_divisions(self, divisions):
         self.divisions = tuple(divisions)
+        return self
+
+    def with_division_formatters(self, formatters):
+        self.division_formatters = tuple(formatters)
         return self
 
     def transform_from_graph(self, point):
@@ -240,6 +245,29 @@ class Axes3d:
 
         return items
 
+    def _format_div(self, value, div, formatter):
+        """
+        Formats a division value into a string.
+        If the division spacing is an integer, the string will be an integer (no dp).
+        If the division spacing is float, the string will be a float with a suitable number of decimal places
+
+        **Parameters**
+
+        * `value`: value to be formatted
+        * `div`: division spacing
+        * `formatter`: formatting function, accepts vale and div, returns a formatted value string
+
+        **Returns**
+
+        String representation of the value
+        """
+        if formatter:
+            return formatter(value, div)
+
+        if isinstance(value, int):
+            return str(value)
+        return str(round(value*1000)/1000)
+
     def _make_text_item(self, text, pos, offset, rotation=(90, 0, 0)):
         text = Text(
         "ttf",
@@ -262,15 +290,15 @@ class Axes3d:
         items = []
 
         for p in self.div_positions[0]:
-            s = str(round(p, self.label_round[0]))
+            s = self._format_div(p, self.divisions[0], self.division_formatters[0])
             p = self.transform_from_graph((p, 0, 0))[0]
             items.append(self._make_text_item(s, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
         for p in self.div_positions[1]:
-            s = str(round(p, self.label_round[1]))
+            s = self._format_div(p, self.divisions[1], self.division_formatters[1])
             p = self.transform_from_graph((0, p, 0))[1]
             items.append(self._make_text_item(s, (2, p, -2), (0, 0, -1)))
         for p in self.div_positions[2]:
-            s = str(round(p, self.label_round[2]))
+            s = self._format_div(p, self.divisions[2], self.division_formatters[1])
             p = self.transform_from_graph((0, 0, p))[2]
             items.append(self._make_text_item(s, (2, -2, p), (0.5, 0, 0)))
 
