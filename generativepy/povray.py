@@ -292,15 +292,18 @@ class Axes3d:
         for p in self.div_positions[0]:
             s = self._format_div(p, self.divisions[0], self.division_formatters[0])
             p = self.transform_from_graph((p, 0, 0))[0]
-            items.append(self._make_text_item(s, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
+            if -1.8 < p < 1.8:
+                items.append(self._make_text_item(s, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
         for p in self.div_positions[1]:
             s = self._format_div(p, self.divisions[1], self.division_formatters[1])
             p = self.transform_from_graph((0, p, 0))[1]
-            items.append(self._make_text_item(s, (2, p, -2), (0, 0, -1)))
+            if -1.8 < p < 1.8:
+                items.append(self._make_text_item(s, (2, p, -2), (0, 0, -1)))
         for p in self.div_positions[2]:
             s = self._format_div(p, self.divisions[2], self.division_formatters[1])
             p = self.transform_from_graph((0, 0, p))[2]
-            items.append(self._make_text_item(s, (2, -2, p), (0.5, 0, 0)))
+            if -1.8 < p < 1.8:
+                items.append(self._make_text_item(s, (2, -2, p), (0.5, 0, 0)))
 
         return items
 

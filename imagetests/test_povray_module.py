@@ -57,7 +57,7 @@ class TestPovrayModule(unittest.TestCase):
             axes = (
                 Axes3d()
                 .division_linestyle(Color("magenta", 0.01))
-                .of_start((0, -2, 1))
+                .of_start((1, -2, 1))
                 .of_extent((10, 6, 2))
                 .with_divisions((2, 1, 0.2))
                 .get()
