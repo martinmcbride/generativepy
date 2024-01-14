@@ -96,9 +96,9 @@ class Axes3d:
     def __init__(self):
         self.position = [-2]*3
         self.size = [4]*3
-        self.start = [-1.999]*3
+        self.start = [-2]*3
         self.end = None
-        self.extent = [3.998]*3
+        self.extent = [4]*3
         self.divisions = [0.5]*3
         self.div_positions = None
         self.axis_thickness = 0.02
@@ -107,6 +107,14 @@ class Axes3d:
 
     def of_start(self, start):
         self.start = tuple(start)
+        return self
+
+    def of_extent(self, extent):
+        self.extent = tuple(extent)
+        return self
+
+    def with_divisions(self, divisions):
+        self.divisions = tuple(divisions)
         return self
 
     def transform_from_graph(self, point):
@@ -253,11 +261,17 @@ class Axes3d:
         items = []
 
         for p in self.div_positions[0]:
-            items.append(self._make_text_item(p, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
+            s = str(p)
+            p = self.transform_from_graph((p, 0, 0))[0]
+            items.append(self._make_text_item(s, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
         for p in self.div_positions[1]:
-            items.append(self._make_text_item(p, (2, p, -2), (0, 0, -1)))
-        for p in self.div_positions[1]:
-            items.append(self._make_text_item(p, (2, -2, p), (0.5, 0, 0)))
+            s = str(p)
+            p = self.transform_from_graph((0, p, 0))[1]
+            items.append(self._make_text_item(s, (2, p, -2), (0, 0, -1)))
+        for p in self.div_positions[2]:
+            s = str(p)
+            p = self.transform_from_graph((0, 0, p))[2]
+            items.append(self._make_text_item(s, (2, -2, p), (0.5, 0, 0)))
 
         return items
 
