@@ -161,7 +161,7 @@ class Axes3d:
         yend = ystart
         zstart = [self.start[2] for p in self.div_positions[1]]
         zend = zstart
-        for i, _ in enumerate(self.div_positions[0]):
+        for i, _ in enumerate(self.div_positions[1]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
@@ -188,7 +188,7 @@ class Axes3d:
         yend = ystart
         zstart = [p for p in self.div_positions[2]]
         zend = zstart
-        for i, _ in enumerate(self.div_positions[0]):
+        for i, _ in enumerate(self.div_positions[2]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
@@ -204,7 +204,7 @@ class Axes3d:
         yend = [self.end[1] for p in self.div_positions[2]]
         zstart = [p for p in self.div_positions[2]]
         zend = zstart
-        for i, _ in enumerate(self.div_positions[0]):
+        for i, _ in enumerate(self.div_positions[2]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
@@ -215,7 +215,7 @@ class Axes3d:
         yend = ystart
         zstart = [self.start[2] for p in self.div_positions[1]]
         zend = [self.end[2] for p in self.div_positions[1]]
-        for i, _ in enumerate(self.div_positions[0]):
+        for i, _ in enumerate(self.div_positions[1]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
