@@ -91,15 +91,55 @@ class Scene3d:
     def get(self):
         return Scene(self.camera_item, [Background("color", get_color(self.background_color))] + self.content)
 
+
 class Axes3d:
 
     def __init__(self):
+        self.position = [-2]*3
+        self.size = [4]*3
         self.start = [-2]*3
-        self.end = [2]*3
-        self.divs = [[-1.5, -1, -0.5, 0, 0.5, 1, 1.5]]*3
+        self.end = None
+        self.extent = [4]*3
+        self.divisions = [0.5]*3
+        self.div_positions = None
         self.axis_thickness = 0.02
         self.color = Color("blue").light1
         self.texture = None
+        self.division_formatters = [None]*3
+
+    def of_start(self, start):
+        self.start = tuple(start)
+        return self
+
+    def of_extent(self, extent):
+        self.extent = tuple(extent)
+        return self
+
+    def with_divisions(self, divisions):
+        self.divisions = tuple(divisions)
+        return self
+
+    def with_division_formatters(self, formatters):
+        self.division_formatters = tuple(formatters)
+        return self
+
+    def transform_from_graph(self, point):
+        '''
+        Convert point in graph coordinates to a corresponding point in Povray coordinates.
+
+        **Parameters**
+        
+        * `point`, 3-tuple - the point in graph coordinates.
+
+        **Returns**
+
+        Transformed point as a 3-tumple
+        '''
+        x = ((point[0] - self.start[0]) * self.size[0] / (self.end[0] - self.start[0])) + self.position[0]
+        y = ((point[1] - self.start[1]) * self.size[1] / (self.end[1] - self.start[1])) + self.position[1]
+        z = ((point[2] - self.start[2]) * self.size[2] / (self.end[2] - self.start[2])) + self.position[2]
+        return x, y, z
+
 
     def division_linestyle(self, pattern=Color(0), line_width=None):
         self.color = pattern
@@ -110,26 +150,26 @@ class Axes3d:
     def _make_xy_planes(self):
         items = []
 
-        xstart = [p for p in self.divs[0]]
+        xstart = [p for p in self.div_positions[0]]
         xend = xstart
-        ystart = [self.start[1] for p in self.divs[0]]
-        yend = [self.end[1] for p in self.divs[0]]
-        zstart = [self.start[2] for p in self.divs[0]]
+        ystart = [self.start[1] for p in self.div_positions[0]]
+        yend = [self.end[1] for p in self.div_positions[0]]
+        zstart = [self.start[2] for p in self.div_positions[0]]
         zend = zstart
-        for i, _ in enumerate(self.divs[0]):
-            start = (xstart[i], ystart[i], zstart[i])
-            end = (xend[i], yend[i], zend[i])
+        for i, _ in enumerate(self.div_positions[0]):
+            start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
+            end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
-        xstart = [self.start[0] for p in self.divs[1]]
-        xend = [self.end[0] for p in self.divs[1]]
-        ystart = [p for p in self.divs[1]]
+        xstart = [self.start[0] for p in self.div_positions[1]]
+        xend = [self.end[0] for p in self.div_positions[1]]
+        ystart = [p for p in self.div_positions[1]]
         yend = ystart
-        zstart = [self.start[2] for p in self.divs[1]]
+        zstart = [self.start[2] for p in self.div_positions[1]]
         zend = zstart
-        for i, _ in enumerate(self.divs[0]):
-            start = (xstart[i], ystart[i], zstart[i])
-            end = (xend[i], yend[i], zend[i])
+        for i, _ in enumerate(self.div_positions[1]):
+            start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
+            end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         return items
@@ -137,26 +177,26 @@ class Axes3d:
     def _make_xz_planes(self):
         items = []
 
-        xstart = [p for p in self.divs[0]]
+        xstart = [p for p in self.div_positions[0]]
         xend = xstart
-        ystart = [self.start[1] for p in self.divs[0]]
+        ystart = [self.start[1] for p in self.div_positions[0]]
         yend = ystart
-        zstart = [self.start[2] for p in self.divs[0]]
-        zend = [self.end[2] for p in self.divs[0]]
-        for i, _ in enumerate(self.divs[0]):
-            start = (xstart[i], ystart[i], zstart[i])
-            end = (xend[i], yend[i], zend[i])
+        zstart = [self.start[2] for p in self.div_positions[0]]
+        zend = [self.end[2] for p in self.div_positions[0]]
+        for i, _ in enumerate(self.div_positions[0]):
+            start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
+            end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
-        xstart = [self.start[0] for p in self.divs[2]]
-        xend = [self.end[0] for p in self.divs[2]]
-        ystart = [self.start[1] for p in self.divs[2]]
+        xstart = [self.start[0] for p in self.div_positions[2]]
+        xend = [self.end[0] for p in self.div_positions[2]]
+        ystart = [self.start[1] for p in self.div_positions[2]]
         yend = ystart
-        zstart = [p for p in self.divs[2]]
+        zstart = [p for p in self.div_positions[2]]
         zend = zstart
-        for i, _ in enumerate(self.divs[0]):
-            start = (xstart[i], ystart[i], zstart[i])
-            end = (xend[i], yend[i], zend[i])
+        for i, _ in enumerate(self.div_positions[2]):
+            start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
+            end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         return items
@@ -164,33 +204,33 @@ class Axes3d:
     def _make_yz_planes(self):
         items = []
 
-        xstart = [self.start[0] for p in self.divs[2]]
+        xstart = [self.start[0] for p in self.div_positions[2]]
         xend = xstart
-        ystart = [self.start[1] for p in self.divs[2]]
-        yend = [self.end[1] for p in self.divs[2]]
-        zstart = [p for p in self.divs[2]]
+        ystart = [self.start[1] for p in self.div_positions[2]]
+        yend = [self.end[1] for p in self.div_positions[2]]
+        zstart = [p for p in self.div_positions[2]]
         zend = zstart
-        for i, _ in enumerate(self.divs[0]):
-            start = (xstart[i], ystart[i], zstart[i])
-            end = (xend[i], yend[i], zend[i])
+        for i, _ in enumerate(self.div_positions[2]):
+            start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
+            end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
-        xstart = [self.start[0] for p in self.divs[1]]
+        xstart = [self.start[0] for p in self.div_positions[1]]
         xend = xstart
-        ystart = [p for p in self.divs[1]]
+        ystart = [p for p in self.div_positions[1]]
         yend = ystart
-        zstart = [self.start[2] for p in self.divs[1]]
-        zend = [self.end[2] for p in self.divs[1]]
-        for i, _ in enumerate(self.divs[0]):
-            start = (xstart[i], ystart[i], zstart[i])
-            end = (xend[i], yend[i], zend[i])
+        zstart = [self.start[2] for p in self.div_positions[1]]
+        zend = [self.end[2] for p in self.div_positions[1]]
+        for i, _ in enumerate(self.div_positions[1]):
+            start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
+            end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
         return items
 
     def _make_axis_box(self):
-        sx, sy, sz = self.start
-        ex, ey, ez = self.end
+        sx, sy, sz = self.position
+        ex, ey, ez = [e + s for e, s in zip(self.size, self.position)]
         items = [
             Cylinder((sx, sy, sz), (ex, sy, sz), self.axis_thickness, self.texture),
             Cylinder((sx, sy, sz), (sx, ey, sz), self.axis_thickness, self.texture),
@@ -205,11 +245,34 @@ class Axes3d:
 
         return items
 
+    def _format_div(self, value, div, formatter):
+        """
+        Formats a division value into a string.
+        If the division spacing is an integer, the string will be an integer (no dp).
+        If the division spacing is float, the string will be a float with a suitable number of decimal places
+
+        **Parameters**
+
+        * `value`: value to be formatted
+        * `div`: division spacing
+        * `formatter`: formatting function, accepts vale and div, returns a formatted value string
+
+        **Returns**
+
+        String representation of the value
+        """
+        if formatter:
+            return formatter(value, div)
+
+        if isinstance(value, int):
+            return str(value)
+        return str(round(value*1000)/1000)
+
     def _make_text_item(self, text, pos, offset, rotation=(90, 0, 0)):
         text = Text(
         "ttf",
              '"/usr/share/fonts/truetype/msttcorefonts/ariali.ttf"',
-             f'"{text}"',
+             f'"{text}"', # Povray requires "" around text
              0.1,
              0,
             self.texture,
@@ -226,12 +289,21 @@ class Axes3d:
     def _make_labels(self):
         items = []
 
-        for p in self.divs[0]:
-            items.append(self._make_text_item(p, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
-        for p in self.divs[1]:
-            items.append(self._make_text_item(p, (2, p, -2), (0, 0, -1)))
-        for p in self.divs[1]:
-            items.append(self._make_text_item(p, (2, -2, p), (0.5, 0, 0)))
+        for p in self.div_positions[0]:
+            s = self._format_div(p, self.divisions[0], self.division_formatters[0])
+            p = self.transform_from_graph((p, 0, 0))[0]
+            if -1.8 < p < 1.8:
+                items.append(self._make_text_item(s, (p, 2.3, -2), (-0.5, 0, -1), (90, 0, -90)))
+        for p in self.div_positions[1]:
+            s = self._format_div(p, self.divisions[1], self.division_formatters[1])
+            p = self.transform_from_graph((0, p, 0))[1]
+            if -1.8 < p < 1.8:
+                items.append(self._make_text_item(s, (2, p, -2), (0, 0, -1)))
+        for p in self.div_positions[2]:
+            s = self._format_div(p, self.divisions[2], self.division_formatters[1])
+            p = self.transform_from_graph((0, 0, p))[2]
+            if -1.8 < p < 1.8:
+                items.append(self._make_text_item(s, (2, -2, p), (0.5, 0, 0)))
 
         return items
 
@@ -248,8 +320,18 @@ class Axes3d:
             [0, 0.5, 0],
         )
 
+    def _get_divs(self, start, end, div):
+        divs = []
+        n = math.ceil(start/div)*div
+        while n <= end:
+            divs.append(n)
+            n += div
+        return divs
+
     def get(self):
         self.texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", get_color(Color("blue").light1)))
+        self.end = [ex + s for ex, s in zip(self.extent, self.start)]
+        self.div_positions = [self._get_divs(self.start[i], self.end[i], self.divisions[i]) for i in range(3)]
         return self._make_axes()
 
 

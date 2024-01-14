@@ -38,7 +38,6 @@ class TestPovrayModule(unittest.TestCase):
 
         self.assertTrue(run_image_test("test_povray_scene.png", creator))
 
-
     def test_povray_axes(self):
         def draw(pixel_width, pixel_height, frame_no, frame_count):
             camera = Camera3d().standard_plot().get()
@@ -55,7 +54,14 @@ class TestPovrayModule(unittest.TestCase):
         def draw(pixel_width, pixel_height, frame_no, frame_count):
             camera = Camera3d().standard_plot().get()
             lights = Lights3d().standard_plot().get()
-            axes = Axes3d().division_linestyle(Color("magenta", 0.01)).get()
+            axes = (
+                Axes3d()
+                .division_linestyle(Color("magenta", 0.01))
+                .of_start((1, -2, 1))
+                .of_extent((10, 6, 2))
+                .with_divisions((2, 1, 0.2))
+                .get()
+            )
             return Scene3d().camera(camera).add(lights).add([axes]).get()
 
         def creator(file):
