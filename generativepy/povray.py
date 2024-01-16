@@ -2,6 +2,13 @@
 # Created: 2023-12-02
 # Copyright (C) 2022, Martin McBride
 # License: MIT
+"""
+povray module uses the Povray application to render 3D images.
+
+It uses the Vapory Python library to allow scenes to be described in Python.
+
+This module also provides 3d axes, function plotting, and default camera and light configurations.
+"""
 import numpy as np
 
 from generativepy.color import Color
@@ -10,9 +17,26 @@ from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Fin
 import math
 
 def get_color(color):
+    '''
+    Convert a generativepy `Color` object into a Povray color.
+
+    A Povray is a list of 4 values, however the alpha component works differently. In generativepy alpha 1 is fully opaque and
+    0 is fully transparent. In Povray alpha 0 is fully opaque and 1 is fully transparent.
+
+    **Parameters**
+
+    * `color`, a `Color` object - the color.
+
+    **Returns**
+
+    A Povray color as a 4-tuple
+    '''
     return color[0], color[1], color[2], 1 - color[3]
 
 class Camera3d:
+    """
+    Represents a Povray camera, at a particlular location, looking at the origin
+    """
 
     def __init__(self):
         self.x = 5
@@ -21,24 +45,64 @@ class Camera3d:
         self.lookat = (0, 0, 0)
 
     def position(self, x, y, z):
+        '''
+        Set the position in x, y, z space
+
+        **Parameters**
+
+        * `x`, number - the x position of the camera.
+        * `y`, number - the y position of the camera.
+        * `z`, number - the z position of the camera.
+
+        **Returns**
+
+        self
+        '''
         self.x = x
         self.y = y
         self.z = z
         return self
 
     def polar_position(self, distance, angle, elevation):
+        '''
+        Set the position in polar coordinates
+
+        **Parameters**
+
+        * `distance`, number - the distance of the camera from the origin.
+        * `angle`, number - the horizontal angle of the camera.
+        * `elevation`, number - the elevation angle of the camera.
+
+        **Returns**
+
+        self
+        '''
         self.x = distance * math.cos(angle)
         self.y = distance * math.sin(angle)
         self.z = distance * math.sin(elevation)
         return self
 
     def standard_plot(self):
+        '''
+        Set the default position of the camera for views a 3D plot.
+
+        **Returns**
+
+        self
+        '''
         self.x = 5
         self.y = 1
         self.z = -5
         return self
 
     def get(self):
+        '''
+        Gets the configured Camera object
+
+        **Returns**
+
+        A Vapory Camera object
+        '''
         return Camera(
             "location",
             [self.x, self.y, self.z],
@@ -67,6 +131,13 @@ class Lights3d:
         return self
 
     def get(self):
+        '''
+        Gets the configured Light objects
+
+        **Returns**
+
+        A tuple of Vapory Light objects
+        '''
         return self.lights
 
 class Scene3d:
@@ -89,6 +160,13 @@ class Scene3d:
         return self
 
     def get(self):
+        '''
+        Gets the configured Scene object
+
+        **Returns**
+
+        A Vapory Scene object
+        '''
         return Scene(self.camera_item, [Background("color", get_color(self.background_color))] + self.content)
 
 
@@ -133,7 +211,7 @@ class Axes3d:
 
         **Returns**
 
-        Transformed point as a 3-tumple
+        Transformed point as a 3-tuple
         '''
         x = ((point[0] - self.start[0]) * self.size[0] / (self.end[0] - self.start[0])) + self.position[0]
         y = ((point[1] - self.start[1]) * self.size[1] / (self.end[1] - self.start[1])) + self.position[1]
@@ -272,7 +350,7 @@ class Axes3d:
         text = Text(
         "ttf",
              '"/usr/share/fonts/truetype/msttcorefonts/ariali.ttf"',
-             f'"{text}"', # Povray requires "" around text
+             f'"{text}"',  # Povray requires "" around text
              0.1,
              0,
             self.texture,
