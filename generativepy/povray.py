@@ -396,6 +396,7 @@ class Axes3d:
             [-90, 0, 0],
             "translate",
             [0, 0.5, 0],
+            "no_shadow"
         )
 
     def _get_divs(self, start, end, div):
@@ -407,7 +408,7 @@ class Axes3d:
         return divs
 
     def get(self):
-        self.texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", get_color(Color("blue").light1)))
+        self.texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", 1, "diffuse", 0))
         self.end = [ex + s for ex, s in zip(self.extent, self.start)]
         self.div_positions = [self._get_divs(self.start[i], self.end[i], self.divisions[i]) for i in range(3)]
         return self._make_axes()
@@ -415,18 +416,20 @@ class Axes3d:
 
 class Plot3dZofXY:
 
-    def __init__(self):
-        self.start = [-2, -2]
+    def __init__(self, axes):
+        self.axes = axes
+        self.start = [-2,-2]
         self.end = [2, 2]
         self.steps = 40
         self.grid_factor = 5
         self.func = lambda x, y: math.cos(math.sqrt((x**2 + y**2))*2)
-        self.color = Color("blue")
-        self.line_color = Color("black")
-        self.line_thickness = 0.03
+        self.color = Color("lightgreen")
+        self.line_color = Color("green")
+        self.line_thickness = 0.02
 
     def function(self, f):
         self.func = f
+        return self
 
     def get(self):
         x = np.linspace(self.start[0], self.end[0], self.steps)
@@ -440,7 +443,7 @@ class Plot3dZofXY:
             for j in range(self.steps - 1):
                 mesh.append("triangle {" f"<{xx[i+1, j]}, {yy[i+1, j]}, {ff[i+1, j]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,<{xx[i, j+1]}, {yy[i, j+1]}, {ff[i, j+1]}>"+ "}\n")
                 mesh.append("triangle {" f"<{xx[i+1, j+1]}, {yy[i+1, j+1]}, {ff[i+1, j+1]}>,<{xx[i+1, j]}, {yy[i+1, j]}, {ff[i+1, j]}>,<{xx[i, j+1]}, {yy[i, j+1]}, {ff[i, j+1]}>"+ "}\n")
-        texture = Texture(Pigment("color", get_color(self.color)), Finish("phong", 1))
+        texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", 0.5, "diffuse", 0.5))
         mesh.append(str(texture))
         mesh.append("rotate <-90, 0, 0> translate<0, -1, 0>}")
         squares = " ".join(mesh)
@@ -452,7 +455,7 @@ class Plot3dZofXY:
                     grid.append("cylinder {" f"<{xx[i + 1, j]}, {yy[i + 1, j]}, {ff[i + 1, j]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,{self.line_thickness}"+ "}\n")
                 if not i % self.grid_factor:
                     grid.append("cylinder {" f"<{xx[i, j + 1]}, {yy[i, j + 1]}, {ff[i, j + 1]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,{self.line_thickness}"+ "}\n")
-        texture = Texture(Pigment("color", get_color(self.line_color)), Finish("phong", 1))
+        texture = Texture(Pigment("color", get_color(self.line_color)), Finish("ambient", 1))
         grid.append(str(texture))
         grid.append("rotate <-90, 0, 0> translate<0, -1, 0>}")
         lines = " ".join(grid)
