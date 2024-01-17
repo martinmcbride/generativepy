@@ -205,17 +205,27 @@ class Axes3d:
     """
 
     def __init__(self):
-        self.position = [-2]*3
-        self.size = [4]*3
-        self.start = [-2]*3
+        self.position = (-2,)*3
+        self.size = (4,)*3
+        self._start = (-2,) * 3
         self.end = None
-        self.extent = [4]*3
-        self.divisions = [0.5]*3
+        self._extent = (4,) * 3
+        self.divisions = (0.5,)*3
         self.div_positions = None
         self.axis_thickness = 0.02
         self.color = Color("blue").light1
         self.texture = None
-        self.division_formatters = [None]*3
+        self.division_formatters = (None,)*3
+
+    @property
+    def start(self):
+        """Start of x, y, z range"""
+        return self._start
+
+    @property
+    def extent(self):
+        """Extent of x, y, z range"""
+        return self._extent
 
     def of_start(self, start):
         """
@@ -227,7 +237,7 @@ class Axes3d:
         Returns:
             self
         """
-        self.start = tuple(start)
+        self._start = tuple(start)
         return self
 
     def of_extent(self, extent):
@@ -240,7 +250,7 @@ class Axes3d:
         Returns:
             self
         """
-        self.extent = tuple(extent)
+        self._extent = tuple(extent)
         return self
 
     def with_divisions(self, divisions):
@@ -284,9 +294,9 @@ class Axes3d:
         Returns:
             Transformed point as a 3-tuple
         """
-        x = ((point[0] - self.start[0]) * self.size[0] / (self.end[0] - self.start[0])) + self.position[0]
-        y = ((point[1] - self.start[1]) * self.size[1] / (self.end[1] - self.start[1])) + self.position[1]
-        z = ((point[2] - self.start[2]) * self.size[2] / (self.end[2] - self.start[2])) + self.position[2]
+        x = ((point[0] - self._start[0]) * self.size[0] / (self.end[0] - self._start[0])) + self.position[0]
+        y = ((point[1] - self._start[1]) * self.size[1] / (self.end[1] - self._start[1])) + self.position[1]
+        z = ((point[2] - self._start[2]) * self.size[2] / (self.end[2] - self._start[2])) + self.position[2]
         return x, y, z
 
 
@@ -313,20 +323,20 @@ class Axes3d:
 
         xstart = [p for p in self.div_positions[0]]
         xend = xstart
-        ystart = [self.start[1] for p in self.div_positions[0]]
+        ystart = [self._start[1] for p in self.div_positions[0]]
         yend = [self.end[1] for p in self.div_positions[0]]
-        zstart = [self.start[2] for p in self.div_positions[0]]
+        zstart = [self._start[2] for p in self.div_positions[0]]
         zend = zstart
         for i, _ in enumerate(self.div_positions[0]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
-        xstart = [self.start[0] for p in self.div_positions[1]]
+        xstart = [self._start[0] for p in self.div_positions[1]]
         xend = [self.end[0] for p in self.div_positions[1]]
         ystart = [p for p in self.div_positions[1]]
         yend = ystart
-        zstart = [self.start[2] for p in self.div_positions[1]]
+        zstart = [self._start[2] for p in self.div_positions[1]]
         zend = zstart
         for i, _ in enumerate(self.div_positions[1]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
@@ -340,18 +350,18 @@ class Axes3d:
 
         xstart = [p for p in self.div_positions[0]]
         xend = xstart
-        ystart = [self.start[1] for p in self.div_positions[0]]
+        ystart = [self._start[1] for p in self.div_positions[0]]
         yend = ystart
-        zstart = [self.start[2] for p in self.div_positions[0]]
+        zstart = [self._start[2] for p in self.div_positions[0]]
         zend = [self.end[2] for p in self.div_positions[0]]
         for i, _ in enumerate(self.div_positions[0]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
-        xstart = [self.start[0] for p in self.div_positions[2]]
+        xstart = [self._start[0] for p in self.div_positions[2]]
         xend = [self.end[0] for p in self.div_positions[2]]
-        ystart = [self.start[1] for p in self.div_positions[2]]
+        ystart = [self._start[1] for p in self.div_positions[2]]
         yend = ystart
         zstart = [p for p in self.div_positions[2]]
         zend = zstart
@@ -365,9 +375,9 @@ class Axes3d:
     def _make_yz_planes(self):
         items = []
 
-        xstart = [self.start[0] for p in self.div_positions[2]]
+        xstart = [self._start[0] for p in self.div_positions[2]]
         xend = xstart
-        ystart = [self.start[1] for p in self.div_positions[2]]
+        ystart = [self._start[1] for p in self.div_positions[2]]
         yend = [self.end[1] for p in self.div_positions[2]]
         zstart = [p for p in self.div_positions[2]]
         zend = zstart
@@ -376,11 +386,11 @@ class Axes3d:
             end = self.transform_from_graph((xend[i], yend[i], zend[i]))
             items.append(Cylinder(start, end, self.axis_thickness, self.texture))
 
-        xstart = [self.start[0] for p in self.div_positions[1]]
+        xstart = [self._start[0] for p in self.div_positions[1]]
         xend = xstart
         ystart = [p for p in self.div_positions[1]]
         yend = ystart
-        zstart = [self.start[2] for p in self.div_positions[1]]
+        zstart = [self._start[2] for p in self.div_positions[1]]
         zend = [self.end[2] for p in self.div_positions[1]]
         for i, _ in enumerate(self.div_positions[1]):
             start = self.transform_from_graph((xstart[i], ystart[i], zstart[i]))
@@ -493,8 +503,8 @@ class Axes3d:
 
     def get(self):
         self.texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", 1, "diffuse", 0))
-        self.end = [ex + s for ex, s in zip(self.extent, self.start)]
-        self.div_positions = [self._get_divs(self.start[i], self.end[i], self.divisions[i]) for i in range(3)]
+        self.end = [ex + s for ex, s in zip(self._extent, self._start)]
+        self.div_positions = [self._get_divs(self._start[i], self.end[i], self.divisions[i]) for i in range(3)]
         return self._make_axes()
 
 
@@ -502,8 +512,8 @@ class Plot3dZofXY:
 
     def __init__(self, axes):
         self.axes = axes
-        self.start = [-2,-2]
-        self.end = [2, 2]
+        self.start = (axes.start[0], axes.start[1])
+        self.end = (axes.extent[0] + axes.start[0], axes.extent[1] + axes.start[1])
         self.steps = 40
         self.grid_factor = 5
         self.func = lambda x, y: math.cos(math.sqrt((x**2 + y**2))*2)
