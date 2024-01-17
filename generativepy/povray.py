@@ -17,25 +17,23 @@ from vapory import Camera, LightSource, Background, Scene, Texture, Pigment, Fin
 import math
 
 def get_color(color):
-    '''
+    """
     Convert a generativepy `Color` object into a Povray color.
 
     A Povray is a list of 4 values, however the alpha component works differently. In generativepy alpha 1 is fully opaque and
     0 is fully transparent. In Povray alpha 0 is fully opaque and 1 is fully transparent.
 
-    **Parameters**
+    Args:
+        color: `Color` object - the color.
 
-    * `color`, a `Color` object - the color.
-
-    **Returns**
-
-    A Povray color as a 4-tuple
-    '''
+    Returns:
+        A Povray color as a 4-tuple
+    """
     return color[0], color[1], color[2], 1 - color[3]
 
 class Camera3d:
     """
-    Represents a Povray camera, at a particlular location, looking at the origin
+    Creates a Povray camera, at a particlular location, looking at the origin
     """
 
     def __init__(self):
@@ -45,64 +43,58 @@ class Camera3d:
         self.lookat = (0, 0, 0)
 
     def position(self, x, y, z):
-        '''
+        """
         Set the position in x, y, z space
 
-        **Parameters**
+        Args:
+            x: number - the x position of the camera.
+            y: number - the y position of the camera.
+            z: number - the y position of the camera.
 
-        * `x`, number - the x position of the camera.
-        * `y`, number - the y position of the camera.
-        * `z`, number - the z position of the camera.
-
-        **Returns**
-
-        self
-        '''
+        Returns:
+            self
+        """
         self.x = x
         self.y = y
         self.z = z
         return self
 
     def polar_position(self, distance, angle, elevation):
-        '''
+        """
         Set the position in polar coordinates
 
-        **Parameters**
+        Args:
+            distance: number - the distance of the camera from the origin.
+            angle: number - the horizontal angle of the camera.
+            elevation: number - the elevation angle of the camera.
 
-        * `distance`, number - the distance of the camera from the origin.
-        * `angle`, number - the horizontal angle of the camera.
-        * `elevation`, number - the elevation angle of the camera.
-
-        **Returns**
-
-        self
-        '''
+        Returns:
+            self
+        """
         self.x = distance * math.cos(angle)
         self.y = distance * math.sin(angle)
         self.z = distance * math.sin(elevation)
         return self
 
     def standard_plot(self):
-        '''
-        Set the default position of the camera for views a 3D plot.
+        """
+        Set the position to view a standard plot
 
-        **Returns**
-
-        self
-        '''
+        Returns:
+            self
+        """
         self.x = 5
         self.y = 1
         self.z = -5
         return self
 
     def get(self):
-        '''
+        """
         Gets the configured Camera object
 
-        **Returns**
-
-        A Vapory Camera object
-        '''
+        Returns:
+            A Vapory Camera object
+        """
         return Camera(
             "location",
             [self.x, self.y, self.z],
@@ -112,11 +104,21 @@ class Camera3d:
 
 
 class Lights3d:
-
+    """
+    Creates a set of lights for the scene.
+    """
     def __init__(self):
         self.lights = ()
 
     def standard(self, color=Color(1)):
+        """
+        Adds two lights at fixed positions, suitable for a typical scene.
+        Args:
+            color: `Color` object - the light colour, default white.
+
+        Returns:
+            self
+        """
         self.lights = (
             LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5]),
             LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, -5])
@@ -124,6 +126,14 @@ class Lights3d:
         return self
 
     def standard_plot(self, color=Color(1)):
+        """
+        Adds two lights at fixed positions, suitable for a standard 3D plot.
+        Args:
+            color: `Color` object - the light colour, default white.
+
+        Returns:
+            self
+        """
         self.lights = (
             LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, 5]),
             LightSource([0, 0, 0], "color", get_color(color), "translate", [5, 5, -5])
@@ -131,16 +141,18 @@ class Lights3d:
         return self
 
     def get(self):
-        '''
+        """
         Gets the configured Light objects
 
-        **Returns**
-
-        A tuple of Vapory Light objects
-        '''
+        Returns:
+            A tuple of Vapory Light objects
+        """
         return self.lights
 
 class Scene3d:
+    """
+    Creates a 3D Vapory scene, adding a camera, lights, and a collection of objects.
+    """
 
     def __init__(self):
         self.camera_item = None
@@ -148,6 +160,15 @@ class Scene3d:
         self.content = []
 
     def camera(self, camera):
+        """
+        Add a camera.
+
+        Args:
+            camera: Vapory camera object - the camera.
+
+        Returns:
+            self
+        """
         self.camera_item = camera
         return self
 
@@ -156,21 +177,32 @@ class Scene3d:
         return self
 
     def add(self, items):
+        """
+        Add a set of items. Items can include 3D models and lights.
+
+        Args:
+            items: tuple of Vapory items - the scene items.
+
+        Returns:
+            self
+        """
         self.content.extend(items)
         return self
 
     def get(self):
-        '''
+        """
         Gets the configured Scene object
 
-        **Returns**
-
-        A Vapory Scene object
-        '''
+        Returns:
+            A Vapory Scene object
+        """
         return Scene(self.camera_item, [Background("color", get_color(self.background_color))] + self.content)
 
 
 class Axes3d:
+    """
+    Represents a set of 3D axes, including labels.
+    """
 
     def __init__(self):
         self.position = [-2]*3
@@ -186,33 +218,72 @@ class Axes3d:
         self.division_formatters = [None]*3
 
     def of_start(self, start):
+        """
+        The start coordinates.
+
+        Args:
+            start: tuple(number, number, number) - start value of x, y, z axes
+
+        Returns:
+            self
+        """
         self.start = tuple(start)
         return self
 
     def of_extent(self, extent):
+        """
+        The coordinate extents.
+
+        Args:
+            extent: tuple(number, number, number) - length of x, y, z axes
+
+        Returns:
+            self
+        """
         self.extent = tuple(extent)
         return self
 
     def with_divisions(self, divisions):
+        """
+        The division spacing for each axis.
+
+        Args:
+            divisions: tuple(number, number, number) - division spacing of x, y, z axes
+
+        Returns:
+            self
+        """
         self.divisions = tuple(divisions)
         return self
 
     def with_division_formatters(self, formatters):
+        """
+        The division label formatters for each axis.
+
+        A formatter is a function that accepts 2 values:
+
+            * `value`: number - the division value
+            * `div`: number - the division spacing
+
+        Args:
+            formatters: tuple(function, function, function) - formatter functions for x, y, z axes.
+
+        Returns:
+            self
+        """
         self.division_formatters = tuple(formatters)
         return self
 
     def transform_from_graph(self, point):
-        '''
-        Convert point in graph coordinates to a corresponding point in Povray coordinates.
+        """
+        Transform a point from graph space to Povray space.
 
-        **Parameters**
-        
-        * `point`, 3-tuple - the point in graph coordinates.
+        Args:
+            point: 3-tuple, the point in graph coordinates.
 
-        **Returns**
-
-        Transformed point as a 3-tuple
-        '''
+        Returns:
+            Transformed point as a 3-tuple
+        """
         x = ((point[0] - self.start[0]) * self.size[0] / (self.end[0] - self.start[0])) + self.position[0]
         y = ((point[1] - self.start[1]) * self.size[1] / (self.end[1] - self.start[1])) + self.position[1]
         z = ((point[2] - self.start[2]) * self.size[2] / (self.end[2] - self.start[2])) + self.position[2]
@@ -220,6 +291,18 @@ class Axes3d:
 
 
     def division_linestyle(self, pattern=Color(0), line_width=None):
+        """
+        Sets the linestyle for axis division lines
+
+        Parameters
+        ----------
+        pattern - `Color` object, line colour.
+        line_width - Number, width of line in Povray units.
+
+        Returns
+        -------
+        self
+        """
         self.color = pattern
         if line_width is not None:
             self.axis_thickness = line_width
@@ -323,11 +406,12 @@ class Axes3d:
 
         return items
 
-    def _format_div(self, value, div, formatter):
+    def _format_div(self, value, div, formatter=None):
         """
         Formats a division value into a string.
+        If a formatter is supplied it will be used to convert the value top a string.
         If the division spacing is an integer, the string will be an integer (no dp).
-        If the division spacing is float, the string will be a float with a suitable number of decimal places
+        If the division spacing is float, the string will be rounded to 3 decimal places
 
         **Parameters**
 
@@ -445,7 +529,7 @@ class Plot3dZofXY:
                 mesh.append("triangle {" f"<{xx[i+1, j+1]}, {yy[i+1, j+1]}, {ff[i+1, j+1]}>,<{xx[i+1, j]}, {yy[i+1, j]}, {ff[i+1, j]}>,<{xx[i, j+1]}, {yy[i, j+1]}, {ff[i, j+1]}>"+ "}\n")
         texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", 0.5, "diffuse", 0.5))
         mesh.append(str(texture))
-        mesh.append("rotate <-90, 0, 0> translate<0, -1, 0>}")
+        mesh.append("rotate <-90, 0, 0> translate<0, 0.5, 0>}")
         squares = " ".join(mesh)
 
         grid = ["union {\n"]
@@ -457,7 +541,7 @@ class Plot3dZofXY:
                     grid.append("cylinder {" f"<{xx[i, j + 1]}, {yy[i, j + 1]}, {ff[i, j + 1]}>,<{xx[i, j]}, {yy[i, j]}, {ff[i, j]}>,{self.line_thickness}"+ "}\n")
         texture = Texture(Pigment("color", get_color(self.line_color)), Finish("ambient", 1))
         grid.append(str(texture))
-        grid.append("rotate <-90, 0, 0> translate<0, -1, 0>}")
+        grid.append("rotate <-90, 0, 0> translate<0, 0.5, 0>}")
         lines = " ".join(grid)
 
         return " ".join(("union {", squares, lines, "}"))
