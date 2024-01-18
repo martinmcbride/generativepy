@@ -8,15 +8,19 @@ from generativepy.movie import save_frame, save_frames
 from generativepy.color import make_colormap
 
 def make_nparray_frame(paint, pixel_width, pixel_height, channels=3, out=None):
-    '''
+    """
     Create a frame using numpy
-    :param paint: the paint function
-    :param pixel_width: width in pixels, int
-    :param pixel_height: height in pixels, int
-    :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
-    :param out: optional array to hold result. Must be correct width, height and channels, but can be any int type
-    :return: a frame buffer
-    '''
+
+    Args:
+        paint: function - the paint function.
+        pixel_width: int - width in pixels.
+        pixel_height: int - height in pixels.
+        channels: int - 1 for greyscale, 3 for rgb, 4 for rgba.
+        out: numpy array - optional array to hold result. Must be correct width, height and channels, but can be any int type.
+
+    Returns:
+        A numpy array frame buffer
+    """
     if out is not None:
         if out.shape != (pixel_height, pixel_width, channels):
             raise ValueError('out array shape not compatible with image dimensions')
@@ -28,22 +32,47 @@ def make_nparray_frame(paint, pixel_width, pixel_height, channels=3, out=None):
     return array
 
 def make_nparray_data(paint, pixel_width, pixel_height, channels=3, dtype=np.uint):
-    '''
-    Create a frame using numpy
-    :param paint: the paint function
-    :param pixel_width: width in pixels, int
-    :param pixel_height: height in pixels, int
-    :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
-    :param out: optional array to hold result. Must be correct width, height and channels, but can be any int type
-    :return: a frame buffer
-    '''
+    """
+    Create a data array using numpy.
+
+    This is similar to `make_nparray_frame` except that it produce a general purpose numpy array rather than a
+    frame buffer. The difference is that the data from this function isn't constrained to the range 0-255.
+
+    The data can be outside that normal range, and it can also be a different type (eg signed integer or floating point).
+    This allows the method to be used for storing intermediate data such as per pixel counts.
+
+    Args:
+        paint: function - the paint function.
+        pixel_width: int - width in pixels.
+        pixel_height: int - height in pixels.
+        channels: int - 1 for greyscale, 3 for rgb, 4 for rgba.
+        dtype: numpy data type - the type of the array.
+
+    Returns:
+        A numpy array
+    """
     array = np.full((pixel_height, pixel_width, channels), 0, dtype=dtype)
     paint(array, pixel_width, pixel_height, 0, 1)
     return array
 
 def make_nparray_frames(paint, pixel_width, pixel_height, count, channels=3):
+    """
+    Create a frame sequence using numpy.
+
+    This function returns a lazy iterator that can be used to access the sequence. Images will be
+    created as they are requested.
+
+    Args:
+        paint: function - the paint function.
+        pixel_width: int - width in pixels.
+        pixel_height: int - height in pixels.
+        count: int - number of frames ot create.
+        channels: int - 1 for greyscale, 3 for rgb, 4 for rgba.
+
+    Returns:
+        Lazy iterator of frames.
+    """
     '''
-    Create a frame sequence using numpy
     :param paint: the paint function
     :param pixel_width: width in pixels, int
     :param pixel_height: height in pixels, int
@@ -59,71 +88,85 @@ def make_nparray_frames(paint, pixel_width, pixel_height, count, channels=3):
 
 
 def make_nparray(outfile, paint, pixel_width, pixel_height, channels=3):
-    '''
-    Create a PNG file using numpy
-    :param outfile: Name of output file
-    :param paint: the paint function
-    :param pixel_width: width in pixels, int
-    :param pixel_height: height in pixels, int
-    :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
-    :return:
-    '''
+    """
+    Create a PNG file using numpy.
+
+    Args:
+        outfile: str - Name of output file.
+        paint: function - the paint function.
+        pixel_width: int - width in pixels.
+        pixel_height: int - height in pixels.
+        channels: int - 1 for greyscale, 3 for rgb, 4 for rgba.
+    """
     frame = make_nparray_frame(paint, pixel_width, pixel_height, channels)
     save_frame(outfile, frame)
 
 def make_nparrays(outfile, paint, pixel_width, pixel_height, count, channels=3):
-    '''
-    Create a set of PNG files using numpy
-    :param outfile: Name of output file
-    :param paint: the paint function
-    :param pixel_width: width in pixels, int
-    :param pixel_height: height in pixels, int
-    :param count: number of frames to create
-    :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
-    :return:
-    '''
+    """
+    Create a set of PNG files using numpy.
+
+    Args:
+        outfile: str - Name of output file.
+        paint: function - the paint function.
+        pixel_width: int - width in pixels.
+        pixel_height: int - height in pixels.
+        count: int - number of frames to create.
+        channels: int - 1 for greyscale, 3 for rgb, 4 for rgba.
+    """
     frames = make_nparray_frames(paint, pixel_width, pixel_height, count, channels)
     save_frames(outfile, frames)
 
 def save_nparray(outfile, array):
-    '''
-    Save an array to file
-    :param outfile: file path including extension
-    :param array: numpy array to be saved
-    :return:
-    '''
+    """
+    Save a general array to file in mumpy format. The saved file is not an image file.
+
+    The file created can be read back in using `load_nparray`.
+
+    Args:
+        outfile: str - numpy file path including extension.
+        array: numpy array - data to be saved.
+    """
     with open(outfile, 'wb') as f:
         np.save(f, array)
 
 def save_nparray_image(outfile, array):
-    '''
-    Save an array to an image file
-    :param outfile: file path including extension
-    :param array: numpy array to be saved
-    :return:
-    '''
+    """
+    Save an array to an image file.
+
+    Args:
+        outfile: str - image file path including extension.
+        array: numpy array - data to be saved.
+    """
     array = np.clip(array, 0, 255).astype(np.uint8)
     save_frame(outfile, array)
 
 def load_nparray(infile):
-    '''
+    """
     Load a numpy array from file
-    :param infile: file path including extension
-    :return: a numpy array, no checking is done on the array
-    '''
+
+    Args:
+        infile: str - file path including extension.
+
+    Returns:
+        A numpy array. No checking is done on the array.
+    """
     with open(infile, 'rb') as f:
         return np.load(f)
 
 def make_npcolormap(length, colors, bands=None, channels=3):
-    '''
-    Create a colormap, a list of varying colors, as a numpy array
-    :param length: Total size of list
-    :param colors: List of colors, must be at least 2 long.
-    :param bands: Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
-                  len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
-    :param channels: 3 for RGB, 4 for RGBA
-    :return: an array of shape (length, channels) containing the RGB(A) values for each entry, as integers from 0-255
-    '''
+    """
+    Create a colormap, a list of varying colors, as a numpy array.
+
+    Args:
+        length: - int, required size of list
+        colors: - tuple of Color objects - the list of colours, must be at least 2 long.
+        bands: tuple of numbers - Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
+                                  len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
+        channels: int 3 for RGB, 4 for RGBA
+
+    Returns:
+        An array of shape (length, channels) containing the RGB(A) values for each entry, as integers from 0-255
+    """
 
     colors = make_colormap(length, colors, bands)
 
@@ -139,13 +182,14 @@ def make_npcolormap(length, colors, bands=None, channels=3):
     return npcolormap
 
 def apply_npcolormap(out, counts, npcolormap):
-    '''
+    """
     Apply a color map to an array of counts, filling an existing output array
-    :param out: The output array, height x width x channels (channels is 3 or 4)
-    :param counts: The counts array, height x width, count range 0 to max_count
-    :param npcolormap: A numpy color map, must have at least maxcount+1 elements
-    :return:
-    '''
+
+    Args:
+        out: numpy array - the output array, height x width x channels (channels is 3 or 4).
+        counts: numpy array - the counts array, height x width, count range 0 to max_count.
+        npcolormap: numpy array - a numpy color map, must have at least maxcount+1 elements.
+    """
 
     if out.shape[0] != counts.shape[0] or out.shape[1] != counts.shape[1]:
         raise ValueError('out and counts are incompatible shapes')

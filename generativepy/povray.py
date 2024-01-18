@@ -272,8 +272,8 @@ class Axes3d:
 
         A formatter is a function that accepts 2 values:
 
-            * `value`: number - the division value
-            * `div`: number - the division spacing
+        * `value`: number - the division value
+        * `div`: number - the division spacing
 
         Args:
             formatters: tuple(function, function, function) - formatter functions for x, y, z axes.
@@ -303,14 +303,12 @@ class Axes3d:
         """
         Sets the linestyle for axis division lines
 
-        Parameters
-        ----------
-        pattern - `Color` object, line colour.
-        line_width - Number, width of line in Povray units.
+        Args:
+            pattern: `Color` object  - line colour.
+            line_width: number - width of line in Povray units.
 
-        Returns
-        -------
-        self
+        Returns:
+            self
         """
         self.color = pattern
         if line_width is not None:
@@ -422,15 +420,13 @@ class Axes3d:
         If the division spacing is an integer, the string will be an integer (no dp).
         If the division spacing is float, the string will be rounded to 3 decimal places
 
-        **Parameters**
+        Args:
+            `value`: numger - value to be formatted
+            `div`: number - division spacing
+            `formatter`: formatting function - accepts vale and div, returns a formatted value string
 
-        * `value`: value to be formatted
-        * `div`: division spacing
-        * `formatter`: formatting function, accepts vale and div, returns a formatted value string
-
-        **Returns**
-
-        String representation of the value
+        Returns:
+            String representation of the value
         """
         if formatter:
             return formatter(value, div)
@@ -501,6 +497,12 @@ class Axes3d:
         return divs
 
     def get(self):
+        """
+        Gets the axes object
+
+        Returns:
+            A Vapory Union object thtat draws the axes
+        """
         self.texture = Texture(Pigment("color", get_color(self.color)), Finish("ambient", 1, "diffuse", 0))
         self.end = [ex + s for ex, s in zip(self._extent, self._start)]
         self.div_positions = [self._get_divs(self._start[i], self.end[i], self.divisions[i]) for i in range(3)]
@@ -528,14 +530,12 @@ class Plot3dZofXY:
         """
         Sets the linestyle for plot mesh lines
 
-        Parameters
-        ----------
-        pattern - `Color` object, line colour.
-        line_width - Number, width of line in Povray units.
+        Args:
+            pattern: `Color` object - line colour.
+            line_width: number 0 width of line in Povray units.
 
-        Returns
-        -------
-        self
+        Returns:
+            self
         """
         self.line_color = pattern
         if line_width is not None:
@@ -546,13 +546,11 @@ class Plot3dZofXY:
         """
         Sets the fill for the plot
 
-        Parameters
-        ----------
-        pattern - `Color` object, fill colour.
+        Args:
+            pattern: - `Color` object, fill colour.
 
-        Returns
-        -------
-        self
+        Returns:
+            self
         """
         self.color = pattern
         return self
@@ -565,6 +563,12 @@ class Plot3dZofXY:
         return x, y, z
 
     def get(self):
+        """
+        Gets the plot object
+
+        Returns:
+            A Vapory Union object that draws the plot
+        """
         x = np.linspace(self.start[0], self.end[0], self.steps)
         y = np.linspace(self.start[1], self.end[1], self.steps)
         xx, yy = np.meshgrid(x, y)
@@ -603,24 +607,18 @@ def make_povray_image(outfile, draw, width, height):
     """
     Used to create a single PNG image of a 3D povray scene.
 
-    **Parameters**
-
-    * `outfile`: str - The path and filename for the output PNG file. The '.png' extension is optional, it will be added
-    if it isn't present.
-    * `draw`: function - A drawing function object, see below.
-    * `width`: int - The width of the image that will be created, in pixels.
-    * `height`: int - The height of the image that will be created, in pixels.
-
-    **Returns**
-
-    None
-
-    **Usage**
-    
     `make_image` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the
     context. It then stores the image as a PNG file.
 
     The draw function must have the signature described for `example_draw_function`.
+
+
+    Args:
+        outfile: str - The path and filename for the output PNG file. The '.png' extension is optional,
+        it will be added if it isn't present.
+        draw: function - A drawing function object, see below.
+        width: int - The width of the image that will be created, in pixels.
+        height: int - The height of the image that will be created, in pixels.
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
@@ -629,21 +627,21 @@ def make_povray_image(outfile, draw, width, height):
 
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
     """
-    This is an example draw function for use with `make_povray_image` and similar functions. It is a dummy function used to document the required parameters.
+    This is an example draw function for use with `make_povray_image` and similar functions. It is a dummy
+    function used to document the required parameters.
 
-    **Parameters**
-
-    * `pixel_width`: int - The width of the image in pixels.
-    * `pixel_height`: int - The height of the image in pixels.
-    * `frame_no`: int - the number of the current frame. For single images this will always be 0. For animations this
+    Args:
+        pixel_width: int - The width of the image in pixels.
+        pixel_height: int - The height of the image in pixels
+        frame_no: int - the number of the current frame. For single images this will always be 0. For animations this
                         paint function will be called `frame_count` times (once for each frame) with `frame_no` incrementing
                         by 1 each time (ie it counts from 0 to `frame_count` - 1.
-    * `frame_count`: int - The total number of frames being created.For single images this will always be 0. For animations
+        frame_count: int - The total number of frames being created.For single images this will always be 0. For animations
                            this will be set to the total number of frames in the animation.
 
-    **Returns**
 
-    The completed povray scene object
+    Returns:
+        The completed povray scene object
     """
     pass
 
