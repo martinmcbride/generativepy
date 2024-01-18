@@ -524,6 +524,39 @@ class Plot3dZofXY:
         self.func = f
         return self
 
+    def grid_linestyle(self, pattern=Color(0), line_width=None):
+        """
+        Sets the linestyle for plot mesh lines
+
+        Parameters
+        ----------
+        pattern - `Color` object, line colour.
+        line_width - Number, width of line in Povray units.
+
+        Returns
+        -------
+        self
+        """
+        self.line_color = pattern
+        if line_width is not None:
+            self.line_thickness = line_width
+        return self
+
+    def fill(self, pattern=Color(0)):
+        """
+        Sets the fill for the plot
+
+        Parameters
+        ----------
+        pattern - `Color` object, fill colour.
+
+        Returns
+        -------
+        self
+        """
+        self.color = pattern
+        return self
+
     def _convert_points(self, x, y, z):
         self.axes.end = [ex + s for ex, s in zip(self.axes.extent, self.axes.start)]
         x = ((x - self.axes._start[0]) * self.axes.size[0] / (self.axes.end[0] - self.axes._start[0])) + self.axes.position[0]
