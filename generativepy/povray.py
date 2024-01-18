@@ -299,7 +299,6 @@ class Axes3d:
         z = ((point[2] - self._start[2]) * self.size[2] / (self.end[2] - self._start[2])) + self.position[2]
         return x, y, z
 
-
     def division_linestyle(self, pattern=Color(0), line_width=None):
         """
         Sets the linestyle for axis division lines
@@ -525,12 +524,22 @@ class Plot3dZofXY:
         self.func = f
         return self
 
+    def _convert_points(self, x, y, z):
+        self.axes.end = [ex + s for ex, s in zip(self.axes.extent, self.axes.start)]
+        x = ((x - self.axes._start[0]) * self.axes.size[0] / (self.axes.end[0] - self.axes._start[0])) + self.axes.position[0]
+        y = ((y - self.axes._start[1]) * self.axes.size[1] / (self.axes.end[1] - self.axes._start[1])) + self.axes.position[1]
+        z = ((z - self.axes._start[2]) * self.axes.size[2] / (self.axes.end[2] - self.axes._start[2])) + self.axes.position[2]
+        return x, y, z
+
     def get(self):
         x = np.linspace(self.start[0], self.end[0], self.steps)
         y = np.linspace(self.start[1], self.end[1], self.steps)
         xx, yy = np.meshgrid(x, y)
         vf = np.vectorize(self.func)
         ff = vf(xx, yy)
+
+        vf = np.vectorize(self._convert_points)
+        xx, yy, ff = vf(xx, yy, ff)
 
         mesh = ["mesh {\n"]
         for i in range(self.steps - 1):
