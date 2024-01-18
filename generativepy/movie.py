@@ -2,6 +2,13 @@
 # Created: 2019-01-24
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+"""
+The movie consists of a sequence of frames, where each frame is a NumPy array. Movies are
+generated and processed using a lazy iterators tht generates frames on demand.
+
+The movie module provides functionality to create video clips (or "scenes"), incorporate audio files, and compile separate scenes
+into complete movies.
+"""
 
 import numpy as np
 from PIL import Image
@@ -14,10 +21,6 @@ import pathlib
 import logging
 
 
-'''
-The movie functions operate on lazy sequences of images. The images are stored as numpy arrays.
-'''
-
 def normalise_array(array):
     """
     If greyscale array has a shape [a, b, 1] it must be normalised to [a, b] otherwise
@@ -26,35 +29,39 @@ def normalise_array(array):
     This function first checks if normalisation is necessary, and then creates a new normalised array if
     required.
 
-    **Parameters**
+    Args:
+        array: numpy array - the image data as a numpy array.
 
-    * `array`, numpy array - the image data as a numpy array.
+    Returns:
+        Normalised array. This will either be a new array (if normalisation was required) or the original array (if
+        no normalisation was required).
 
-    **Returns**
-
-    Normalised array. This will either be a new array (if normalisation was required) or the original array (if
-    no normalisation was required).
     """
     if array.ndim == 3 and array.shape[2] == 1:
         return np.squeeze(array, axis=2)
     return array
 
 def duplicate_frame(frame, count):
-    '''
-    Duplicate a single frame, multiple times
-    :param frame: the frame, a numpy array
-    :param count: Number of times to duplicate
-    :return: Generator
-    '''
+    """
+    Duplicate a single frame, multiple times.
+
+    Args:
+        frame: numpy array - the frame
+        count: int - Number of times to duplicate
+
+    Returns:
+        A generator object.
+    """
     for i in range(count):
         yield frame
 
 def save_frame(outfile, frame):
     """
     Save a frame as a png image
-    :param outfile: Full name and path of the file (.png extension optional)
-    :param frame: The sequence of frames
-    :return:
+
+    Args:
+        outfile: str - full name and path of the file (.png extension optional)
+        frame: numpy array - the frame
     """
 
     if outfile.lower().endswith('.png'):
@@ -65,9 +72,10 @@ def save_frame(outfile, frame):
 def save_frames(outfile, frames):
     """
     Save a sequence of frame as a sequence of png images
-    :param outfile: Base name and path of the file (.png extension optional)
-    :param frames: The sequence of frames
-    :return:
+
+    Args:
+        outfile: str - base name and path of the file (.png extension optional).
+        frames: numpy arrays - the sequence of frames.
     """
 
     if outfile.lower().endswith('.png'):
@@ -79,11 +87,15 @@ def save_frames(outfile, frames):
 
 def create_videoclip(frames, duration, frame_rate, audio_in=None):
     """
-    Create a VideoClip object
-    :param frames: a iterator returning numpy frame objects
-    :param duration: Duration of clip in seconds
-    :param audio_in: file name of audio file, or None
-    :return:
+    Create a VideoClip object from a sequence of frames and an optional audio file.
+    Args:
+        frames: numpy arrays - the sequence of frames.
+        duration: number - duration of clip in seconds.
+        frame_rate: number - frame rate, frames per second.
+        audio_in: str - file name of audio file, or None.
+
+    Returns:
+        A `VideoClip` object.
     """
 
     def make_frame(t):
@@ -109,10 +121,14 @@ def create_videoclip(frames, duration, frame_rate, audio_in=None):
 
 class MovieBuilder():
     """
-    Builds up a movie
+    Builds up a movie from a set of clips.
     """
 
     def __init__(self, frame_rate):
+        """
+        Args:
+            frame_rate: number - frame rate, frames per second.
+        """
         self.frame_rate = frame_rate
         self.frame_sources = []
         self.audio_files = []
@@ -120,11 +136,21 @@ class MovieBuilder():
 
     def add_scene(self, frame_source_duration, audio_file=None):
         """
-        Add a clip
-        :param frame_source_duration: Tuple of (frame_source, duration). frame_source is a iterator returning
-        numpy frame objects, duration is the clip duration in seconds
-        :param audio_file:
-        :return:
+        Add a scene (a sequence of frame plus an optional audio file).
+
+        Note, due to the requirements of the MoviePy library, if the movie has sound then every scene must include a sound file (use
+        a slient file if no sound is required for a particular scene). Alternatively, if the movie has no sound,then don;t include
+        a sound file with any of the scenes.
+
+        Also note that the sound file should be at least as long as the video duration.
+
+        Args:
+            frame_source_duration: tuple - frame_source, duration. frame_source is a iterator returning
+                numpy frame objects, duration is the clip duration in seconds
+            audio_file: str - name of MP3 file, or None.
+
+        Returns:
+
         """
         self.frame_sources.append(frame_source_duration[0])
         self.duration.append(frame_source_duration[1])
@@ -132,10 +158,11 @@ class MovieBuilder():
 
     def make_movie(self, video_out, source=None):
         """
-        Make a movie of either all the clips that have been added, or just a single clip if source is not None
-        :param video_out: Filename of output file.
-        :param source: set to index of a clip to use just that clip, or None to join all clips
-        :return:
+        Make a movie of either all the clips that have been added, or just a single clip if source is not None.
+
+        Args:
+            video_out: str - Filename of output file.
+            source: int - set to index of a clip to use just that clip, or None to join all clips.
         """
         if source is not None:
             video = create_videoclip(self.frame_sources[source], self.duration[source], self.frame_rate, self.audio_files[source])
