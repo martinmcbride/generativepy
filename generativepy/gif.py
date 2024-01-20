@@ -15,12 +15,11 @@ def save_animated_gif(filepath, frames, delay, loop=0):
     Save a set of frames as an animated GIF.
     Requires gifsicle to be installed
 
-    **Parameters**
-
-    * `filepath`: str - Output filepath.
-    * `frames`: iterator returning frames - sequence of frames.
-    * `delay`: number - Delay between frames in seconds (eg 0.2 for frame rate of 5 frames per second).
-    * `loop`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
+    Args:
+        `filepath`: str - Output filepath.
+        `frames`: iterator returning frames - sequence of frames.
+        `delay`: number - Delay between frames in seconds (eg 0.2 for frame rate of 5 frames per second).
+        `loop`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
     '''
     if not filepath.lower().endswith('.gif'):
         filepath += '.gif'

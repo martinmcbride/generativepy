@@ -40,6 +40,7 @@ class Axes:
     '''
 
     def __init__(self, ctx, position, width, height):
+
         self.ctx = ctx
         self.appearance = AxesAppearance()
         self.position = position
@@ -58,14 +59,11 @@ class Axes:
         '''
         Sets the start value of the axes
 
-        **Parameters**
+        Args:
+            `start`: (x, y) value of bottom left corner of axes
 
-        * `start`: (x, y) value of bottom left corner of axes
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.start = start
         return self
@@ -74,14 +72,11 @@ class Axes:
         '''
         Sets the range of the axes
 
-        **Parameters**
+        Args:
+            `extent`: (x, y) range of axes
 
-        * `extent`: (x, y) range of axes
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.extent = extent
         return self
@@ -91,14 +86,11 @@ class Axes:
         Sets the scale of the features. For example a value of 2 will make all the gridlines and label text
         on the axes twice as big. This is a quick way of resizing everything in one go.
 
-        **Parameters**
+        Args:
+            `scale`: scale factor
 
-        * `scale`: scale factor
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.appearance.featurescale = scale
         return self
@@ -107,14 +99,11 @@ class Axes:
         '''
         Set divisons spacing
 
-        **Parameters**
+        Args:
+            `divisions`: (x, y) spacing divisions in each direction
 
-        * `divisions`: (x, y) spacing divisions in each direction
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.divisions = divisions
         return self
@@ -128,14 +117,11 @@ class Axes:
         '''
         Draw subdivision lines on graph
 
-        **Parameters**
+        Args:
+            `factor`: (x, y) Number of subdivisions per division in each direction
 
-        * `factor`: (x, y) Number of subdivisions per division in each direction
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.subdivisons = True
         self.subdivisionfactor = factor
@@ -145,14 +131,11 @@ class Axes:
         '''
         Sets the entire graph background
 
-        **Parameters**
+        Args:
+            `pattern`: color or fill pattern
 
-        * `pattern`: color or fill pattern
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.appearance.background = FillParameters(pattern)
         return self
@@ -161,13 +144,11 @@ class Axes:
         '''
         Sets the color of the axes text
 
-        **Parameters**
+        Args:
+            `pattern`: color or pattern
 
-        * `pattern`: color or pattern
-                
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.appearance.textcolor = pattern
         return self
@@ -176,16 +157,14 @@ class Axes:
         '''
         Set the style of the axis text
 
-        **Parameters**
+        Args:
+            `font`: Font name
+            `weight`: Font weight
+            `slant`: Font slant
+            `size`: Font size in units. This will be multiplied by the featurescale value.
 
-        * `font`: Font name
-        * `weight`: Font weight
-        * `slant`: Font slant
-        * `size`: Font size in units. This will be multiplied by the featurescale value.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.appearance.fontparams = FontParameters(font, weight, slant, size)
         return self
@@ -194,19 +173,16 @@ class Axes:
         '''
         Sets the style of the axis lines
 
-        **Parameters**
+        Args:
+            `pattern`:  the fill pattern or color to use for the outline, None for default
+            `line_width`: width of stroke line, None for default
+            `dash`: dash patter of line, as for Pycairo, None for default
+            `cap`: line end style, None for default
+            `join`: line join style, None for default
+            `miter_limit`: mitre limit, None for default
 
-        * `pattern`:  the fill pattern or color to use for the outline, None for default
-        * `line_width`: width of stroke line, None for default
-        * `dash`: dash patter of line, as for Pycairo, None for default
-        * `cap`: line end style, None for default
-        * `join`: line join style, None for default
-        * `miter_limit`: mitre limit, None for default
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.appearance.axislines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -215,19 +191,16 @@ class Axes:
         '''
         Sets the style of the division lines
 
-        **Parameters**
+        Args:
+            `pattern`:  the fill pattern or color to use for the outline, None for default
+            `line_width`: width of stroke line, None for default
+            `dash`: dash patter of line, as for Pycairo, None for default
+            `cap`: line end style, None for default
+            `join`: line join style, None for default
+            `miter_limit`: mitre limit, None for default
 
-        * `pattern`:  the fill pattern or color to use for the outline, None for default
-        * `line_width`: width of stroke line, None for default
-        * `dash`: dash patter of line, as for Pycairo, None for default
-        * `cap`: line end style, None for default
-        * `join`: line join style, None for default
-        * `miter_limit`: mitre limit, None for default
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.appearance.divlines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -236,19 +209,16 @@ class Axes:
         '''
         Sets the style of the subdivision lines
 
-        **Parameters**
+        Args:
+            `pattern`:  the fill pattern or color to use for the outline, None for default
+            `line_width`: width of stroke line, None for default
+            `dash`: dash patter of line, as for Pycairo, None for default
+            `cap`: line end style, None for default
+            `join`: line join style, None for default
+            `miter_limit`: mitre limit, None for default
 
-        * `pattern`:  the fill pattern or color to use for the outline, None for default
-        * `line_width`: width of stroke line, None for default
-        * `dash`: dash patter of line, as for Pycairo, None for default
-        * `cap`: line end style, None for default
-        * `join`: line join style, None for default
-        * `miter_limit`: mitre limit, None for default
-                
-        **Returns**
-
-        self
-
+        Returns:
+            self
         '''
         self.appearance.subdivlines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -261,11 +231,11 @@ class Axes:
         self.ctx.new_path()
         # Get the text height using the selected font. This is used to control text offset and other sizes.
         _, self.text_height = Text(self.ctx).of('0', (0, 0)) \
-                                .font(self.appearance.fontparams.font,
-                                      self.appearance.fontparams.weight,
-                                      self.appearance.fontparams.slant) \
-                                .size(self.appearance.fontparams.size * self.appearance.featurescale) \
-                                .get_size()
+            .font(self.appearance.fontparams.font,
+                  self.appearance.fontparams.weight,
+                  self.appearance.fontparams.slant) \
+            .size(self.appearance.fontparams.size * self.appearance.featurescale) \
+            .get_size()
         self.clip()
         self._draw_background()
         if self.subdivisons:
@@ -328,10 +298,10 @@ class Axes:
             if abs(p)>0.001:
                 position = self.transform_from_graph((p, 0))
                 pstr = self._format_div(p, self.divisions[0], self.x_div_formatter)
-                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset))\
+                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
                     .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
-                          self.appearance.fontparams.slant)\
-                    .size(self.appearance.fontparams.size*self.appearance.featurescale)\
+                          self.appearance.fontparams.slant) \
+                    .size(self.appearance.fontparams.size*self.appearance.featurescale) \
                     .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
                 params.apply(self.ctx)
                 self.ctx.new_path()
@@ -343,10 +313,10 @@ class Axes:
             if abs(p)>0.001:
                 position = self.transform_from_graph((0, p))
                 pstr = self._format_div(p, self.divisions[1], self.y_div_formatter)
-                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset))\
+                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
                     .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
-                          self.appearance.fontparams.slant)\
-                    .size(self.appearance.fontparams.size*self.appearance.featurescale)\
+                          self.appearance.fontparams.slant) \
+                    .size(self.appearance.fontparams.size*self.appearance.featurescale) \
                     .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
                 params.apply(self.ctx)
                 self.ctx.new_path()
@@ -380,15 +350,13 @@ class Axes:
         '''
         Return true if the sequence values contains the value to within a given tolerance
 
-        **Parameters**
+        Args:
+            `values`
+            `value`
+            `tolerance`
 
-        * `values`
-        * `value`
-        * `tolerance`
-
-        **Returns**
-
-        Result
+        Returns:
+            Result
         '''
         for v in values:
             if abs(value - v) < tolerance:
@@ -412,15 +380,13 @@ class Axes:
         If the division spacing is an integer, the string will be an integer (no dp).
         If the division spacing is float, the string will be a float with a suitable number of decimal places
 
-        **Parameters**
+        Args:
+            `value`: value to be formatted
+            `div`: division spacing
+            `formatter`: formatting function, accepts vale and div, returns a formatted value string
 
-        * `value`: value to be formatted
-        * `div`: division spacing
-        * `formatter`: formatting function, accepts vale and div, returns a formatted value string
-
-        **Returns**
-
-        String representation of the value
+        Returns:
+            String representation of the value
         """
         if formatter:
             return formatter(value, div)
@@ -433,9 +399,8 @@ class Axes:
         '''
         Scale the ctx so that point (x, y) will be correctly positioned in the axes coordinates
 
-        **Returns**
-
-        x, y
+        Returns:
+            x, y
         '''
         x = ((point[0] - self.start[0]) * self.width / self.extent[0]) + self.position[0]
         y = self.height + self.position[1] - ((point[1] - self.start[1]) * self.height / self.extent[1])
@@ -472,18 +437,16 @@ class Plot(Shape):
         Stroke overrides the Shape stroke() method. It clips the stroke to the area of the axes. This ensures that if
         the curve goes out of range it will not interfere with other parts of the image.
 
-        **Parameters**
+        Args:
+            `pattern`
+            `line_width`
+            `dash`
+            `cap`
+            `join`
+            `miter_limit`
 
-        * `pattern`
-        * `line_width`
-        * `dash`
-        * `cap`
-        * `join`
-        * `miter_limit`
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         super().stroke(pattern, line_width, dash, cap, join, miter_limit)
 
@@ -492,17 +455,15 @@ class Plot(Shape):
         '''
         Plot a function y = fn(x)
 
-        **Parameters**
+        Args:
+            `fn`: the function to plot. It must take a single argument
+            `extent`: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
+            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+                    to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
-        * `fn`: the function to plot. It must take a single argument
-        * `extent`: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
-        * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
-        to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.points = []
         start = self.axes.start[0]
@@ -520,17 +481,15 @@ class Plot(Shape):
         '''
         Plot a function x = fn(y)
 
-        **Parameters**
+        Args:
+            `fn`: the function to plot. It must take a single argument
+            `extent`: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
+            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+                to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
-        * `fn`: the function to plot. It must take a single argument
-        * `extent`: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
-        * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
-        to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.points = []
         start = self.axes.start[1]
@@ -548,17 +507,15 @@ class Plot(Shape):
         '''
         Plot a polar function r = fn(theta). theta is measured in radians
 
-        **Parameters**
+        Args:
+            `fn`: the function to plot. It must take a single argument
+            `extent`: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
+            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+                to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
-        * `fn`: the function to plot. It must take a single argument
-        * `extent`: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
-        * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
-        to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.points = []
         for theta in np.linspace(extent[0], extent[1], precision):
@@ -573,18 +530,16 @@ class Plot(Shape):
         '''
         Plot a parametric function x = fx(t), y = ft(t).
 
-        **Parameters**
+        Args:
+            `fx`: x as a function of t. It must take a single argument
+            `fy`: y as a function of t. It must take a single argument
+            `extent`: the range of t values to plot. If not supplied the range 0 to 1 is used.
+            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+                to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
-        * `fx`: x as a function of t. It must take a single argument
-        * `fy`: y as a function of t. It must take a single argument
-        * `extent`: the range of t values to plot. If not supplied the range 0 to 1 is used.
-        * `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-        * `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
-        to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.points = []
         for t in np.linspace(extent[0], extent[1], precision):

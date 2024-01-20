@@ -14,16 +14,14 @@ def isclose(a, b, rel_tol=1e-09, abs_tol=1e-12):
     """
     Check if two values a and b are equal to within a given tolerance
 
-    **Parameters**
+    Args:
+        `a`: number - First value
+        `b`: number - Second value
+        `rel_tol`: number - Tolerance as a fraction of the absolute value of a or b (whichever is largest)
+        `abs_tol`: number - Tolerance as an absolute value
 
-    * `a`: number - First value
-    * `b`: number - Second value
-    * `rel_tol`: number - Tolerance as a fraction of the absolute value of a or b (whichever is largest)
-    * `abs_tol`: number - Tolerance as an absolute value
-
-    **Returns**
-
-    True if the numbers are close, false otherwise.
+    Returns:
+        True if the numbers are close, false otherwise.
     """
     return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)
 
@@ -43,9 +41,8 @@ class Matrix():
         """
         Create a unit matrix
 
-        **Returns**
-
-        The unit matrix.
+        Returns:
+            The unit matrix.
         """
         return Matrix(1, 0, 0, 0, 1, 0)
 
@@ -54,14 +51,12 @@ class Matrix():
         """
         Create a scaling matrix
 
-        **Parameters**
+        Args:
+            `scale_x`: Scale factor in x direction
+            `scale_y`: Scale factor in y direction, defaults to scale_x
 
-        * `scale_x`: Scale factor in x direction
-        * `scale_y`: Scale factor in y direction, defaults to scale_x
-
-        **Returns**
-
-        New matrix
+        Returns:
+            New matrix
         """
         if scale_y is None:
             scale_y = scale_x
@@ -72,14 +67,12 @@ class Matrix():
         """
         Create a translation matrix
 
-        **Parameters**
+        Args:
+            `x`: Translation in x direction
+            `y`: Translation in y direction
 
-        * `x`: Translation in x direction
-        * `y`: Translation in y direction
-
-        **Returns**
-
-        New matrix
+        Returns:
+            New matrix
         """
         return Matrix(1, 0, x, 0, 1, y)
 
@@ -88,13 +81,11 @@ class Matrix():
         """
         Create a rotation matrix
 
-        **Parameters**
+        Args:
+            `angle`: Angle in radians, measured counterclockwise from positive x direction
 
-        * `angle`: Angle in radians, measured counterclockwise from positive x direction
-
-        **Returns**
-
-        New matrix
+        Returns:
+            New matrix
         """
         c = math.cos(angle)
         s = math.sin(angle)
@@ -105,14 +96,12 @@ class Matrix():
         """
         Multiply two matrices
 
-        **Parameters**
+        Args:
+            `a`: First matrix
+            `b`: Second matrix
 
-        * `a`: First matrix
-        * `b`: Second matrix
-
-        **Returns**
-
-        New matrix
+        Returns:
+            New matrix
         """
         a = p[0] * q[0] + p[1] * q[3]
         b = p[0] * q[1] + p[1] * q[4]
@@ -193,14 +182,12 @@ class Vector():
         """
         Create a vector based on a length and angle
 
-        **Parameters**
+        Args:
+            `length`: Length of vector
+            `angle`: Angle in radians, measured counterclockwise from positive x direction
 
-        * `length`: Length of vector
-        * `angle`: Angle in radians, measured counterclockwise from positive x direction
-
-        **Returns**
-
-        New vector
+        Returns:
+            New vector
         """
         x = length * math.cos(angle)
         y = length * math.sin(angle)
@@ -211,14 +198,12 @@ class Vector():
         """
         Multiply a matrix (first) and a vector (second)
 
-        **Parameters**
+        Args:
+            `m`: matrix
+            `v`: vector
 
-        * `m`: matrix
-        * `v`: vector
-
-        **Returns**
-
-        New vector
+        Returns:
+            New vector
         """
         a = m[0] * v[0] + m[1] * v[1] + m[2]
         b = m[3] * v[0] + m[4] * v[1] + m[5]
@@ -226,20 +211,13 @@ class Vector():
 
     def __init__(self, *args):
         """
-        **Parameters**
+        Can either accept 2 number, or a tuple containing 2 numerical elements.
 
-        Either 2 numbers to create vector (a, b):
+        Args:
+            args: various - see abouve
 
-        * `a`: number
-        * `b`: number
-
-        Or an array/tuple of numbers:
-
-        * `v`: (number, number)
-
-        **Returns**
-
-        Self
+        Returns:
+            Self
         """
         if len(args) == 1 and hasattr(args[0], "__iter__") and len(args[0]) == 2:
             self.coords = tuple(args[0])
@@ -252,13 +230,11 @@ class Vector():
         """
         Transform this vector by a matrix. The vector is pre-multiplied by the matrix
 
-        **Parameters**
+        Args:
+            `m`: matrix
 
-        * `m`: matrix
-
-        **Returns**
-
-        New transformed vector
+        Returns:
+            New transformed vector
         """
         return m * self
 
@@ -266,14 +242,12 @@ class Vector():
         """
         Scale this vector by a factor.
 
-        **Parameters**
+        Args:
+            `scale_x`: scale factor in x direction.
+            `scale_y`: scale factor in y direction. If this is None, scale by `scale_x` in both directions.
 
-        * `scale_x`: scale factor in x direction.
-        * `scale_y`: scale factor in y direction. If this is None, scale by `scale_x` in both directions.
-
-        **Returns**
-
-        New scaled vector
+        Returns:
+            New scaled vector
         """
         return Matrix.scale(scale_x, scale_y) * self
 
@@ -281,14 +255,12 @@ class Vector():
         """
         Translate this vector by (x, y),
 
-        **Parameters**
+        Args:
+            `x`: translation amount in x direction.
+            `y`: translation amount in y direction.
 
-        * `x`: translation amount in x direction.
-        * `y`: translation amount in y direction.
-
-        **Returns**
-
-        New translated vector
+        Returns:
+            New translated vector
         """
         return Matrix.translate(x, y) * self
 
@@ -296,14 +268,12 @@ class Vector():
         """
         Rotate this vector by (x, y),
 
-        **Parameters**
+        Args:
+            `x`: rotation amount in x direction.
+            `y`: rotation amount in y direction.
 
-        * `x`: rotation amount in x direction.
-        * `y`: rotation amount in y direction.
-
-        **Returns**
-
-        New rotated vector
+        Returns:
+            New rotated vector
         """
         return Matrix.rotate(angle) * self
 
@@ -311,12 +281,7 @@ class Vector():
         """
         Interpolate between this vector and other.
 
-        **Parameters**
-
-        * `other`: Vector - the other vector
-        * `factor`: number - The interpolation amount.
-
-        Interplations factor:
+        The `factor` parameter works like this:
 
         * 0 - result is self
         * 1 - result is other
@@ -324,9 +289,12 @@ class Vector():
         * > 1 - result extensds beyond other
         * < 0 - result extends backwards before other
 
-        **Returns**
+        Args:
+            `other`: Vector - the other vector
+            `factor`: number - The interpolation amount.
 
-        New rotated vector
+        Returns:
+            New rotated vector
         """
 
         return Vector((1 - factor) * self.x + factor * other.x, (1 - factor) * self.y + factor * other.y)
