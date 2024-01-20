@@ -15,9 +15,8 @@ def set_frame_rate(rate):
     """
     Sets the tween frame rate
 
-    **Parameters**
-
-    * `rate`: number - Number of frames per second
+    Args:
+        `rate`: number - Number of frames per second
     """
     global _FRAME_RATE
     if not isinstance(rate, (int, float)):
@@ -49,13 +48,11 @@ class Tween():
 
     def __init__(self, value=0):
         """
-        **Parameters**
+        Args:
+            `value`: number - The initial value, defaults to 0.
 
-        * `value`: number - The initial value, defaults to 0.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, None)
         self.frames = []
@@ -66,13 +63,11 @@ class Tween():
         """
         Wait, maintaining the current value, until the specified absolute time.
 
-        **Parameters**
+        Args:
+            `time`: number - Absolute time to wait
 
-        * `time`: number - Absolute time to wait
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         count = self.check_and_convert_time(time, len(self.frames))
         self.frames.extend([self.previous for i in range(count)])
@@ -82,13 +77,11 @@ class Tween():
         """
         Wait, maintaining the current value, for the specified time period
 
-        **Parameters**
+        Args:
+            `time`: number - Relative time to wait
 
-        * `time`: number - Relative time to wait
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         count = self.check_and_convert_time_d(time)
         self.frames.extend([self.previous for i in range(count)])
@@ -98,13 +91,11 @@ class Tween():
         """
         Set the value
 
-        **Parameters**
+        Args:
+            `value`: number - New tween value
 
-        * `value`: number - New tween value
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         self.previous = value
@@ -115,14 +106,12 @@ class Tween():
         Make the tween value move from its current value to a new value, finishing at the specified time.
         The transition is linear.
 
-        **Parameters**
+        Args:
+            `value`: number - New tween value.
+            `time`: number - Absolute time to reach final value.
 
-        * `value`: number - New tween value.
-        * `time`: number - Absolute time to reach final value.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time(time, len(self.frames))
@@ -137,14 +126,12 @@ class Tween():
         Make the tween value move from its current value to a new value, finishing after the specified time period.
         The transition is linear.
 
-        **Parameters**
+        Args:
+            `value`: number - New tween value.
+            `time`: number - Relative time period to reach final value.
 
-        * `value`: number - New tween value.
-        * `time`: number - Relative time period to reach final value.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time_d(time)
@@ -159,15 +146,13 @@ class Tween():
         Make the tween value move from its current value to a new value, finishing at the specified time.
         The transition is controlled by the easing function.
 
-        **Parameters**
+        Args:
+            `value`: number - New tween value.
+            `time`: number - Absolute time to reach final value.
+            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
-        * `value`: number - New tween value.
-        * `time`: number - Absolute time to reach final value.
-        * `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time(time, len(self.frames))
@@ -182,15 +167,13 @@ class Tween():
         Make the tween value move from its current value to a new value, finishing after the specified time period.
         The transition is controlled by the easing function.
 
-        **Parameters**
+        Args:
+            `value`: number - New tween value.
+            `time`: number - Absolute time to reach final value.
+            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
-        * `value`: number - New tween value.
-        * `time`: number - Absolute time to reach final value.
-        * `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time_d(time)
@@ -204,9 +187,8 @@ class Tween():
         """
         Get the tween value at the specified frame.
 
-        **Returns**
-
-        The tween value for the frame. If a frame is requested that is beyond the last frame available, return the value of the final frame.
+        Returns:
+            The tween value for the frame. If a frame is requested that is beyond the last frame available, return the value of the final frame.
         """
         if frame >= len(self.frames):
             return self.previous
@@ -269,14 +251,12 @@ class TweenVector(Tween):
         Make the tween value move from its current value to a new value, finishing at the specified time.
         The transition is linear.
 
-        **Parameters**
+        Args:
+            `value`: sequence of numbers - New tween value.
+            `time`: number - Absolute time to reach final value.
 
-        * `value`: sequence of numbers - New tween value.
-        * `time`: number - Absolute time to reach final value.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time(time, len(self.frames))
@@ -294,14 +274,12 @@ class TweenVector(Tween):
         Make the tween value move from its current value to a new value, finishing after the specified time period.
         The transition is linear.
 
-        **Parameters**
+        Args:
+            `value`: sequence of numbers - New tween value.
+            `time`: number - Relative time period to reach final value.
 
-        * `value`: sequence of numbers - New tween value.
-        * `time`: number - Relative time period to reach final value.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time_d(time)
@@ -319,15 +297,13 @@ class TweenVector(Tween):
         Make the tween value move from its current value to a new value, finishing at the specified time.
         The transition is controlled by the easing function.
 
-        **Parameters**
+        Args:
+            `value`: sequence of numbers - New tween value.
+            `time`: number - Absolute time to reach final value.
+            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
-        * `value`: sequence of numbers - New tween value.
-        * `time`: number - Absolute time to reach final value.
-        * `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time(time, len(self.frames))
@@ -345,15 +321,13 @@ class TweenVector(Tween):
         Make the tween value move from its current value to a new value, finishing after the specified time period.
         The transition is controlled by the easing function.
 
-        **Parameters**
+        Args:
+            `value`: sequence of numbers - New tween value.
+            `time`: number - Absolute time to reach final value.
+            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
-        * `value`: sequence of numbers - New tween value.
-        * `time`: number - Absolute time to reach final value.
-        * `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.check_value(value, self.previous)
         count = self.check_and_convert_time_d(time)

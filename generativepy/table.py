@@ -22,13 +22,11 @@ class TableLayout():
         """
         Initialise the table layout.
 
-        **Parameters**
+        Args:
+            `position`: (number, number) - The (x, y) position of the top left corner of the table
 
-        * `position`: (number, number) - The (x, y) position of the top left corner of the table
-        
-        **Returns**
-        
-        self
+        Returns:
+            self
         """
         self.position = position
         self.rows = [100]
@@ -40,14 +38,12 @@ class TableLayout():
         """
         Set the size and number of rows and columns
 
-        **Parameters**
+        Args:
+            `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
+            `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
 
-        `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
-        `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.rows = rows
         self.cols = cols
@@ -59,12 +55,12 @@ class TableLayout():
         """
         Get the position of the centre of cell (row, col)
 
-        **Parameters**
+        Args:
 
         `row`: int - Row number.
         `col`: int - Column number.
 
-        **Returns**
+        Returns:
 
         (x, y) position of the centre of the cell.
         """
@@ -90,14 +86,12 @@ class Table:
         """
         Initialise the table layout.
 
-        **Parameters**
+        Args:
+            `position`: (number, number) - The (x, y) position of the top left corner of the table
+            `ctx`: Pycairo drawing context - The context to draw on.
 
-        * `position`: (number, number) - The (x, y) position of the top left corner of the table
-        * `ctx`: Pycairo drawing context - The context to draw on.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.ctx = ctx
         self.appearance = TableAppearance()
@@ -107,14 +101,12 @@ class Table:
         """
         Set the size and number of rows and columns
 
-        **Parameters**
+        Args:
+            `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
+            `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
 
-        `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
-        `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.table_layout.of_rows_cols(rows, cols)
         return self
@@ -123,13 +115,11 @@ class Table:
         '''
         Sets the entire table background
 
-        **Parameters**
+        Args:
+            `pattern`: the fill `Pattern` or `Color` to use.
 
-        * `pattern`: the fill `Pattern` or `Color` to use.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.appearance.background = FillParameters(pattern)
         return self
@@ -138,18 +128,16 @@ class Table:
         '''
         Sets the line style of the whole table
 
-        **Parameters**
+        Args:
+            `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
+            `line_width`: width of stroke line. None for default
+            dash`: sequence, dash patter of line. None for default
+            cap`: line end style, None for default.
+            join`: line join style, None for default.
+            miter_limit`: mitre limit, number, None for default
 
-        * `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
-        * `line_width`: width of stroke line. None for default
-        * dash`: sequence, dash patter of line. None for default
-        * cap`: line end style, None for default.
-        * join`: line join style, None for default.
-        * miter_limit`: mitre limit, number, None for default
-
-        **Returns**
-
-        self
+        Returns:
+            self
         '''
         self.appearance.lines = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
@@ -181,13 +169,11 @@ class Table:
         """
         Get the position of the centre of cell (row, col)
 
-        **Parameters**
+        Args:
+            `row`: int - Row number.
+            `col`: int - Column number.
 
-        `row`: int - Row number.
-        `col`: int - Column number.
-
-        **Returns**
-
-        (x, y) position of the centre of the cell.
+        Returns:
+            (x, y) position of the centre of the cell.
         """
         return self.table_layout.get(row, col)
