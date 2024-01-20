@@ -117,13 +117,13 @@ def rasterise_formula(name, formula, color, dpi=600, packages=None):
     cropped so the dimensions can be used to align the image.
 
     Args:
-        `name`: str - The base filename for the output PNG file. String with no extension, eg "myformula". The final
+        name: str - The base filename for the output PNG file. String with no extension, eg "myformula". The final
             output will be stored using this name, in the current working folder, so if you are creating multiple formulae give
             each one a unique name.
-        `formula`: string - The formula, as a latex string.
-        `color`: `Color` object - The colour that will be used to paint the formula.
-        `dpi`: number - The nominal size of the formula. See usage.
-        `packages`: sequence of strings - a list of the names of any required latex packages.  Any valid packages listed
+        formula: string - The formula, as a latex string.
+        color: `Color` object - The colour that will be used to paint the formula.
+        dpi: number - The nominal size of the formula. See usage.
+        packages: sequence of strings - a list of the names of any required latex packages.  Any valid packages listed
                 here will be imported into the Latex equation description so that they can be used in the formula.
 
     Returns:

@@ -36,12 +36,12 @@ class Scaler:
 
 
         Args:
-            `pixel_width`: int - The width of the image in pixels. Use the value passed into `paint`.
-            `pixel_height`: int - The height of the image in pixels. Use the value passed into `paint`.
-            `width`: number - The required image width in user coordinates. Default is `pixel_width`.
-            `height`: number - The required image height in user coordinates. Default is `pixel_height`.
-            `startx`: number - The user space x coordinate of the device space origin. Default is 0.
-            `starty`: number - The use rspace y coordinate of the device space origin. Default is 0.
+            pixel_width: int - The width of the image in pixels. Use the value passed into `paint`.
+            pixel_height: int - The height of the image in pixels. Use the value passed into `paint`.
+            width: number - The required image width in user coordinates. Default is `pixel_width`.
+            height: number - The required image height in user coordinates. Default is `pixel_height`.
+            startx: number - The user space x coordinate of the device space origin. Default is 0.
+            starty: number - The use rspace y coordinate of the device space origin. Default is 0.
 
         Returns:
             A `Scaler` object
@@ -66,8 +66,8 @@ class Scaler:
         Converts a device coordinate to user space.
 
         Args:
-            `device_x`: number - the x coordinate in device space.
-            `device_y`: number - the y coordinate in device space.
+            device_x: number - the x coordinate in device space.
+            device_y: number - the y coordinate in device space.
 
         Returns:
             float (x, y), a tuple of the equivalent coordinates in user space.
@@ -81,8 +81,8 @@ class Scaler:
         Converts a user coordinate to device space.
 
         Args:
-            `user_x`: number - the x coordinate in user space.
-            `user_y`: number - the y coordinate in user space.
+            user_x: number - the x coordinate in user space.
+            user_y: number - the y coordinate in user space.
 
         Returns:
             float (x, y), a tuple of the equivalent coordinates in device space.
@@ -96,7 +96,7 @@ def get_mode(channels):
     Convert the number of channels into a PIL mode string.
 
     Args:
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
 
     Returns:
         Returns a string:
@@ -127,7 +127,7 @@ def get_background(channels):
     For RGBA images, the background is set to transparent white.
 
     Args:
-        `channels`: int - Number of colour channels in the image.
+        channels: int - Number of colour channels in the image.
 
     Returns:
         A color specifier for white in the colour space specified by `channels`.
@@ -151,12 +151,12 @@ def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
     The paint function must have the signature described for `example_paint_function`.
 
     Args:
-        `outfile`: str - The path and filename for the output PNG file. The '.png' extension is optional, it will be added
+        outfile: str - The path and filename for the output PNG file. The '.png' extension is optional, it will be added
                     if it isn't present.
-        `paint`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        paint: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
@@ -179,13 +179,13 @@ def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
     called, `fn` will contain the frame number - 0, 1 etc
 
     Args:
-        `outfile`: str - The path and filename template for the output PNG file. The '.png' extension is optional, it
+        outfile: str - The path and filename template for the output PNG file. The '.png' extension is optional, it
                     will be added if it isn't present.
-        `paint`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `count`: int - the number of images to create
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        paint: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        count: int - the number of images to create
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
@@ -204,10 +204,10 @@ def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
     The paint function must have the signature described for `example_paint_function`.
 
     Args:
-        `paint`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        paint: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
 
     Returns:
         A frame.
@@ -231,11 +231,11 @@ def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
     called, `fn` will contain the frame number - 0, 1 etc
 
     Args:
-        `paint`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `count`: int - the number of images to create
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        paint: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        count: int - the number of images to create
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
 
     Returns:
         An iterator returning a sequence of frames.
@@ -251,13 +251,13 @@ def example_paint_function(image, pixel_width, pixel_height, frame_no, frame_cou
     This is an example paint function. It is a dummy function used to document the required parameters.
 
     Args:
-        `image`: PIL Image object - A drawing function object, see below.
-        `pixel_width`: int - The width of the image in pixels.
-        `pixel_height`: int - The height of the image in pixels.
-        `frame_no`: int - the number of the current frame. For single images this will always be 0. For animations this
+        image: PIL Image object - A drawing function object, see below.
+        pixel_width: int - The width of the image in pixels.
+        pixel_height: int - The height of the image in pixels.
+        frame_no: int - the number of the current frame. For single images this will always be 0. For animations this
                         paint function will be called `frame_count` times (once for each frame) with `frame_no` incrementing
                         by 1 each time (ie it counts from 0 to `frame_count` - 1.
-        `frame_count`: int - The total number of frames being created.For single images this will always be 0. For animations
+        frame_count: int - The total number of frames being created.For single images this will always be 0. For animations
                            this will be set to the total number of frames in the animation.
     """
     pass

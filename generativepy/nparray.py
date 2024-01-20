@@ -72,14 +72,6 @@ def make_nparray_frames(paint, pixel_width, pixel_height, count, channels=3):
     Returns:
         Lazy iterator of frames.
     """
-    '''
-    :param paint: the paint function
-    :param pixel_width: width in pixels, int
-    :param pixel_height: height in pixels, int
-    :param count: number of frames to create
-    :param channels: 1 for greyscale, 3 for rgb, 4 for rgba
-    :return: a lazy sequence of frame buffers
-    '''
     for i in range(count):
         array = np.full((pixel_height, pixel_width, channels), 255, dtype=np.uint)
         paint(array, pixel_width, pixel_height, i, count)

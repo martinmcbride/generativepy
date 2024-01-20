@@ -23,7 +23,7 @@ class TableLayout():
         Initialise the table layout.
 
         Args:
-            `position`: (number, number) - The (x, y) position of the top left corner of the table
+            position: (number, number) - The (x, y) position of the top left corner of the table
 
         Returns:
             self
@@ -39,8 +39,8 @@ class TableLayout():
         Set the size and number of rows and columns
 
         Args:
-            `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
-            `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
+            rows: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
+            cols: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
 
         Returns:
             self
@@ -56,13 +56,11 @@ class TableLayout():
         Get the position of the centre of cell (row, col)
 
         Args:
-
-        `row`: int - Row number.
-        `col`: int - Column number.
+            row: int - Row number.
+            col: int - Column number.
 
         Returns:
-
-        (x, y) position of the centre of the cell.
+            (x, y) position of the centre of the cell.
         """
         return self.position[0]+(self.col_pos[col]+self.col_pos[col+1])/2, self.position[1]+(self.row_pos[row]+self.row_pos[row+1])/2
 
@@ -87,8 +85,8 @@ class Table:
         Initialise the table layout.
 
         Args:
-            `position`: (number, number) - The (x, y) position of the top left corner of the table
-            `ctx`: Pycairo drawing context - The context to draw on.
+            position: (number, number) - The (x, y) position of the top left corner of the table
+            ctx: Pycairo drawing context - The context to draw on.
 
         Returns:
             self
@@ -102,8 +100,8 @@ class Table:
         Set the size and number of rows and columns
 
         Args:
-            `rows`: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
-            `cols`: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
+            rows: list of numbers - A list of the height of each row in user space units. The length of the list controls the number of rows.
+            cols: list of numbers - A list of the width of each column in user space units. The length of the list controls the number of columns.
 
         Returns:
             self
@@ -129,12 +127,12 @@ class Table:
         Sets the line style of the whole table
 
         Args:
-            `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
-            `line_width`: width of stroke line. None for default
-            dash`: sequence, dash patter of line. None for default
-            cap`: line end style, None for default.
-            join`: line join style, None for default.
-            miter_limit`: mitre limit, number, None for default
+            pattern:  the fill Pattern or Color to use for the outline, None for default
+            line_width: width of stroke line. None for default
+            dash: sequence, dash patter of line. None for default
+            cap: line end style, None for default.
+            join: line join style, None for default.
+            miter_limit: mitre limit, number, None for default
 
         Returns:
             self
@@ -170,8 +168,8 @@ class Table:
         Get the position of the centre of cell (row, col)
 
         Args:
-            `row`: int - Row number.
-            `col`: int - Column number.
+            row: int - Row number.
+            col: int - Column number.
 
         Returns:
             (x, y) position of the centre of the cell.

@@ -74,8 +74,8 @@ class LinearGradient(Pattern):
         Set the points for the Pycairo LinearGradient pattern
 
         Args:
-            `start`: Sequence of 2 numbers - The start point, (x, y)
-            `end`: Sequence of 2 numbers - The end point, (x, y)
+            start: Sequence of 2 numbers - The start point, (x, y)
+            end: Sequence of 2 numbers - The end point, (x, y)
 
         Returns:
             self
@@ -90,8 +90,8 @@ class LinearGradient(Pattern):
         This is equivalent to calling with_stops with ((0, color1), (1, color2)
 
         Args:
-            `color1`: `Color` - The start colour (ie the colour at the start point).
-            `color2`: `Color` - The end colour (ie the colour at the end point).
+            color1: `Color` - The start colour (ie the colour at the start point).
+            color2: `Color` - The end colour (ie the colour at the end point).
 
         Returns:
             self
@@ -104,7 +104,7 @@ class LinearGradient(Pattern):
         Set the gradient stops. There should be 2 or more stops in the sequence.
 
         Args:
-            `stops`: tuple of numbers - Each stop tuple (position, color) where `position` is a number indicating the position of the stop between
+            stops: tuple of numbers - Each stop tuple (position, color) where `position` is a number indicating the position of the stop between
                     the start and end points, and `color`is the `Color` of the stop.
 
         Returns:
@@ -146,8 +146,8 @@ class FillParameters:
         parts of the path will be filled, and which will be left as "holes". Possible values are `drawing.EVEN_ODD` and `drawing.WINDING`.
 
         Args:
-            `pattern`: the fill `Pattern` or `Color` to use, None for default
-            `fill_rule`: the fill rule to use, None for default.
+            pattern: the fill `Pattern` or `Color` to use, None for default
+            fill_rule: the fill rule to use, None for default.
         """
         self.pattern = Color(0) if pattern is None else pattern
         self.fill_rule = WINDING if fill_rule is None else fill_rule
@@ -158,7 +158,7 @@ class FillParameters:
         settings.
 
         Args:
-            `ctx`: The context to apply the settings to.
+            ctx: The context to apply the settings to.
         """
         if isinstance(self.pattern, Color):
             ctx.set_source_rgba(*self.pattern)
@@ -211,12 +211,12 @@ class StrokeParameters:
 
 
         Args:
-            `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
-            `line_width`: width of stroke line. None for default
-            dash`: sequence, dash patter of line. None for default
-            cap`: line end style, None for default.
-            join`: line join style, None for default.
-            miter_limit`: mitre limit, number, None for default
+            pattern:  the fill `Pattern` or `Color` to use for the outline, None for default
+            line_width: width of stroke line. None for default
+            dash: sequence, dash patter of line. None for default
+            cap: line end style, None for default.
+            join: line join style, None for default.
+            miter_limit: mitre limit, number, None for default
         """
         self.pattern = Color(0) if pattern is None else pattern
         self.line_width = 1 if line_width is None else line_width
@@ -231,7 +231,7 @@ class StrokeParameters:
         settings.
 
         Args:
-            `ctx`: The context to apply the settings to.
+            ctx: The context to apply the settings to.
         """
         if isinstance(self.pattern, Color):
             ctx.set_source_rgba(*self.pattern)
@@ -268,10 +268,10 @@ class FontParameters:
     def __init__(self, font=None, weight=None, slant=None, size=None):
         """
         Args:
-            `font`: str - name of font face.
-            `weight`: number - font weight. This can be `FONT_WEIGHT_NORMAL` or `FONT_WEIGHT_BOLD`, defined in the`drawing` module.
-            `slant`: int - font slant. This can be `FONT_SLANT_NORMAL`, `FONT_SLANT_ITALIC` or `FONT_SLANT_OBLIQUE`, defined in the`drawing` module.
-            `size`: number - font size. This is the *approximate* size of the characters in user space units.
+            font: str - name of font face.
+            weight: number - font weight. This can be `FONT_WEIGHT_NORMAL` or `FONT_WEIGHT_BOLD`, defined in the`drawing` module.
+            slant: int - font slant. This can be `FONT_SLANT_NORMAL`, `FONT_SLANT_ITALIC` or `FONT_SLANT_OBLIQUE`, defined in the`drawing` module.
+            size: number - font size. This is the *approximate* size of the characters in user space units.
         """
         self.font = 'Arial' if font is None else font
         self.weight = FONT_WEIGHT_NORMAL if weight is None else weight
@@ -284,7 +284,7 @@ class FontParameters:
         specified font.
 
         Args:
-            `ctx`: The context to apply the settings to.
+            ctx: The context to apply the settings to.
         """
         c_weight = cairo.FONT_WEIGHT_NORMAL
         if self.weight == FONT_WEIGHT_BOLD:
@@ -309,7 +309,7 @@ class Shape():
     def __init__(self, ctx):
         """
         Args:
-            `ctx`: Pycairo drawing context - The context to draw on.
+            ctx: Pycairo drawing context - The context to draw on.
 
         Returns:
             self
@@ -384,8 +384,8 @@ class Shape():
         Parameters are as described for `FillParameters`.
 
         Args:
-            `pattern`: the fill `Pattern` or `Color` to use, None for default
-            `fill_rule`: the fill rule to use, None for default.
+            pattern: the fill `Pattern` or `Color` to use, None for default
+            fill_rule: the fill rule to use, None for default.
 
         Returns:
             self
@@ -406,12 +406,12 @@ class Shape():
         Parameters are as described for `StrokeParameters`.
 
         Args:
-            `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
-            `line_width`: width of stroke line. None for default
-            dash`: sequence, dash patter of line. None for default
-            cap`: line end style, None for default.
-            join`: line join style, None for default.
-            miter_limit`: mitre limit, number, None for default
+            pattern:  the fill `Pattern` or `Color` to use for the outline, None for default
+            line_width: width of stroke line. None for default
+            dash: sequence, dash patter of line. None for default
+            cap: line end style, None for default.
+            join: line join style, None for default.
+            miter_limit: mitre limit, number, None for default
 
         Returns:
             self
@@ -528,7 +528,7 @@ class Path(Shape):
         This is useful if you want to reuse a path, drawing it multiple times, or if you need to create a path is one part of your code but store it for use somewhere else. Paths also have advanced applications such as drawing text along a curve.
 
         Args:
-            `path`:  Pycairo path object that defines the shape
+            path:  Pycairo path object that defines the shape
 
         Returns:
             self
@@ -559,9 +559,9 @@ class Rectangle(Shape):
 
         Args:
 
-            `corner`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
-            `width`:  number - The width.
-            `height`:  number - The height.
+            corner:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
+            width:  number - The width.
+            height:  number - The height.
 
         Returns:
             self
@@ -601,8 +601,8 @@ class Square(Shape):
         Creates a square based on the position and size.
 
         Args:
-            `corner`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
-            `width`:  number - The width.
+            corner:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
+            width:  number - The width.
 
         Returns:
             self
@@ -644,9 +644,9 @@ class Triangle(Shape):
         Creates a triangle based on the corners
 
         Args:
-            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner a.
-            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner b.
-            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner c.
+            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner a.
+            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner b.
+            c:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner c.
 
         Returns:
             self
@@ -738,8 +738,8 @@ class Text(Shape):
         Sets the text to be displayed, and the position.
 
         Args:
-            `text`:  str - The text to display. Only single line text is supported.
-            `position`:  (number, number) - (x, y) position of the text. This uses the alignment specified by the
+            text:  str - The text to display. Only single line text is supported.
+            position:  (number, number) - (x, y) position of the text. This uses the alignment specified by the
                 align functions below.
 
         Returns:
@@ -754,9 +754,9 @@ class Text(Shape):
         Selects the font face. If this method is not called, the font defaults to 'arial'.
 
         Args:
-            `font`:  str - The name of the font, such as 'arial'.
-            `weight`:  int - The font weight, either `drawing.FONT_WEIGHT_NORMAL` or `drawing.FONT_WEIGHT_BOLD`.
-            `slant`:  int - The font slant, either `drawing.FONT_SLANT_NORMAL`, `drawing.FONT_SLANT_ITALIC`, or
+            font:  str - The name of the font, such as 'arial'.
+            weight:  int - The font weight, either `drawing.FONT_WEIGHT_NORMAL` or `drawing.FONT_WEIGHT_BOLD`.
+            slant:  int - The font slant, either `drawing.FONT_SLANT_NORMAL`, `drawing.FONT_SLANT_ITALIC`, or
                     `drawing.FONT_SLANT_OBLIQUE`.
 
         Returns:
@@ -774,7 +774,7 @@ class Text(Shape):
         Chinese fonts). If size is not called, the size default to 10. The size is measured in userspace units.
 
         Args:
-            `size`:  number - The size of the text.
+            size:  number - The size of the text.
 
         Returns:
             self
@@ -800,8 +800,8 @@ class Text(Shape):
         As an alternative, you can use the `align_xxx()` methods to se the alignment.
 
         Args:
-            `alignx`:  int - Sets the horizontal alignment of the text.
-            `aligny`:  int - Sets the vertical alignment of the text.
+            alignx:  int - Sets the horizontal alignment of the text.
+            aligny:  int - Sets the vertical alignment of the text.
 
         Returns:
             self
@@ -895,8 +895,8 @@ class Text(Shape):
         Offsets the text in the x and y axes.
 
         Args:
-            `x`:  number - The x offset.
-            `y`:  number - The y offset.
+            x:  number - The x offset.
+            y:  number - The y offset.
 
         The offset moves the text in the x and y direction. The amount of offset is measured in user space.
         The offset is simple added to the position of the text. So for example:
@@ -920,8 +920,8 @@ class Text(Shape):
         Offsets the text by a given distance in a specified direction.
 
         Args:
-            `angle`:  number - The direction to move the text.
-            `distance`:  number - The distance to move the text.
+            angle:  number - The direction to move the text.
+            distance:  number - The distance to move the text.
 
         Thi sfunction is equivalent to:
 
@@ -938,8 +938,8 @@ class Text(Shape):
         Offsets the text by a given distance towards a particular point
 
         Args:
-            `point`:  number - The target point
-            `distance`:  number - The distance to move the text.
+            point:  number - The target point
+            distance:  number - The distance to move the text.
 
         Displaces the text by an amount distance towards the point. If distance is negative, the text will
         be moved in the opposite direction, ie away from the point.
@@ -1025,8 +1025,8 @@ class Line(Shape):
         Creates a line based on the start and end points.
 
         Args:
-            `start`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the start of the line.
-            `end`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
+            start:  (number, number) - A tuple of two numbers, giving the (x, y) position of the start of the line.
+            end:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
 
         Returns:
             self
@@ -1041,7 +1041,7 @@ class Line(Shape):
         complex paths where we might want to extend an existing path by adding a line to it.
 
         Args:
-            `end`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
+            end:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
 
         Returns:
             self
@@ -1055,7 +1055,7 @@ class Line(Shape):
         Sets the line mode to LINE
 
         Args:
-            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+            infinity:  number - a large number such that a line of length `infinity` is any direction will always be outside the
                 drawing area. Default 1000, which is fine for most cases.
 
         Returns:
@@ -1071,7 +1071,7 @@ class Line(Shape):
         Sets the line mode to RAY
 
         Args:
-            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+            infinity:  number - a large number such that a line of length `infinity` is any direction will always be outside the
                 drawing area. Default 1000, which is fine for most cases.
 
         Returns:
@@ -1087,7 +1087,7 @@ class Line(Shape):
         Sets the line mode to SEGMENT
 
         Args:
-            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+            infinity:  number - a large number such that a line of length `infinity` is any direction will always be outside the
                 drawing area. Default 1000, which is fine for most cases.
 
         Returns:
@@ -1103,8 +1103,8 @@ class Line(Shape):
         Sets the line mode to the supplied mode
 
         Args:
-            `extent_type`:  number - can be `drawing.SEGMENT`, `drawing.LINE` or `drawing.RAY`
-            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+            extent_type:  number - can be `drawing.SEGMENT`, `drawing.LINE` or `drawing.RAY`
+            infinity:  number - a large number such that a line of length `infinity` is any direction will always be outside the
         drawing area. Default 1000, which is fine for most cases.
 
         Returns:
@@ -1148,10 +1148,10 @@ class Bezier(Shape):
         """
         Creates a bezier curve based on the control points.
         Args:
-            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
-            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
-            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
-            `d`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
+            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
+            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
+            c:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
+            d:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
 
         Returns:
             self
@@ -1168,10 +1168,10 @@ class Bezier(Shape):
         complex paths where we might want to extend an existing path by adding a bezier curve to it.
 
         Args:
-            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
-            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
-            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
-            `d`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
+            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
+            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
+            c:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
+            d:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
 
         Returns:
             self
@@ -1237,7 +1237,7 @@ class Polygon(Shape):
         The polygon will be closed by default. To create an open polygon, call the open method.
 
         Args:
-            `points`:  sequence of number tuples - A sequence of line or curve specifiers.
+            points:  sequence of number tuples - A sequence of line or curve specifiers.
 
         Returns:
             self
@@ -1253,7 +1253,7 @@ class Polygon(Shape):
         to the first point. To create a closed polygon, simply don't call this method.
 
         Args:
-            `open_polygon`:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
+            open_polygon:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
         parameter tio create an open polygon.
 
         Returns:
@@ -1310,8 +1310,8 @@ class Circle(Shape):
         Creates a circle based on the centre point and radius.
 
         Args:
-            `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the circle.
-            `radius`:  number - The radius of the circle
+            center:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the circle.
+            radius:  number - The radius of the circle
 
         Returns:
             self
@@ -1325,8 +1325,8 @@ class Circle(Shape):
         Modifies a circle, to show only an arc. An arc is part of the circumference of the circle.
 
         Args:
-            `start_angle`:  number - The start angle of the arc
-            `end_angle`:  number - The end angle of the arc
+            start_angle:  number - The start angle of the arc
+            end_angle:  number - The end angle of the arc
 
         This is used as a modifier with of_center_radius, to draw just an arc. To draw an arc use:
 
@@ -1357,8 +1357,8 @@ class Circle(Shape):
         in a pie chart.
 
         Args:
-            `start_angle`:  number - The start angle of the sector
-            `end_angle`:  number - The end angle of the sector
+            start_angle:  number - The start angle of the sector
+            end_angle:  number - The end angle of the sector
 
         This function works in a similar way to the as_arc function, but it includes the area
         of the sector. You can fill or stroke the area.
@@ -1376,8 +1376,8 @@ class Circle(Shape):
         Modifies a circle, to show only a segment. A segment is the part of the circle that is cut off by a chord.
 
         Args:
-            `start_angle`:  number - The start angle of the segment
-            `end_angle`:  number - The end angle of the segment
+            start_angle:  number - The start angle of the segment
+            end_angle:  number - The end angle of the segment
 
         This function works in a similar way to the as_arc function, but it includes the area
         of the segment. You can fill or stroke the area.
@@ -1445,11 +1445,11 @@ class RegularPolygon(Shape):
         value, the shape will be rotated about its centre by angle radians in a clockwise direction.
 
         Args:
-            `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre
+            center:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre
                     of the polygon.
-            `numsides`:  number - The number of sides of the polygon.
-            `radius`:  number - The distance from the centre to any one of its vertices.
-            `angle`:  number - Angle to rotate the shape (defaults to zero).
+            numsides:  number - The number of sides of the polygon.
+            radius:  number - The distance from the centre to any one of its vertices.
+            angle:  number - Angle to rotate the shape (defaults to zero).
 
         Returns:
             self
@@ -1475,7 +1475,7 @@ class RegularPolygon(Shape):
         to the first point. To create a closed polygon, simply don't call this method.
 
         Args:
-            `open_polygon`:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
+            open_polygon:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
                 parameter tio create an open polygon.
 
         Returns:
@@ -1581,9 +1581,9 @@ class Ellipse(Shape):
         Creates a ellipse based on the centre point and the two radii.
 
         Args:
-            `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the ellipse.
-            `radius_x`:  number - The x radius of the ellipse.
-            `radius_y`:  number - The y radius of the ellipse.
+            center:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the ellipse.
+            radius_x:  number - The x radius of the ellipse.
+            radius_y:  number - The y radius of the ellipse.
 
         Returns:
             self
@@ -1613,8 +1613,8 @@ class Ellipse(Shape):
         fill the arc, it will fill it as if it was a segment.
 
         Args:
-            `start_angle`:  number - The start angle of the arc
-            `end_angle`:  number - The end angle of the arc
+            start_angle:  number - The start angle of the arc
+            end_angle:  number - The end angle of the arc
 
         Returns:
             self
@@ -1633,8 +1633,8 @@ class Ellipse(Shape):
         of the sector. You can fill or stroke the area.
 
         Args:
-            `start_angle`:  number - The start angle of the sector
-            `end_angle`:  number - The end angle of the sector
+            start_angle:  number - The start angle of the sector
+            end_angle:  number - The end angle of the sector
 
         Returns:
             self
@@ -1652,8 +1652,8 @@ class Ellipse(Shape):
         of the segment. You can fill or stroke the area.
 
         Args:
-            `start_angle`:  number - The start angle of the segment
-            `end_angle`:  number - The end angle of the segment
+            start_angle:  number - The start angle of the segment
+            end_angle:  number - The end angle of the segment
 
         Returns:
             self
@@ -1724,9 +1724,9 @@ class AngleMarker(Shape):
         and be drawn in a clockwise direction to the line **cb**, with point b as the centre of the angle.
 
         Args:
-            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
-            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point c.
+            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
+            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
+            c:  (number, number) - A tuple of two numbers, giving the (x, y) position of point c.
 
         Returns:
             self
@@ -1741,7 +1741,7 @@ class AngleMarker(Shape):
         Sets the radius of the arc. Default 8
 
         Args:
-            `radius`:  number - Radius of arc in user units.
+            radius:  number - Radius of arc in user units.
 
         Returns:
             self
@@ -1754,7 +1754,7 @@ class AngleMarker(Shape):
         Sets the number of arcs in the marker. Default 1. permitted values are 1, 2 or 3.
 
         Args:
-            `count`:  number - Number of arcs
+            count:  number - Number of arcs
 
         Returns:
             self
@@ -1773,7 +1773,7 @@ class AngleMarker(Shape):
         8 and gap is 2, and 3 arcs are specified, the arcs will have radii of 6, 8, and 10.
 
         Args:
-            `gap`:  number - Gap between arcs in user units.
+            gap:  number - Gap between arcs in user units.
 
         Returns:
             self
@@ -1793,7 +1793,7 @@ class AngleMarker(Shape):
         close to 90 degrees.
 
         Args:
-            `right_angle`:  bool - Draws the angle as a right angle.
+            right_angle:  bool - Draws the angle as a right angle.
 
         Returns:
             self
@@ -1862,8 +1862,8 @@ class TickMarker(Shape):
         This will draw a mark for the line formed by ab. The mark will be half way between a and b.
 
         Args:
-            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
+            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
+            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
 
         Returns:
             self
@@ -1877,7 +1877,7 @@ class TickMarker(Shape):
         Sets the length of the marker. Default 4
 
         Args:
-            `length`:  number - Length of the marker in user units.
+            length:  number - Length of the marker in user units.
 
         Returns:
             self
@@ -1890,7 +1890,7 @@ class TickMarker(Shape):
         Sets the number of marks. Default 1. Permitted values are 1, 2 or 3.
 
         Args:
-            * `count`:  number - Number of marks
+            * count:  number - Number of marks
 
         Returns:
             self
@@ -1906,7 +1906,7 @@ class TickMarker(Shape):
         it is ignored.The default is 2.
 
         Args:
-            `gap`:  number - Gap between marks in user units.
+            gap:  number - Gap between marks in user units.
 
         Returns:
             self
@@ -1979,8 +1979,8 @@ class ParallelMarker(Shape):
         This will draw a mark for the line formed by ab. The mark will be half way between a and b.
 
         Args:
-            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
+            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
+            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
 
         Returns:
             self
@@ -1994,7 +1994,7 @@ class ParallelMarker(Shape):
         Sets the length of the marker. Default 4
 
         Args:
-            `length`:  number - Length of the marker in user units.
+            length:  number - Length of the marker in user units.
 
         Returns:
             self
@@ -2007,7 +2007,7 @@ class ParallelMarker(Shape):
         Sets the number of marks. Default 1. Permitted values are 1, 2 or 3.
 
         Args:
-            * `count`:  number - Number of marks
+            * count:  number - Number of marks
 
         Returns:
             self
@@ -2023,7 +2023,7 @@ class ParallelMarker(Shape):
         it is ignored.The default is 2.
 
         Args:
-            `gap`:  number - Gap between marks in user units.
+            gap:  number - Gap between marks in user units.
 
         Returns:
             self
@@ -2097,7 +2097,7 @@ class Image():
         """
         Args:
 
-        * `ctx`: Pycairo drawing context - The context to draw on.
+        * ctx: Pycairo drawing context - The context to draw on.
 
         Returns:
             self
@@ -2114,7 +2114,7 @@ class Image():
         `of_file_position` function, if the same image is being rendered multiple times.
 
         Args:
-            `filename`: str - Path of file containing image.
+            filename: str - Path of file containing image.
 
         Returns:
             Pycairo ImageSurface object containing the image.
@@ -2138,8 +2138,8 @@ class Image():
         preload an image into an ImageSurface, and then pass that into this function.
 
         Args:
-            `image`: str or Pycairo ImageSurface - The iamge.
-            `position`:  (number, number) - A tuple of two numbers, giving the required (x, y) position the image.
+            image: str or Pycairo ImageSurface - The iamge.
+            position:  (number, number) - A tuple of two numbers, giving the required (x, y) position the image.
 
         Returns:
             self
@@ -2158,7 +2158,7 @@ class Image():
         This scale factor is applied prior to any scaling of the userspace.
 
         Args:
-            `scale_factor`: number - The image scale factor.
+            scale_factor: number - The image scale factor.
 
         Returns:
             self
@@ -2208,7 +2208,7 @@ class Turtle():
         """
         Args:
 
-        * `ctx`: Pycairo drawing context - The context to draw on.
+        * ctx: Pycairo drawing context - The context to draw on.
 
         Returns:
             self
@@ -2250,7 +2250,7 @@ class Turtle():
         Moves the turtle forward, in its current heading direction, and draw a line in the current style.
 
         Args:
-            `distance`: number - The distance to move.
+            distance: number - The distance to move.
 
         Returns:
             self
@@ -2267,7 +2267,7 @@ class Turtle():
         Moves the turtle forward, in its current heading direction without drawing a line.
 
         Args:
-            `distance`: number - The distance to move.
+            distance: number - The distance to move.
 
         Returns:
             self
@@ -2281,8 +2281,8 @@ class Turtle():
         Moves the turtle to a new position without drawing a line.
 
         Args:
-            `x`: number - x position to move to
-            `y`: number - y position to move to
+            x: number - x position to move to
+            y: number - y position to move to
 
         Returns:
             self
@@ -2296,7 +2296,7 @@ class Turtle():
         Change the current heading by moving to the left (ie counterclockwise)
 
         Args:
-            `angle`: number - Angles to move through
+            angle: number - Angles to move through
 
         Returns:
             self
@@ -2309,7 +2309,7 @@ class Turtle():
         Change the current heading by moving to the right (ie clockwise)
 
         Args:
-            `angle`: number - Angles to move through
+            angle: number - Angles to move through
 
         Returns:
             self
@@ -2322,7 +2322,7 @@ class Turtle():
         Change the current heading to a new angle
 
         Args:
-            `angle`: number - New heading angle.
+            angle: number - New heading angle.
 
         Returns:
             self
@@ -2337,11 +2337,11 @@ class Turtle():
         The parameters are as described for the `StrokeParams` object, except that the `color` parameter can accept a sequence.
 
         Args:
-            `color`: `Color` or sequence of `Color` objects - The `Color` to use for the line, None for default. If a sequence of colours is provided, each
+            color: `Color` or sequence of `Color` objects - The `Color` to use for the line, None for default. If a sequence of colours is provided, each
                 new `forward` call will cycle through the colors in sequence.
-            `line_width`: width of stroke line. None for default
-            dash`: sequence, dash patter of line. None for default
-            cap`: line end style, None for default.
+            line_width: width of stroke line. None for default
+            dash: sequence, dash patter of line. None for default
+            cap: line end style, None for default.
 
         Returns:
             self
@@ -2390,7 +2390,7 @@ class Transform():
         """
         Args:
 
-        * `ctx`: Pycairo drawing context - The context to draw on.
+        * ctx: Pycairo drawing context - The context to draw on.
 
         Returns:
             self
@@ -2417,9 +2417,9 @@ class Transform():
         direction and `sy` in the y direction. `centre` is the fixed point. By default it is the origin.
 
         Args:
-            `sx`: number - Scale in the x direction.
-            `sy`: number - Scale in the x direction.
-            `centre`: (number, number) - Centre of scaling
+            sx: number - Scale in the x direction.
+            sy: number - Scale in the x direction.
+            centre: (number, number) - Centre of scaling
 
         Returns:
             self
@@ -2433,11 +2433,11 @@ class Transform():
         """
         Rotates user space.
 
-        This rotates user space. Anything drawn in the new user space will rotated around centre. `centre` is the fixed point. By default it is the origin.
+        This rotates user space. Anything drawn in the new user space will rotated around centre. `centre is the fixed point. By default it is the origin.
 
         Args:
-            `angle`: number - Rotation angle, clockwise, in radians.
-            `centre`: (number, number) - Centre of scaling
+            angle: number - Rotation angle, clockwise, in radians.
+            centre`: (number, number) - Centre of scaling
 
         Returns:
             self
@@ -2454,8 +2454,8 @@ class Transform():
         This translates user space. Anything drawn in the new user space will be shifted by `(tx, ty)`.
 
         Args:
-            `tx`: number - Translate in the x direction.
-            `ty`: number - Translate in the x direction.
+            tx: number - Translate in the x direction.
+            ty: number - Translate in the x direction.
 
         Returns:
             self
@@ -2468,7 +2468,7 @@ class Transform():
         Applies a transformation matrix to user space.
 
         Args:
-            `m`: tuple of 6 numbers - Transform matrix
+            m: tuple of 6 numbers - Transform matrix
 
         Returns:
             self

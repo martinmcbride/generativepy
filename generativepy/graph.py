@@ -60,7 +60,7 @@ class Axes:
         Sets the start value of the axes
 
         Args:
-            `start`: (x, y) value of bottom left corner of axes
+            start: (x, y) value of bottom left corner of axes
 
         Returns:
             self
@@ -73,7 +73,7 @@ class Axes:
         Sets the range of the axes
 
         Args:
-            `extent`: (x, y) range of axes
+            extent: (x, y) range of axes
 
         Returns:
             self
@@ -87,7 +87,7 @@ class Axes:
         on the axes twice as big. This is a quick way of resizing everything in one go.
 
         Args:
-            `scale`: scale factor
+            scale: scale factor
 
         Returns:
             self
@@ -100,7 +100,7 @@ class Axes:
         Set divisons spacing
 
         Args:
-            `divisions`: (x, y) spacing divisions in each direction
+            divisions: (x, y) spacing divisions in each direction
 
         Returns:
             self
@@ -118,7 +118,7 @@ class Axes:
         Draw subdivision lines on graph
 
         Args:
-            `factor`: (x, y) Number of subdivisions per division in each direction
+            factor: (x, y) Number of subdivisions per division in each direction
 
         Returns:
             self
@@ -132,7 +132,7 @@ class Axes:
         Sets the entire graph background
 
         Args:
-            `pattern`: color or fill pattern
+            pattern: color or fill pattern
 
         Returns:
             self
@@ -145,7 +145,7 @@ class Axes:
         Sets the color of the axes text
 
         Args:
-            `pattern`: color or pattern
+            pattern: color or pattern
 
         Returns:
             self
@@ -158,10 +158,10 @@ class Axes:
         Set the style of the axis text
 
         Args:
-            `font`: Font name
-            `weight`: Font weight
-            `slant`: Font slant
-            `size`: Font size in units. This will be multiplied by the featurescale value.
+            font: Font name
+            weight: Font weight
+            slant: Font slant
+            size: Font size in units. This will be multiplied by the featurescale value.
 
         Returns:
             self
@@ -174,12 +174,12 @@ class Axes:
         Sets the style of the axis lines
 
         Args:
-            `pattern`:  the fill pattern or color to use for the outline, None for default
-            `line_width`: width of stroke line, None for default
-            `dash`: dash patter of line, as for Pycairo, None for default
-            `cap`: line end style, None for default
-            `join`: line join style, None for default
-            `miter_limit`: mitre limit, None for default
+            pattern:  the fill pattern or color to use for the outline, None for default
+            line_width: width of stroke line, None for default
+            dash: dash patter of line, as for Pycairo, None for default
+            cap: line end style, None for default
+            join: line join style, None for default
+            miter_limit: mitre limit, None for default
 
         Returns:
             self
@@ -192,12 +192,12 @@ class Axes:
         Sets the style of the division lines
 
         Args:
-            `pattern`:  the fill pattern or color to use for the outline, None for default
-            `line_width`: width of stroke line, None for default
-            `dash`: dash patter of line, as for Pycairo, None for default
-            `cap`: line end style, None for default
-            `join`: line join style, None for default
-            `miter_limit`: mitre limit, None for default
+            pattern:  the fill pattern or color to use for the outline, None for default
+            line_width: width of stroke line, None for default
+            dash: dash patter of line, as for Pycairo, None for default
+            cap: line end style, None for default
+            join: line join style, None for default
+            miter_limit: mitre limit, None for default
 
         Returns:
             self
@@ -210,12 +210,12 @@ class Axes:
         Sets the style of the subdivision lines
 
         Args:
-            `pattern`:  the fill pattern or color to use for the outline, None for default
-            `line_width`: width of stroke line, None for default
-            `dash`: dash patter of line, as for Pycairo, None for default
-            `cap`: line end style, None for default
-            `join`: line join style, None for default
-            `miter_limit`: mitre limit, None for default
+            pattern:  the fill pattern or color to use for the outline, None for default
+            line_width: width of stroke line, None for default
+            dash: dash patter of line, as for Pycairo, None for default
+            cap: line end style, None for default
+            join: line join style, None for default
+            miter_limit: mitre limit, None for default
 
         Returns:
             self
@@ -351,9 +351,9 @@ class Axes:
         Return true if the sequence values contains the value to within a given tolerance
 
         Args:
-            `values`
-            `value`
-            `tolerance`
+            values
+            value
+            tolerance
 
         Returns:
             Result
@@ -381,9 +381,9 @@ class Axes:
         If the division spacing is float, the string will be a float with a suitable number of decimal places
 
         Args:
-            `value`: value to be formatted
-            `div`: division spacing
-            `formatter`: formatting function, accepts vale and div, returns a formatted value string
+            value: value to be formatted
+            div: division spacing
+            formatter: formatting function, accepts vale and div, returns a formatted value string
 
         Returns:
             String representation of the value
@@ -438,12 +438,12 @@ class Plot(Shape):
         the curve goes out of range it will not interfere with other parts of the image.
 
         Args:
-            `pattern`
-            `line_width`
-            `dash`
-            `cap`
-            `join`
-            `miter_limit`
+            pattern
+            line_width
+            dash
+            cap
+            join
+            miter_limit
 
         Returns:
             self
@@ -456,10 +456,10 @@ class Plot(Shape):
         Plot a function y = fn(x)
 
         Args:
-            `fn`: the function to plot. It must take a single argument
-            `extent`: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
-            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+            fn: the function to plot. It must take a single argument
+            extent: the range of x values to plot. If not supplied, the plot will use the full range of the axes.
+            precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            close: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
                     to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         Returns:
@@ -482,10 +482,10 @@ class Plot(Shape):
         Plot a function x = fn(y)
 
         Args:
-            `fn`: the function to plot. It must take a single argument
-            `extent`: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
-            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+            fn: the function to plot. It must take a single argument
+            extent: the range of y values to plot. If not supplied, the plot will use the full range of the axes.
+            precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            close: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
                 to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         Returns:
@@ -508,10 +508,10 @@ class Plot(Shape):
         Plot a polar function r = fn(theta). theta is measured in radians
 
         Args:
-            `fn`: the function to plot. It must take a single argument
-            `extent`: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
-            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+            fn: the function to plot. It must take a single argument
+            extent: the range of theta values to plot. If not supplied, the plot will use the range 0 to 2*pi.
+            precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            close: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
                 to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         Returns:
@@ -531,11 +531,11 @@ class Plot(Shape):
         Plot a parametric function x = fx(t), y = ft(t).
 
         Args:
-            `fx`: x as a function of t. It must take a single argument
-            `fy`: y as a function of t. It must take a single argument
-            `extent`: the range of t values to plot. If not supplied the range 0 to 1 is used.
-            `precision`: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
-            `close`: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
+            fx: x as a function of t. It must take a single argument
+            fy: y as a function of t. It must take a single argument
+            extent: the range of t values to plot. If not supplied the range 0 to 1 is used.
+            precision: number of points to plot. Defaults to 100. This can be increased if needed for hi res plots
+            close: sequence of (x, y) points. One or more additional points, defined in axes coordinates, that will be added
                 to the plot path to create a polygon. The polygon will also be closed. This allows an area under the curve to be filled.
 
         Returns:

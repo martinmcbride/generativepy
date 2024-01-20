@@ -68,15 +68,15 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
     As a convenience it can also set the page background colour.
 
     Args:
-        `ctx` :  Pycairo context - The drawing context.
-        `pixel_width` int:  - Pycairo context. Use the value passed into the `draw` function.
-        `pixel_height` int:  -  The device space height. Use the value passed into the `draw` function.
-        `width` number:  - The user space width.
-        `height` number:  -  The user space height.
-        `startx` number:  - The x offset of the top left corner from the origin.
-        `starty` number:  - The y offset of the top left corner from the origin.
-        `background` Color:  - Color of the background.
-        `flip` bool:  - If true, flips the page in the y direction, so the origin is at the bottom left, useful for
+        ctx:  Pycairo context - The drawing context.
+        pixel_width: int  - Pycairo context. Use the value passed into the `draw` function.
+        pixel_height: int  -  The device space height. Use the value passed into the `draw` function.
+        width: number  - The user space width.
+        height: number  -  The user space height.
+        startx: number  - The x offset of the top left corner from the origin.
+        starty: number  - The y offset of the top left corner from the origin.
+        background: Color  - Color of the background.
+        flip: bool  - If true, flips the page in the y direction, so the origin is at the bottom left, useful for
                     mathematical drawing.
     """
 
@@ -109,12 +109,12 @@ def make_image(outfile, draw, width, height, channels=3):
     The draw function must have the signature described for `example_draw_function`.
 
     Args:
-        `outfile`: str - The path and filename for the output PNG file. The '.png' extension is optional, it will be added
+        outfile: str - The path and filename for the output PNG file. The '.png' extension is optional, it will be added
                     if it isn't present.
-        `draw`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        draw: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
@@ -140,13 +140,13 @@ def make_images(outfile, draw, width, height, count, channels=3):
     called, `fn` will contain the frame number - 0, 1 etc
 
     Args:
-        `outfile`: str - The path and filename template for the output PNG file. The '.png' extension is optional, it
+        outfile: str - The path and filename template for the output PNG file. The '.png' extension is optional, it
                     will be added if it isn't present.
-        `draw`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `count`: int - the number of images to create
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        draw: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        count: int - the number of images to create
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
@@ -171,10 +171,10 @@ def make_image_frames(draw, width, height, count, channels=3):
     called, `fn` will contain the frame number - 0, 1 etc
 
     Args:
-        `draw`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        draw: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
 
     Yields:
         A frame.
@@ -200,10 +200,10 @@ def make_image_frame(draw, width, height, channels=3):
     The draw function must have the signature described for `example_draw_function`.
 
     Args:
-        `draw`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
-        `channels`: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
+        draw: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
+        channels: int - The number of colour channels. 1 for greyscale, 3 for RGB, 4 for RGBA.
 
     Yields:
         A frame.
@@ -233,11 +233,11 @@ def make_svg(outfile, draw, width, height):
     The draw function must have the signature described for `example_draw_function`.
 
     Args:
-        `outfile`: str - The path and filename for the output SVG file. The '.svg' extension is optional, it will be added
+        outfile: str - The path and filename for the output SVG file. The '.svg' extension is optional, it will be added
                     if it isn't present.
-        `draw`: function - A drawing function object, see below.
-        `pixel_width`: int - The width of the image that will be created, in pixels.
-        `pixel_height`: int - The height of the image that will be created, in pixels.
+        draw: function - A drawing function object, see below.
+        pixel_width: int - The width of the image that will be created, in pixels.
+        pixel_height: int - The height of the image that will be created, in pixels.
     """
     if outfile.lower().endswith('.svg'):
         outfile = outfile[:-4]
@@ -251,13 +251,13 @@ def example_pycairo_draw_function(ctx, pixel_width, pixel_height, frame_no, fram
     This is an example draw function for use with `make_image` and similar functions. It is a dummy function used to document the required parameters.
 
     Args:
-        `ctx`: PyCairo context object - The context object that the image will be drawn on.
-        `pixel_width`: int - The width of the image in pixels.
-        `pixel_height`: int - The height of the image in pixels.
-        `frame_no`: int - the number of the current frame. For single images this will always be 0. For animations this
+        ctx: PyCairo context object - The context object that the image will be drawn on.
+        pixel_width: int - The width of the image in pixels.
+        pixel_height: int - The height of the image in pixels.
+        frame_no: int - the number of the current frame. For single images this will always be 0. For animations this
                         paint function will be called `frame_count` times (once for each frame) with `frame_no` incrementing
                         by 1 each time (ie it counts from 0 to `frame_count` - 1.
-        `frame_count`: int - The total number of frames being created.For single images this will always be 0. For animations
+        frame_count: int - The total number of frames being created.For single images this will always be 0. For animations
                            this will be set to the total number of frames in the animation.
     """
     pass

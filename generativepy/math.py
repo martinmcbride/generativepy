@@ -15,10 +15,10 @@ def isclose(a, b, rel_tol=1e-09, abs_tol=1e-12):
     Check if two values a and b are equal to within a given tolerance
 
     Args:
-        `a`: number - First value
-        `b`: number - Second value
-        `rel_tol`: number - Tolerance as a fraction of the absolute value of a or b (whichever is largest)
-        `abs_tol`: number - Tolerance as an absolute value
+        a: number - First value
+        b: number - Second value
+        rel_tol: number - Tolerance as a fraction of the absolute value of a or b (whichever is largest)
+        abs_tol: number - Tolerance as an absolute value
 
     Returns:
         True if the numbers are close, false otherwise.
@@ -52,8 +52,8 @@ class Matrix():
         Create a scaling matrix
 
         Args:
-            `scale_x`: Scale factor in x direction
-            `scale_y`: Scale factor in y direction, defaults to scale_x
+            scale_x: Scale factor in x direction
+            scale_y: Scale factor in y direction, defaults to scale_x
 
         Returns:
             New matrix
@@ -68,8 +68,8 @@ class Matrix():
         Create a translation matrix
 
         Args:
-            `x`: Translation in x direction
-            `y`: Translation in y direction
+            x: Translation in x direction
+            y: Translation in y direction
 
         Returns:
             New matrix
@@ -82,7 +82,7 @@ class Matrix():
         Create a rotation matrix
 
         Args:
-            `angle`: Angle in radians, measured counterclockwise from positive x direction
+            angle: Angle in radians, measured counterclockwise from positive x direction
 
         Returns:
             New matrix
@@ -97,8 +97,8 @@ class Matrix():
         Multiply two matrices
 
         Args:
-            `a`: First matrix
-            `b`: Second matrix
+            a: First matrix
+            b: Second matrix
 
         Returns:
             New matrix
@@ -183,8 +183,8 @@ class Vector():
         Create a vector based on a length and angle
 
         Args:
-            `length`: Length of vector
-            `angle`: Angle in radians, measured counterclockwise from positive x direction
+            length: Length of vector
+            angle: Angle in radians, measured counterclockwise from positive x direction
 
         Returns:
             New vector
@@ -199,8 +199,8 @@ class Vector():
         Multiply a matrix (first) and a vector (second)
 
         Args:
-            `m`: matrix
-            `v`: vector
+            m: matrix
+            v: vector
 
         Returns:
             New vector
@@ -214,7 +214,7 @@ class Vector():
         Can either accept 2 number, or a tuple containing 2 numerical elements.
 
         Args:
-            args: various - see abouve
+            args: various - see above
 
         Returns:
             Self
@@ -231,7 +231,7 @@ class Vector():
         Transform this vector by a matrix. The vector is pre-multiplied by the matrix
 
         Args:
-            `m`: matrix
+            m: matrix
 
         Returns:
             New transformed vector
@@ -243,8 +243,8 @@ class Vector():
         Scale this vector by a factor.
 
         Args:
-            `scale_x`: scale factor in x direction.
-            `scale_y`: scale factor in y direction. If this is None, scale by `scale_x` in both directions.
+            scale_x: scale factor in x direction.
+            scale_y: scale factor in y direction. If this is None, scale by scale_x in both directions.
 
         Returns:
             New scaled vector
@@ -256,8 +256,8 @@ class Vector():
         Translate this vector by (x, y),
 
         Args:
-            `x`: translation amount in x direction.
-            `y`: translation amount in y direction.
+            x: translation amount in x direction.
+            y: translation amount in y direction.
 
         Returns:
             New translated vector
@@ -269,8 +269,8 @@ class Vector():
         Rotate this vector by (x, y),
 
         Args:
-            `x`: rotation amount in x direction.
-            `y`: rotation amount in y direction.
+            x: rotation amount in x direction.
+            y: rotation amount in y direction.
 
         Returns:
             New rotated vector
@@ -290,8 +290,8 @@ class Vector():
         * < 0 - result extends backwards before other
 
         Args:
-            `other`: Vector - the other vector
-            `factor`: number - The interpolation amount.
+            other: Vector - the other vector
+            factor: number - The interpolation amount.
 
         Returns:
             New rotated vector

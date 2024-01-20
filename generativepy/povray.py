@@ -421,9 +421,9 @@ class Axes3d:
         If the division spacing is float, the string will be rounded to 3 decimal places
 
         Args:
-            `value`: number - value to be formatted
-            `div`: number - division spacing
-            `formatter`: formatting function - accepts vale and div, returns a formatted value string
+            value: number - value to be formatted
+            div: number - division spacing
+            formatter: formatting function - accepts vale and div, returns a formatted value string
 
         Returns:
             String representation of the value

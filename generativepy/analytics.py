@@ -38,8 +38,8 @@ def print_stats(array, title='stats'):
 
     Args:
 
-        `array`: NumPy array - the image data.
-        `title`: str - the title to display (defaults to `stats`)
+        array: NumPy array - the image data.
+        title: str - the title to display (defaults to `stats`)
     """
     print(title)
     print('Min:', np.min(array))
@@ -60,9 +60,9 @@ def print_histogram(array, title='histogram', bins=10):
 
     Args:
 
-        `array`: NumPy array - the image data.
-        `title`: str - the title to display (defaults to `histogram`).
-        `bns`: int - the number of bins in the histogram (defaults to 10).
+        array: NumPy array - the image data.
+        title: str - the title to display (defaults to `histogram`).
+        bins: int - the number of bins in the histogram (defaults to 10).
     """
 
 

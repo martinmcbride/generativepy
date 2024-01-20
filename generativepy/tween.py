@@ -16,7 +16,7 @@ def set_frame_rate(rate):
     Sets the tween frame rate
 
     Args:
-        `rate`: number - Number of frames per second
+        rate: number - Number of frames per second
     """
     global _FRAME_RATE
     if not isinstance(rate, (int, float)):
@@ -49,7 +49,7 @@ class Tween():
     def __init__(self, value=0):
         """
         Args:
-            `value`: number - The initial value, defaults to 0.
+            value: number - The initial value, defaults to 0.
 
         Returns:
             self
@@ -64,7 +64,7 @@ class Tween():
         Wait, maintaining the current value, until the specified absolute time.
 
         Args:
-            `time`: number - Absolute time to wait
+            time: number - Absolute time to wait
 
         Returns:
             self
@@ -78,7 +78,7 @@ class Tween():
         Wait, maintaining the current value, for the specified time period
 
         Args:
-            `time`: number - Relative time to wait
+            time: number - Relative time to wait
 
         Returns:
             self
@@ -92,7 +92,7 @@ class Tween():
         Set the value
 
         Args:
-            `value`: number - New tween value
+            value: number - New tween value
 
         Returns:
             self
@@ -107,8 +107,8 @@ class Tween():
         The transition is linear.
 
         Args:
-            `value`: number - New tween value.
-            `time`: number - Absolute time to reach final value.
+            value: number - New tween value.
+            time: number - Absolute time to reach final value.
 
         Returns:
             self
@@ -127,8 +127,8 @@ class Tween():
         The transition is linear.
 
         Args:
-            `value`: number - New tween value.
-            `time`: number - Relative time period to reach final value.
+            value: number - New tween value.
+            time: number - Relative time period to reach final value.
 
         Returns:
             self
@@ -147,9 +147,9 @@ class Tween():
         The transition is controlled by the easing function.
 
         Args:
-            `value`: number - New tween value.
-            `time`: number - Absolute time to reach final value.
-            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
+            value: number - New tween value.
+            time: number - Absolute time to reach final value.
+            ease_function: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
         Returns:
             self
@@ -168,9 +168,9 @@ class Tween():
         The transition is controlled by the easing function.
 
         Args:
-            `value`: number - New tween value.
-            `time`: number - Absolute time to reach final value.
-            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
+            value: number - New tween value.
+            time: number - Absolute time to reach final value.
+            ease_function: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
         Returns:
             self
@@ -252,8 +252,8 @@ class TweenVector(Tween):
         The transition is linear.
 
         Args:
-            `value`: sequence of numbers - New tween value.
-            `time`: number - Absolute time to reach final value.
+            value: sequence of numbers - New tween value.
+            time: number - Absolute time to reach final value.
 
         Returns:
             self
@@ -275,8 +275,8 @@ class TweenVector(Tween):
         The transition is linear.
 
         Args:
-            `value`: sequence of numbers - New tween value.
-            `time`: number - Relative time period to reach final value.
+            value: sequence of numbers - New tween value.
+            time: number - Relative time period to reach final value.
 
         Returns:
             self
@@ -298,9 +298,9 @@ class TweenVector(Tween):
         The transition is controlled by the easing function.
 
         Args:
-            `value`: sequence of numbers - New tween value.
-            `time`: number - Absolute time to reach final value.
-            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
+            value: sequence of numbers - New tween value.
+            time: number - Absolute time to reach final value.
+            ease_function: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
         Returns:
             self
@@ -322,9 +322,9 @@ class TweenVector(Tween):
         The transition is controlled by the easing function.
 
         Args:
-            `value`: sequence of numbers - New tween value.
-            `time`: number - Absolute time to reach final value.
-            `ease_function`: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
+            value: sequence of numbers - New tween value.
+            time: number - Absolute time to reach final value.
+            ease_function: function - Easing function. Thus accepts a value that varies between 0 and 1.0.
 
         Returns:
             self

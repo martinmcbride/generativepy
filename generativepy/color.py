@@ -215,7 +215,7 @@ class Color():
         There are also various static methods and properties for creating other colours.
 
         Args:
-            `args`: various - See usage.
+            args: various - See usage.
 
         Returns:
             A `Color` object.
@@ -260,9 +260,9 @@ class Color():
         with the `a` value to 1.
 
         Args:
-            `h`: number - Hue of colour.
-            `s`: number - Saturation of colour.
-            `v`: number - Value (lightness) of colour.
+            h: number - Hue of colour.
+            s: number - Saturation of colour.
+            v: number - Value (lightness) of colour.
 
         Returns:
             A `Color` object.
@@ -281,10 +281,10 @@ class Color():
         Similar to `of_hsl` but provides alpha channel.
 
         Args:
-            `h`: number - Hue of colour.
-            `s`: number - Saturation of colour.
-            `v`: number - Value (lightness) of colour.
-            `a`: number - Alpha (transparency) of colour.
+            h: number - Hue of colour.
+            s: number - Saturation of colour.
+            v: number - Value (lightness) of colour.
+            a: number - Alpha (transparency) of colour.
 
         Returns:
             A `Color` object.
@@ -592,9 +592,9 @@ def make_colormap(length, colors, bands=None):
     it is set up.
 
     Args:
-        `length`: int - Total size of returned list.
-        `colors`: list[Colors] - Colours for creating the map. The list must be at least 2 long.
-        `bands`: list[number] - Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
+        length: int - Total size of returned list.
+        colors: list[Colors] - Colours for creating the map. The list must be at least 2 long.
+        bands: list[number] - Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
                     len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
 
     Returns:
