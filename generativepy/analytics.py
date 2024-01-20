@@ -28,22 +28,18 @@ import numpy as np
 
 def print_stats(array, title='stats'):
     """
-    Prints the statistics for a NumPy array
+    Prints the statistics for a NumPy array.
 
-    **Parameters**
-
-    * `array`: NumPy array - the image data.
-    * `title`: str - the title to display (defaults to `stats`)
-
-    **Returns**
-    None
-
-    **Usage**
     This function takes a NumPy array, and calculates the minium, maximum, mean and median values.
 
     It prints the result to the console.
 
     `title` is printed before the stats. It can be useful if you are printing more than one set of statistics in a run.
+
+    Args:
+
+        `array`: NumPy array - the image data.
+        `title`: str - the title to display (defaults to `stats`)
     """
     print(title)
     print('Min:', np.min(array))
@@ -56,21 +52,17 @@ def print_histogram(array, title='histogram', bins=10):
     """
    Prints the histogram for a NumPy array
 
-    **Parameters**
-
-    * `array`: NumPy array - the image data.
-    * `title`: str - the title to display (defaults to `histogram`).
-    * `bns`: int - the number of bins in the histogram (defaults to 10).
-
-    **Returns**
-    None
-
-    **Usage**
     This function takes a NumPy array, and calculates a histogram of the values.
 
     It prints the result to the console.
 
     `title` is printed before the stats. It can be useful if you are printing more than one set of statistics in a run.
+
+    Args:
+
+        `array`: NumPy array - the image data.
+        `title`: str - the title to display (defaults to `histogram`).
+        `bns`: int - the number of bins in the histogram (defaults to 10).
     """
 
 

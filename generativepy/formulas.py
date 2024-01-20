@@ -34,10 +34,11 @@ def _create_tex(formula, packages):
 def _crop(inname, outname, color):
     """
     Crop the image and colour it in a flat colour. The alpha channel is left unchanged.
-    :param inname: base name of input file. Input image is {inname}1.png. The 1 is added by latex.
-    :param outname: base name of output file. Output image is {outname}.png
-    :param color:
-    :return:
+
+    Args:
+        inname:  str - base name of input file. Input image is {inname}1.png. The 1 is added by latex.
+        outname: str - base name of output file. Output image is {outname}.png
+        color: `Color` - colour of the formula text
     """
     image=Image.open('{}1.png'.format(inname))
     image.load()
@@ -82,8 +83,9 @@ def _crop(inname, outname, color):
 def _remove_ignore_errors(filename):
     """
     Remove a file but ignore errors. We shouldn;t fail just because a temp file didn't get deleted.
-    :param filename:
-    :return: None
+
+    Args:
+        filename: str - the filename.
     """
     try:
         os.remove(filename)
@@ -96,22 +98,6 @@ def rasterise_formula(name, formula, color, dpi=600, packages=None):
     Convert a latex formula into a PNG image. The PNG image will be tightly cropped, with a transparent background and
     text in the selected colour.
 
-    **Parameters**
-
-    * `name`: str - The base filename for the output PNG file. String with no extension, eg "myformula". The final
-    output will be stored using this name, in the current working folder, so if you are creating multiple formulae give
-    each one a unique name.
-    * `formula`: string - The formula, as a latex string.
-    * `color`: `Color` object - The colour that will be used to paint the formula.
-    * `dpi`: number - The nominal size of the formula. See usage.
-    * `packages`: sequence of strings - a list of the names of any required latex packages.  Any valid packages listed
-    here will be imported into the Latex equation description so that they can be used in the formula.
-
-    **Returns**
-    A tuple containing the filename of the result (with a png extension) and the (width, height) of the image
-    in pixels.
-
-    **Usage**
     The default `dpi`value of 600 creates the formula using a text height of about 60 pixels. The exact size of the image
     depends on the formula used. The image is cropped tightly to the image area that includes the formula.
 
@@ -129,6 +115,20 @@ def rasterise_formula(name, formula, color, dpi=600, packages=None):
 
     The second element is a size tuple, `(width, height)`, giving the exact size of the output image. The image is tightly
     cropped so the dimensions can be used to align the image.
+
+    Args:
+        `name`: str - The base filename for the output PNG file. String with no extension, eg "myformula". The final
+            output will be stored using this name, in the current working folder, so if you are creating multiple formulae give
+            each one a unique name.
+        `formula`: string - The formula, as a latex string.
+        `color`: `Color` object - The colour that will be used to paint the formula.
+        `dpi`: number - The nominal size of the formula. See usage.
+        `packages`: sequence of strings - a list of the names of any required latex packages.  Any valid packages listed
+                here will be imported into the Latex equation description so that they can be used in the formula.
+
+    Returns:
+        A tuple containing the filename of the result (with a png extension) and the (width, height) of the image
+        in pixels.
     """
     unique_name = "{}-{}".format(name, random.randint(100000, 999999))
     tex = _create_tex(formula, packages)

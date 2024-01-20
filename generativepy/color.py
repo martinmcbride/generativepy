@@ -35,173 +35,165 @@ import colorsys
 import itertools
 
 cssColors = {
-"indianred":(205,92,92),
-"lightcoral":(240,128,128),
-"salmon":(250,128,114),
-"darksalmon":(233,150,122),
-"lightsalmon":(255,160,122),
-"crimson":(220,20,60),
-"red":(255,0,0),
-"firebrick":(178,34,34),
-"darkred":(139,0,0),
-"pink":(255,192,203),
-"lightpink":(255,182,193),
-"hotpink":(255,105,180),
-"deeppink":(255,20,147),
-"mediumvioletred":(199,21,133),
-"palevioletred":(219,112,147),
-"coral":(255,127,80),
-"tomato":(255,99,71),
-"orangered":(255,69,0),
-"darkorange":(255,140,0),
-"orange":(255,165,0),
-"gold":(255,215,0),
-"yellow":(255,255,0),
-"lightyellow":(255,255,224),
-"lemonchiffon":(255,250,205),
-"lightgoldenrodyellow":(250,250,210),
-"papayawhip":(255,239,213),
-"moccasin":(255,228,181),
-"peachpuff":(255,218,185),
-"palegoldenrod":(238,232,170),
-"khaki":(240,230,140),
-"darkkhaki":(189,183,107),
-"lavender":(230,230,250),
-"thistle":(216,191,216),
-"plum":(221,160,221),
-"violet":(238,130,238),
-"orchid":(218,112,214),
-"fuchsia":(255,0,255),
-"magenta":(255,0,255),
-"mediumorchid":(186,85,211),
-"mediumpurple":(147,112,219),
-"blueviolet":(138,43,226),
-"darkviolet":(148,0,211),
-"darkorchid":(153,50,204),
-"darkmagenta":(139,0,139),
-"purple":(128,0,128),
-"rebeccapurple":(102,51,153),
-"indigo":(75,0,130),
-"mediumslateblue":(123,104,238),
-"slateblue":(106,90,205),
-"darkslateblue":(72,61,139),
-"greenyellow":(173,255,47),
-"chartreuse":(127,255,0),
-"lawngreen":(124,252,0),
-"lime":(0,255,0),
-"limegreen":(50,205,50),
-"palegreen":(152,251,152),
-"lightgreen":(144,238,144),
-"mediumspringgreen":(0,250,154),
-"springgreen":(0,255,127),
-"mediumseagreen":(60,179,113),
-"seagreen":(46,139,87),
-"forestgreen":(34,139,34),
-"green":(0,128,0),
-"darkgreen":(0,100,0),
-"yellowgreen":(154,205,50),
-"olivedrab":(107,142,35),
-"olive":(128,128,0),
-"darkolivegreen":(85,107,47),
-"mediumaquamarine":(102,205,170),
-"darkseagreen":(143,188,143),
-"lightseagreen":(32,178,170),
-"darkcyan":(0,139,139),
-"teal":(0,128,128),
-"aqua":(0,255,255),
-"cyan":(0,255,255),
-"lightcyan":(224,255,255),
-"paleturquoise":(175,238,238),
-"aquamarine":(127,255,212),
-"turquoise":(64,224,208),
-"mediumturquoise":(72,209,204),
-"darkturquoise":(0,206,209),
-"cadetblue":(95,158,160),
-"steelblue":(70,130,180),
-"lightsteelblue":(176,196,222),
-"powderblue":(176,224,230),
-"lightblue":(173,216,230),
-"skyblue":(135,206,235),
-"lightskyblue":(135,206,250),
-"deepskyblue":(0,191,255),
-"dodgerblue":(30,144,255),
-"cornflowerblue":(100,149,237),
-"royalblue":(65,105,225),
-"blue":(0,0,255),
-"mediumblue":(0,0,205),
-"darkblue":(0,0,139),
-"navy":(0,0,128),
-"midnightblue":(25,25,112),
-"cornsilk":(255,248,220),
-"blanchedalmond":(255,235,205),
-"bisque":(255,228,196),
-"navajowhite":(255,222,173),
-"wheat":(245,222,179),
-"burlywood":(222,184,135),
-"tan":(210,180,140),
-"rosybrown":(188,143,143),
-"sandybrown":(244,164,96),
-"goldenrod":(218,165,32),
-"darkgoldenrod":(184,134,11),
-"peru":(205,133,63),
-"chocolate":(210,105,30),
-"saddlebrown":(139,69,19),
-"sienna":(160,82,45),
-"brown":(165,42,42),
-"maroon":(128,0,0),
-"white":(255,255,255),
-"snow":(255,250,250),
-"honeydew":(240,255,240),
-"mintcream":(245,255,250),
-"azure":(240,255,255),
-"aliceblue":(240,248,255),
-"ghostwhite":(248,248,255),
-"whitesmoke":(245,245,245),
-"seashell":(255,245,238),
-"beige":(245,245,220),
-"oldlace":(253,245,230),
-"floralwhite":(255,250,240),
-"ivory":(255,255,240),
-"antiquewhite":(250,235,215),
-"linen":(250,240,230),
-"lavenderblush":(255,240,245),
-"mistyrose":(255,228,225),
-"gainsboro":(220,220,220),
-"lightgray":(211,211,211),
-"lightgrey":(211,211,211),
-"silver":(192,192,192),
-"darkgray":(169,169,169),
-"darkgrey":(169,169,169),
-"gray":(128,128,128),
-"grey":(128,128,128),
-"dimgray":(105,105,105),
-"dimgrey":(105,105,105),
-"lightslategray":(119,136,153),
-"lightslategrey":(119,136,153),
-"slategray":(112,128,144),
-"slategrey":(112,128,144),
-"darkslategray":(47,79,79),
-"darkslategrey":(47,79,79),
-"black":(0,0,0),
+    "indianred":(205,92,92),
+    "lightcoral":(240,128,128),
+    "salmon":(250,128,114),
+    "darksalmon":(233,150,122),
+    "lightsalmon":(255,160,122),
+    "crimson":(220,20,60),
+    "red":(255,0,0),
+    "firebrick":(178,34,34),
+    "darkred":(139,0,0),
+    "pink":(255,192,203),
+    "lightpink":(255,182,193),
+    "hotpink":(255,105,180),
+    "deeppink":(255,20,147),
+    "mediumvioletred":(199,21,133),
+    "palevioletred":(219,112,147),
+    "coral":(255,127,80),
+    "tomato":(255,99,71),
+    "orangered":(255,69,0),
+    "darkorange":(255,140,0),
+    "orange":(255,165,0),
+    "gold":(255,215,0),
+    "yellow":(255,255,0),
+    "lightyellow":(255,255,224),
+    "lemonchiffon":(255,250,205),
+    "lightgoldenrodyellow":(250,250,210),
+    "papayawhip":(255,239,213),
+    "moccasin":(255,228,181),
+    "peachpuff":(255,218,185),
+    "palegoldenrod":(238,232,170),
+    "khaki":(240,230,140),
+    "darkkhaki":(189,183,107),
+    "lavender":(230,230,250),
+    "thistle":(216,191,216),
+    "plum":(221,160,221),
+    "violet":(238,130,238),
+    "orchid":(218,112,214),
+    "fuchsia":(255,0,255),
+    "magenta":(255,0,255),
+    "mediumorchid":(186,85,211),
+    "mediumpurple":(147,112,219),
+    "blueviolet":(138,43,226),
+    "darkviolet":(148,0,211),
+    "darkorchid":(153,50,204),
+    "darkmagenta":(139,0,139),
+    "purple":(128,0,128),
+    "rebeccapurple":(102,51,153),
+    "indigo":(75,0,130),
+    "mediumslateblue":(123,104,238),
+    "slateblue":(106,90,205),
+    "darkslateblue":(72,61,139),
+    "greenyellow":(173,255,47),
+    "chartreuse":(127,255,0),
+    "lawngreen":(124,252,0),
+    "lime":(0,255,0),
+    "limegreen":(50,205,50),
+    "palegreen":(152,251,152),
+    "lightgreen":(144,238,144),
+    "mediumspringgreen":(0,250,154),
+    "springgreen":(0,255,127),
+    "mediumseagreen":(60,179,113),
+    "seagreen":(46,139,87),
+    "forestgreen":(34,139,34),
+    "green":(0,128,0),
+    "darkgreen":(0,100,0),
+    "yellowgreen":(154,205,50),
+    "olivedrab":(107,142,35),
+    "olive":(128,128,0),
+    "darkolivegreen":(85,107,47),
+    "mediumaquamarine":(102,205,170),
+    "darkseagreen":(143,188,143),
+    "lightseagreen":(32,178,170),
+    "darkcyan":(0,139,139),
+    "teal":(0,128,128),
+    "aqua":(0,255,255),
+    "cyan":(0,255,255),
+    "lightcyan":(224,255,255),
+    "paleturquoise":(175,238,238),
+    "aquamarine":(127,255,212),
+    "turquoise":(64,224,208),
+    "mediumturquoise":(72,209,204),
+    "darkturquoise":(0,206,209),
+    "cadetblue":(95,158,160),
+    "steelblue":(70,130,180),
+    "lightsteelblue":(176,196,222),
+    "powderblue":(176,224,230),
+    "lightblue":(173,216,230),
+    "skyblue":(135,206,235),
+    "lightskyblue":(135,206,250),
+    "deepskyblue":(0,191,255),
+    "dodgerblue":(30,144,255),
+    "cornflowerblue":(100,149,237),
+    "royalblue":(65,105,225),
+    "blue":(0,0,255),
+    "mediumblue":(0,0,205),
+    "darkblue":(0,0,139),
+    "navy":(0,0,128),
+    "midnightblue":(25,25,112),
+    "cornsilk":(255,248,220),
+    "blanchedalmond":(255,235,205),
+    "bisque":(255,228,196),
+    "navajowhite":(255,222,173),
+    "wheat":(245,222,179),
+    "burlywood":(222,184,135),
+    "tan":(210,180,140),
+    "rosybrown":(188,143,143),
+    "sandybrown":(244,164,96),
+    "goldenrod":(218,165,32),
+    "darkgoldenrod":(184,134,11),
+    "peru":(205,133,63),
+    "chocolate":(210,105,30),
+    "saddlebrown":(139,69,19),
+    "sienna":(160,82,45),
+    "brown":(165,42,42),
+    "maroon":(128,0,0),
+    "white":(255,255,255),
+    "snow":(255,250,250),
+    "honeydew":(240,255,240),
+    "mintcream":(245,255,250),
+    "azure":(240,255,255),
+    "aliceblue":(240,248,255),
+    "ghostwhite":(248,248,255),
+    "whitesmoke":(245,245,245),
+    "seashell":(255,245,238),
+    "beige":(245,245,220),
+    "oldlace":(253,245,230),
+    "floralwhite":(255,250,240),
+    "ivory":(255,255,240),
+    "antiquewhite":(250,235,215),
+    "linen":(250,240,230),
+    "lavenderblush":(255,240,245),
+    "mistyrose":(255,228,225),
+    "gainsboro":(220,220,220),
+    "lightgray":(211,211,211),
+    "lightgrey":(211,211,211),
+    "silver":(192,192,192),
+    "darkgray":(169,169,169),
+    "darkgrey":(169,169,169),
+    "gray":(128,128,128),
+    "grey":(128,128,128),
+    "dimgray":(105,105,105),
+    "dimgrey":(105,105,105),
+    "lightslategray":(119,136,153),
+    "lightslategrey":(119,136,153),
+    "slategray":(112,128,144),
+    "slategrey":(112,128,144),
+    "darkslategray":(47,79,79),
+    "darkslategrey":(47,79,79),
+    "black":(0,0,0),
 }
 
 class Color():
+    """
+    `Color` holds an `rgba` colour object.
+
+    All numerical input values are clamped in the range 0.0 to 1.0 (values less than 0.0 are replaced with 0.0, values greater than 1.0 are replaced with 1.0).
+    """
 
     def __init__(self, *args):
         """
-        The `Color` constructor creates an `rgba` colour object. It accepts between 1 and 4 parameters.
-
-        All numerical input values are clamped in the range 0.0 to 1.0 (values less than 0.0 are replaced with 0.0, values greater than 1.0 are replaced with 1.0).
-
-        **Parameters**
-
-        * `args`: various - See usage.
-
-        **Returns**
-        A `Color` object.
-
-        **Usage**
-
         A color object always contains four values, `r`, `g`, `b` and `a`. Each value can have a value between
         0.0 and 1.0. Out of range values are automatically clamped.
 
@@ -221,6 +213,12 @@ class Color():
         Color objects are immutable.
 
         There are also various static methods and properties for creating other colours.
+
+        Args:
+            `args`: various - See usage.
+
+        Returns:
+            A `Color` object.
         """
 
         if len(args) == 1:
@@ -248,28 +246,26 @@ class Color():
         """
         Static method to create an HSL colour.
 
-        **Parameters**
-
-        * `h`: number - Hue of colour.
-        * `s`: number - Saturation of colour.
-        * `v`: number - Value (lightness) of colour.
-
-        **Returns**
-        A `Color` object.
-
-        **Usage**
         HSL colours are defined by 3 values:
-        
+
         * The hue value controls the position of the colour on the colour wheel.
-        * The saturation controls how pure the colour is. For a particular hue, reducing the saturation creates a greyed 
+        * The saturation controls how pure the colour is. For a particular hue, reducing the saturation creates a greyed
         out version of the same colour.
         * The lightness controls how light the colour is. Varying the lightness creates a lighter or darker version of
         the same colour.
-        
+
         HSL is very useful because it allows you to control colours more intuitively.
-        
+
         Internally the colour is still represented as an `rgba` colour. The `h`, `s` and `l` values are converted to `rgb`,
         with the `a` value to 1.
+
+        Args:
+            `h`: number - Hue of colour.
+            `s`: number - Saturation of colour.
+            `v`: number - Value (lightness) of colour.
+
+        Returns:
+            A `Color` object.
         """
         h = Color.clamp(h)
         s = Color.clamp(s)
@@ -282,18 +278,16 @@ class Color():
         """
         Static method to create a transparent HSL colour.
 
-        **Parameters**
-
-        * `h`: number - Hue of colour.
-        * `s`: number - Saturation of colour.
-        * `v`: number - Value (lightness) of colour.
-        * `a`: number - Alpha (transparency) of colour.
-
-        **Returns**
-        A `Color` object.
-
-        **Usage**
         Similar to `of_hsl` but provides alpha channel.
+
+        Args:
+            `h`: number - Hue of colour.
+            `s`: number - Saturation of colour.
+            `v`: number - Value (lightness) of colour.
+            `a`: number - Alpha (transparency) of colour.
+
+        Returns:
+            A `Color` object.
         """
         h = Color.clamp(h)
         s = Color.clamp(s)
@@ -518,10 +512,19 @@ class Color():
         Creates a new `Color` object that is part way between the current colour and the `other` colour. `factor` controls
         the mixture, eg:
 
-        0: Current colour
-        0.2: 80% current + 20% other
-        0.7: 30% current + 70% other
-        1: Other colour
+        * 0: Current colour
+        * 0.2: 80% current + 20% other
+        * 0.7: 30% current + 70% other
+        * 1: Other colour
+
+        Args:
+            other: `Color` - the other colour to mix with the current colour.
+            factor: number - the amount of the other colour to mix (see above).
+
+        Returns:
+            The new `Color`.
+        """
+        """
         """
         factor = Color.clamp(factor)
         col1 = self.rgba
@@ -533,19 +536,19 @@ class Color():
         """
         Converts current colour into a string format.
 
-        **Returns**
-        String of form rgb(255, 128, 0)
+        Returns:
+            String of form rgb(255, 128, 0)
         """
         return 'rgb({}, {}, {})'.format(int(self.color[0] * 255),
-                                       int(self.color[1] * 255),
-                                       int(self.color[2] * 255))
+                                        int(self.color[1] * 255),
+                                        int(self.color[2] * 255))
 
     def as_rgb_bytes(self):
         """
         Converts current colour into a tuple.
 
-        **Returns**
-        Tuple of form (255, 128, 0)
+        Returns:
+            Tuple of form (255, 128, 0)
         """
         return (int(self.color[0] * 255),
                 int(self.color[1] * 255),
@@ -555,8 +558,8 @@ class Color():
         """
         Converts current colour into a tuple including alpha.
 
-        **Returns**
-        Tuple of form (255, 128, 0, 64)
+        Returns:
+            Tuple of form (255, 128, 0, 64)
         """
         return (int(self.color[0] * 255),
                 int(self.color[1] * 255),
@@ -588,15 +591,14 @@ def make_colormap(length, colors, bands=None):
     A colormap can be used to assign colour gradients, gradients with step changes, or discrete colours depending on how
     it is set up.
 
-    **Parameters**
+    Args:
+        `length`: int - Total size of returned list.
+        `colors`: list[Colors] - Colours for creating the map. The list must be at least 2 long.
+        `bands`: list[number] - Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
+                    len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
 
-    * `length`: int - Total size of returned list.
-    * `colors`: list[Colors] - Colours for creating the map. The list must be at least 2 long.
-    * `bands`: list[number] - Relative size of each band. bands[i] gives the size of the band between color[i] and color[i+1].
-    len(bands) must be exactly 1 less than len(colors). If bands is None, equal bands will be used.
-
-    **Returns**
-    A list of `Color` objects.
+    Returns:
+        A list of `Color` objects.
     """
 
     color_count = len(colors)
@@ -629,13 +631,16 @@ def make_colormap(length, colors, bands=None):
     band_size.append(band_index)
 
     colormap = [colors[col].lerp(colors[col+1], band/(band_size[col]-1))
-                 for col, band in colormap ]
+                for col, band in colormap ]
 
     return colormap
 
 ## Colour schemes
 
 class ArtisticColorScheme:
+    """
+    An example colour scheme suitable for a white background,
+    """
 
     def __init__(self):
         self._RED = Color(0.941, 0.234, 0.125)
@@ -705,6 +710,9 @@ class ArtisticColorScheme:
         return self._WHITE
 
 class DarkColorScheme:
+    """
+    An example colour scheme suitable for a dark grey background, such as the `BACKGROUND` colour below.
+    """
 
     def __init__(self):
         self._BACKGROUND = Color(0.2)

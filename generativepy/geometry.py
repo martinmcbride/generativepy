@@ -52,21 +52,18 @@ class Pattern:
         """
         Get the Pycairo pattern object associated with this Pattern
 
-        **Returns**
-        Pycairo pattern object
+        Returns:
+            Pycairo pattern object
         """
         return self.pattern
 
 
 class LinearGradient(Pattern):
     """
-    Definnes a linear gradient `pattern`
+    Defines a linear gradient `pattern`
     """
 
     def __init__(self):
-        """
-        Creates a linear gradient
-        """
         super().__init__()
         self.start = (0, 0)
         self.end = (0, 0)
@@ -76,13 +73,12 @@ class LinearGradient(Pattern):
         """
         Set the points for the Pycairo LinearGradient pattern
 
-        **Parameters**
+        Args:
+            `start`: Sequence of 2 numbers - The start point, (x, y)
+            `end`: Sequence of 2 numbers - The end point, (x, y)
 
-        * `start`: Sequence of 2 numbers - The start point, (x, y)
-        * `end`: Sequence of 2 numbers - The end point, (x, y)
-
-        **Returns**
-        self
+        Returns:
+            self
         """
         self.start = start
         self.end = end
@@ -93,15 +89,12 @@ class LinearGradient(Pattern):
         Set up a simple linear gradient, with a start color at position 0 and an end color at position 1.
         This is equivalent to calling with_stops with ((0, color1), (1, color2)
 
-        **Parameters**
+        Args:
+            `color1`: `Color` - The start colour (ie the colour at the start point).
+            `color2`: `Color` - The end colour (ie the colour at the end point).
 
-        * `color1`: `Color`
-            The start colour (ie the colour at the start point).
-        * `color2`: `Color`
-            The end colour (ie the colour at the end point).
-
-        **Returns**
-        self
+        Returns:
+            self
         """
         self.stops = [(0, color1), (1, color2)]
         return self
@@ -110,14 +103,12 @@ class LinearGradient(Pattern):
         """
         Set the gradient stops. There should be 2 or more stops in the sequence.
 
-        **Parameters**
+        Args:
+            `stops`: tuple of numbers - Each stop tuple (position, color) where `position` is a number indicating the position of the stop between
+                    the start and end points, and `color`is the `Color` of the stop.
 
-        * `stops`: Sequence of stops
-        Each stop tuple (position, color) where `position` is a number indicating the position of the stop between
-        the start and end points, and `color`is the `Color` of the stop.
-
-        **Returns**
-        self
+        Returns:
+            self
         """
         self.stops = [(pos, color) for pos, color in stops]
         return self
@@ -127,8 +118,8 @@ class LinearGradient(Pattern):
         Build the pattern. This must be called after all the stops have been added. It creates the Pycairo
         Pattern object that will be returned by get_pattern
 
-        **Returns**
-        self
+        Returns:
+            self
         """
         self.pattern = cairo.LinearGradient(self.start[0], self.start[1], self.end[0], self.end[1])
         for position, color in self.stops:
@@ -144,15 +135,6 @@ class FillParameters:
 
     def __init__(self, pattern=Color(0), fill_rule=WINDING):
         """
-        Initialise the fill parameters.
-        
-        **Parameters**
-
-        * `pattern`: the fill `Pattern` or `Color` to use, None for default
-        * `fill_rule`: the fill rule to use, None for default.
-
-        **Parameter details**
-
         `pattern` specifies the colour or pattern that will be used to stroke the shape. It can either be:
 
         * A `Color` object to specify a flat colour fill.
@@ -162,6 +144,10 @@ class FillParameters:
 
         `fill_rule` only applies to complex paths such as self-intersecting paths. It controls which
         parts of the path will be filled, and which will be left as "holes". Possible values are `drawing.EVEN_ODD` and `drawing.WINDING`.
+
+        Args:
+            `pattern`: the fill `Pattern` or `Color` to use, None for default
+            `fill_rule`: the fill rule to use, None for default.
         """
         self.pattern = Color(0) if pattern is None else pattern
         self.fill_rule = WINDING if fill_rule is None else fill_rule
@@ -171,9 +157,8 @@ class FillParameters:
         Apply the settings to a context. After this, any fill operation using the context will use the
         settings.
 
-        **Parameters**
-
-        * `ctx`: The context to apply the settings to.
+        Args:
+            `ctx`: The context to apply the settings to.
         """
         if isinstance(self.pattern, Color):
             ctx.set_source_rgba(*self.pattern)
@@ -194,25 +179,12 @@ class StrokeParameters:
 
     def __init__(self, pattern=Color(0), line_width=None, dash=None, cap=None, join=None, miter_limit=None):
         """
-        Initialise the stroke parameters
-
-        **Parameters**
-        
-        * `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
-        * `line_width`: width of stroke line. None for default
-        * dash`: sequence, dash patter of line. None for default
-        * cap`: line end style, None for default.
-        * join`: line join style, None for default.
-        * miter_limit`: mitre limit, number, None for default
-
-        **Parameter details**
-
         `pattern` specifies the colour or pattern that will be used to stroke the shape. It can either be:
 
         * A `Color` object to specify a flat colour fill.
         * A `Pattern` object to specify a special fill (for example a `LinearGradient`).
 
-        It defaults to black.
+        It defaults to `Color` black.
 
         `line_width` controls the width of the line. The line width is in user units, and default to 1.
 
@@ -238,6 +210,13 @@ class StrokeParameters:
         11 degrees, which is suitable for most applications.
 
 
+        Args:
+            `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
+            `line_width`: width of stroke line. None for default
+            dash`: sequence, dash patter of line. None for default
+            cap`: line end style, None for default.
+            join`: line join style, None for default.
+            miter_limit`: mitre limit, number, None for default
         """
         self.pattern = Color(0) if pattern is None else pattern
         self.line_width = 1 if line_width is None else line_width
@@ -251,9 +230,8 @@ class StrokeParameters:
         Apply the settings to a context. After this, any stroke operation using the context will use the
         settings.
 
-        **Parameters**
-
-        * `ctx`: The context to apply the settings to.
+        Args:
+            `ctx`: The context to apply the settings to.
         """
         if isinstance(self.pattern, Color):
             ctx.set_source_rgba(*self.pattern)
@@ -289,16 +267,11 @@ class FontParameters:
 
     def __init__(self, font=None, weight=None, slant=None, size=None):
         """
-        Set parameters
-        
-        * `font`: `str`
-            name of font face.
-        * `weight`: number
-            font weight. This can be `FONT_WEIGHT_NORMAL` or `FONT_WEIGHT_BOLD`, defined in the`drawing` module.
-        * `slant`: `int`
-            font slant. This can be `FONT_SLANT_NORMAL`, `FONT_SLANT_ITALIC` or `FONT_SLANT_OBLIQUE`, defined in the`drawing` module.
-        * `size`: number
-            font size. This is the *approximate* size of the characters in user space units.
+        Args:
+            `font`: str - name of font face.
+            `weight`: number - font weight. This can be `FONT_WEIGHT_NORMAL` or `FONT_WEIGHT_BOLD`, defined in the`drawing` module.
+            `slant`: int - font slant. This can be `FONT_SLANT_NORMAL`, `FONT_SLANT_ITALIC` or `FONT_SLANT_OBLIQUE`, defined in the`drawing` module.
+            `size`: number - font size. This is the *approximate* size of the characters in user space units.
         """
         self.font = 'Arial' if font is None else font
         self.weight = FONT_WEIGHT_NORMAL if weight is None else weight
@@ -309,8 +282,9 @@ class FontParameters:
         """
         Apply the settings to a context. After this, any text operation using the context will use the
         specified font.
-        
-        `ctx`: The context to apply the settings to.
+
+        Args:
+            `ctx`: The context to apply the settings to.
         """
         c_weight = cairo.FONT_WEIGHT_NORMAL
         if self.weight == FONT_WEIGHT_BOLD:
@@ -334,12 +308,11 @@ class Shape():
     """
     def __init__(self, ctx):
         """
-        **Parameters**
+        Args:
+            `ctx`: Pycairo drawing context - The context to draw on.
 
-        * `ctx`: Pycairo drawing context - The context to draw on.
-
-        **Returns**
-        self
+        Returns:
+            self
         """
         self.ctx = ctx
         self.extend = False
@@ -363,9 +336,11 @@ class Shape():
         When the final shape is added, you can optionally set the close flag to create a closed shape.
         You should not add any further sections after this final call. Alternatively, if the close flag is not set it will create an open shape.
 
-        **Returns**
+        Args:
+            close: bool - controls whether the extended path should be closed or left open.
 
-        self
+        Returns:
+            self
         """
         self.sub_path = True
         self.extend = True
@@ -380,9 +355,8 @@ class Shape():
         This method allows you to create complex paths, consisting of two or more separate shapes.
         This allows you to do things such as creating shapes with holes or creating complex clip paths.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.sub_path = True
         return self
@@ -398,9 +372,8 @@ class Shape():
         This method is mainly for internal use. Each shape subclass overrides this method to draw the specific shape. This method is called
         to generate the shape path the first time it is is filled, stroked etc.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         raise NotImplementedError()
 
@@ -408,16 +381,14 @@ class Shape():
         """
         Fill the shape. This draws the shape to the supplied context.
 
-        **Parameters**
-
         Parameters are as described for `FillParameters`.
 
-        * `pattern`: the fill `Pattern` or `Color` to use, None for default
-        * `fill_rule`: the fill rule to use, None for default.
+        Args:
+            `pattern`: the fill `Pattern` or `Color` to use, None for default
+            `fill_rule`: the fill rule to use, None for default.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         if not self.added:
             self.add()
@@ -432,20 +403,18 @@ class Shape():
         """
         Outline the shape. This draws the shape to the supplied context.
 
-        **Parameters**
-
         Parameters are as described for `StrokeParameters`.
 
-        * `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
-        * `line_width`: width of stroke line. None for default
-        * dash`: sequence, dash patter of line. None for default
-        * cap`: line end style, None for default.
-        * join`: line join style, None for default.
-        * miter_limit`: mitre limit, number, None for default
+        Args:
+            `pattern`:  the fill `Pattern` or `Color` to use for the outline, None for default
+            `line_width`: width of stroke line. None for default
+            dash`: sequence, dash patter of line. None for default
+            cap`: line end style, None for default.
+            join`: line join style, None for default.
+            miter_limit`: mitre limit, number, None for default
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         if not self.added:
             self.add()
@@ -482,9 +451,8 @@ class Shape():
         will be removed on leaving the block. Alternatively (and more advanced), store the old context returned by this function and restore it
         later with a Pycairo call.
 
-        **Returns**
-
-        Old context
+        Returns:
+            The old context.
         """
         if not self.added:
             self.add()
@@ -512,9 +480,8 @@ class Shape():
         segments. The path will be reproduced perfectly at the same scale, but if you store a path and then redraw it using a
         large scale factor you might see some distortion of the curve.
 
-        **Returns**
-
-        The current path
+        Returns:
+            The current path
         """
         if not self.added:
             self.add()
@@ -545,12 +512,6 @@ class Path(Shape):
         """
         Creates a shape based on an existing path.
 
-        **Parameters**
-
-        Parameters are as described for `StrokeParameters`.
-
-        * `path`:  Pycairo path object that defines the shape
-
         A `path` object is usually obtained by calling the path method another shape. A Path object recreates the shape and allows
         it to be filled.
 
@@ -566,9 +527,11 @@ class Path(Shape):
 
         This is useful if you want to reuse a path, drawing it multiple times, or if you need to create a path is one part of your code but store it for use somewhere else. Paths also have advanced applications such as drawing text along a curve.
 
-        **Returns**
+        Args:
+            `path`:  Pycairo path object that defines the shape
 
-        self
+        Returns:
+            self
         """
         self.path = path
         return self
@@ -594,15 +557,14 @@ class Rectangle(Shape):
         """
         Creates a rectangle based on the position and size.
 
-        **Parameters**
+        Args:
 
-        * `corner`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
-        * `width`:  number - The width.
-        * `height`:  number - The height.
+            `corner`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
+            `width`:  number - The width.
+            `height`:  number - The height.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.x = corner[0]
         self.y = corner[1]
@@ -638,14 +600,12 @@ class Square(Shape):
         """
         Creates a square based on the position and size.
 
-        **Parameters**
+        Args:
+            `corner`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
+            `width`:  number - The width.
 
-        * `corner`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the top left corner.
-        * `width`:  number - The width.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.x = corner[0]
         self.y = corner[1]
@@ -683,15 +643,13 @@ class Triangle(Shape):
         """
         Creates a triangle based on the corners
 
-        **Parameters**
+        Args:
+            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner a.
+            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner b.
+            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner c.
 
-        * `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner a.
-        * `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner b.
-        * `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of corner c.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.a = a
         self.b = b
@@ -779,15 +737,13 @@ class Text(Shape):
         """
         Sets the text to be displayed, and the position.
 
-        **Parameters**
+        Args:
+            `text`:  str - The text to display. Only single line text is supported.
+            `position`:  (number, number) - (x, y) position of the text. This uses the alignment specified by the
+                align functions below.
 
-        * `text`:  str - The text to display. Only single line text is supported.
-        * `position`:  (number, number) - (x, y) position of the text. This uses the alignment specified by the
-        align functions below.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.text = text
         self.position = position
@@ -797,16 +753,14 @@ class Text(Shape):
         """
         Selects the font face. If this method is not called, the font defaults to 'arial'.
 
-        **Parameters**
+        Args:
+            `font`:  str - The name of the font, such as 'arial'.
+            `weight`:  int - The font weight, either `drawing.FONT_WEIGHT_NORMAL` or `drawing.FONT_WEIGHT_BOLD`.
+            `slant`:  int - The font slant, either `drawing.FONT_SLANT_NORMAL`, `drawing.FONT_SLANT_ITALIC`, or
+                    `drawing.FONT_SLANT_OBLIQUE`.
 
-        * `font`:  str - The name of the font, such as 'arial'.
-        * `weight`:  int - The font weight, either `drawing.FONT_WEIGHT_NORMAL` or `drawing.FONT_WEIGHT_BOLD`.
-        * `slant`:  int - The font slant, either `drawing.FONT_SLANT_NORMAL`, `drawing.FONT_SLANT_ITALIC`, or
-        `drawing.FONT_SLANT_OBLIQUE`.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self._font = font
         self._weight = weight
@@ -819,13 +773,11 @@ class Text(Shape):
         in user units. This may vary slightly for different font faces, and non-western fonts (for example
         Chinese fonts). If size is not called, the size default to 10. The size is measured in userspace units.
 
-        **Parameters**
+        Args:
+            `size`:  number - The size of the text.
 
-        * `size`:  number - The size of the text.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self._size = size
         return self
@@ -833,11 +785,6 @@ class Text(Shape):
     def align(self, alignx, aligny):
         """
         Sets the text alignment.
-
-        **Parameters**
-
-        * `alignx`:  int - Sets the horizontal alignment of the text.
-        * `aligny`:  int - Sets the vertical alignment of the text.
 
         alignx should be set to drawing.LEFT, drawing.CENTER, or drawing.RIGHT. This causes the left, centre,
         or right of the text bounding box to be aligned with the x value of the text position.
@@ -852,9 +799,12 @@ class Text(Shape):
 
         As an alternative, you can use the `align_xxx()` methods to se the alignment.
 
-        **Returns**
+        Args:
+            `alignx`:  int - Sets the horizontal alignment of the text.
+            `aligny`:  int - Sets the vertical alignment of the text.
 
-        self
+        Returns:
+            self
         """
         self.alignx = alignx
         self.aligny = aligny
@@ -864,9 +814,8 @@ class Text(Shape):
         """
         Sets the horizontal alignment to drawing.LEFT but leaves the vertical alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.alignx = LEFT
         return self
@@ -875,9 +824,8 @@ class Text(Shape):
         """
         Sets the horizontal alignment to drawing.CENTER but leaves the vertical alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.alignx = CENTER
         return self
@@ -886,9 +834,8 @@ class Text(Shape):
         """
         Sets the horizontal alignment to drawing.RIGHT but leaves the vertical alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.alignx = RIGHT
         return self
@@ -897,9 +844,8 @@ class Text(Shape):
         """
         Sets the vertical alignment to drawing.BOTTOM but leaves the horizontal alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.aligny = BOTTOM
         return self
@@ -908,9 +854,8 @@ class Text(Shape):
         """
         Sets the vertical alignment to drawing.BASELINE but leaves the horizontal alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.aligny = BASELINE
         return self
@@ -919,9 +864,8 @@ class Text(Shape):
         """
         Sets the vertical alignment to drawing.MIDDLE but leaves the horizontal alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.aligny = MIDDLE
         return self
@@ -930,9 +874,8 @@ class Text(Shape):
         """
         Sets the vertical alignment to drawing.TOP but leaves the horizontal alignment unchanged.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.aligny = TOP
         return self
@@ -940,9 +883,9 @@ class Text(Shape):
     def flip(self):
         """
         Flips the text vertically. This is useful if yiu are working with a flipped userspace.
-        **Returns**
 
-        self
+        Returns:
+            self
         """
         self._flip = True
         return self
@@ -951,10 +894,9 @@ class Text(Shape):
         """
         Offsets the text in the x and y axes.
 
-        **Parameters**
-
-        * `x`:  number - The x offset.
-        * `y`:  number - The y offset.
+        Args:
+            `x`:  number - The x offset.
+            `y`:  number - The y offset.
 
         The offset moves the text in the x and y direction. The amount of offset is measured in user space.
         The offset is simple added to the position of the text. So for example:
@@ -967,9 +909,8 @@ class Text(Shape):
 
         It is a matter of personal preference which form you use.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self._offset = (x, y)
         return self
@@ -978,18 +919,16 @@ class Text(Shape):
         """
         Offsets the text by a given distance in a specified direction.
 
-        **Parameters**
-
-        * `angle`:  number - The direction to move the text.
-        * `distance`:  number - The distance to move the text.
+        Args:
+            `angle`:  number - The direction to move the text.
+            `distance`:  number - The distance to move the text.
 
         Thi sfunction is equivalent to:
 
         `offset(distance*math.cos(angle), distance*math.sin(angle))`
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self._offset = V.polar(distance, angle)
         return self
@@ -998,17 +937,15 @@ class Text(Shape):
         """
         Offsets the text by a given distance towards a particular point
 
-        **Parameters**
-
-        * `point`:  number - The target point
-        * `distance`:  number - The distance to move the text.
+        Args:
+            `point`:  number - The target point
+            `distance`:  number - The distance to move the text.
 
         Displaces the text by an amount distance towards the point. If distance is negative, the text will
         be moved in the opposite direction, ie away from the point.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         direction = V(point) - V(self.position)
         unit = direction.unit
@@ -1087,14 +1024,12 @@ class Line(Shape):
         """
         Creates a line based on the start and end points.
 
-        **Parameters**
+        Args:
+            `start`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the start of the line.
+            `end`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
 
-        * `start`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the start of the line.
-        * `end`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.start = start
         self.end = end
@@ -1105,13 +1040,11 @@ class Line(Shape):
         Creates a line based on the end point. The start paint defaults to (0, 0). This is typically used when creating
         complex paths where we might want to extend an existing path by adding a line to it.
 
-        **Parameters**
+        Args:
+            `end`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
 
-        * `end`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the end of the line.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.start = (0, 0)
         self.end = end
@@ -1121,14 +1054,12 @@ class Line(Shape):
         """
         Sets the line mode to LINE
 
-        **Parameters**
+        Args:
+            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+                drawing area. Default 1000, which is fine for most cases.
 
-        * `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
-        drawing area. Default 1000, which is fine for most cases.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.extent_type = LINE
         if infinity:
@@ -1139,14 +1070,12 @@ class Line(Shape):
         """
         Sets the line mode to RAY
 
-        **Parameters**
+        Args:
+            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+                drawing area. Default 1000, which is fine for most cases.
 
-        * `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
-        drawing area. Default 1000, which is fine for most cases.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.extent_type = RAY
         if infinity:
@@ -1157,14 +1086,12 @@ class Line(Shape):
         """
         Sets the line mode to SEGMENT
 
-        **Parameters**
+        Args:
+            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+                drawing area. Default 1000, which is fine for most cases.
 
-        * `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
-        drawing area. Default 1000, which is fine for most cases.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.extent_type = SEGMENT
         if infinity:
@@ -1175,15 +1102,13 @@ class Line(Shape):
         """
         Sets the line mode to the supplied mode
 
-        **Parameters**
-
-        * `extent_type`:  number - can be `drawing.SEGMENT`, `drawing.LINE` or `drawing.RAY`
-        * `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
+        Args:
+            `extent_type`:  number - can be `drawing.SEGMENT`, `drawing.LINE` or `drawing.RAY`
+            `infinity`:  number - a large number such that a line of length `infinity` is any direction will always be outside the
         drawing area. Default 1000, which is fine for most cases.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.extent_type = extent_type
         if infinity:
@@ -1200,7 +1125,7 @@ def line(ctx, start, end):
 
 class Bezier(Shape):
     """
-    The Bezier class draws a bezier curve. 
+    The Bezier class draws a bezier curve.
     """
 
     def __init__(self, ctx):
@@ -1222,16 +1147,14 @@ class Bezier(Shape):
     def of_abcd(self, a, b, c, d):
         """
         Creates a bezier curve based on the control points.
-        **Parameters**
+        Args:
+            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
+            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
+            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
+            `d`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
 
-        * `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
-        * `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
-        * `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
-        * `d`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.a = a
         self.b = b
@@ -1244,16 +1167,14 @@ class Bezier(Shape):
         Creates a bezier curve based on the control points, but with control point a set to (0, 0).  This is typically used when creating
         complex paths where we might want to extend an existing path by adding a bezier curve to it.
 
-        **Parameters**
+        Args:
+            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
+            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
+            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
+            `d`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
 
-        * `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point a.
-        * `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point b.
-        * `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point c.
-        * `d`:  (number, number) - A tuple of two numbers, giving the (x, y) position of control point d.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.a = (0, 0)
         self.b = b
@@ -1299,10 +1220,6 @@ class Polygon(Shape):
         """
         Creates a polygon based on a list of points.
 
-        **Parameters**
-
-        * `points`:  sequence of number tuples - A sequence of line or curve specifiers.
-
         To define a simple polygon with straight sides, points should just be a list of points, like this:
 
        `[(300, 100), (300, 150), (400, 200), (450, 100)]`
@@ -1319,9 +1236,11 @@ class Polygon(Shape):
 
         The polygon will be closed by default. To create an open polygon, call the open method.
 
-        **Returns**
+        Args:
+            `points`:  sequence of number tuples - A sequence of line or curve specifiers.
 
-        self
+        Returns:
+            self
         """
         self.points = points
         return self
@@ -1333,14 +1252,12 @@ class Polygon(Shape):
         Calling this method will cause the final polygon to be open - the last point will not be connected
         to the first point. To create a closed polygon, simply don't call this method.
 
-        **Parameters**
-
-        * `open_polygon`:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
+        Args:
+            `open_polygon`:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
         parameter tio create an open polygon.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.closed = not open_polygon
         return self
@@ -1392,14 +1309,12 @@ class Circle(Shape):
         """
         Creates a circle based on the centre point and radius.
 
-        **Parameters**
+        Args:
+            `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the circle.
+            `radius`:  number - The radius of the circle
 
-        * `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the circle.
-        * `radius`:  number - The radius of the circle
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.center = center
         self.radius = radius
@@ -1409,10 +1324,9 @@ class Circle(Shape):
         """
         Modifies a circle, to show only an arc. An arc is part of the circumference of the circle.
 
-        **Parameters**
-
-        * `start_angle`:  number - The start angle of the arc
-        * `end_angle`:  number - The end angle of the arc
+        Args:
+            `start_angle`:  number - The start angle of the arc
+            `end_angle`:  number - The end angle of the arc
 
         This is used as a modifier with of_center_radius, to draw just an arc. To draw an arc use:
 
@@ -1429,9 +1343,8 @@ class Circle(Shape):
         Since an arc is a line, you should normally use the stroke method to draw it. If you attempt to
         fill the arc, it will fill it as if it was a segment.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.start_angle = start_angle
         self.end_angle = end_angle
@@ -1443,17 +1356,15 @@ class Circle(Shape):
         Modifies a circle, to show only a sector. A sector is a "pizza slice", like you would use
         in a pie chart.
 
-        **Parameters**
-
-        * `start_angle`:  number - The start angle of the sector
-        * `end_angle`:  number - The end angle of the sector
+        Args:
+            `start_angle`:  number - The start angle of the sector
+            `end_angle`:  number - The end angle of the sector
 
         This function works in a similar way to the as_arc function, but it includes the area
         of the sector. You can fill or stroke the area.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.start_angle = start_angle
         self.end_angle = end_angle
@@ -1464,17 +1375,15 @@ class Circle(Shape):
         """
         Modifies a circle, to show only a segment. A segment is the part of the circle that is cut off by a chord.
 
-        **Parameters**
-
-        * `start_angle`:  number - The start angle of the segment
-        * `end_angle`:  number - The end angle of the segment
+        Args:
+            `start_angle`:  number - The start angle of the segment
+            `end_angle`:  number - The end angle of the segment
 
         This function works in a similar way to the as_arc function, but it includes the area
         of the segment. You can fill or stroke the area.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.start_angle = start_angle
         self.end_angle = end_angle
@@ -1496,7 +1405,9 @@ class RegularPolygon(Shape):
     * Number of sides.
     * Radius (the distance from the centre to any one of its vertices).
 
-    You can also draw a regular polygon using the Polygon class, by calculating the position of each vertex. The RegularPolygon class is more convenient because it performs the calculations automatically, and also provides some useful properties of the shape.
+    You can also draw a regular polygon using the Polygon class, by calculating the position of each vertex.
+    The RegularPolygon class is more convenient because it performs the calculations automatically, and also
+    provides some useful properties of the shape.
     """
 
     def __init__(self, ctx):
@@ -1527,23 +1438,21 @@ class RegularPolygon(Shape):
         """
         Creates a regular polygon based on its parameters.
 
-        **Parameters**
-
-        * `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre
-        of the polygon.
-        * `numsides`:  number - The number of sides of the polygon.
-        * `radius`:  number - The distance from the centre to any one of its vertices.
-        * `angle`:  number - Angle to rotate the shape (defaults to zero).
-
         Creates a regular polygon, centred at centre, with numsides sides. radius controls the distance of
         each vertex from the centre, and therefore indirectly controls the size.
 
         By default, the shape is oriented so that the bottom side is horizontal. If angle is set to a non-zero
         value, the shape will be rotated about its centre by angle radians in a clockwise direction.
 
-        **Returns**
+        Args:
+            `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre
+                    of the polygon.
+            `numsides`:  number - The number of sides of the polygon.
+            `radius`:  number - The distance from the centre to any one of its vertices.
+            `angle`:  number - Angle to rotate the shape (defaults to zero).
 
-        self
+        Returns:
+            self
         """
         self.centre = centre
         self.numsides = numsides
@@ -1565,14 +1474,12 @@ class RegularPolygon(Shape):
         Calling this method will cause the final polygon to be open - the last point will not be connected
         to the first point. To create a closed polygon, simply don't call this method.
 
-        **Parameters**
+        Args:
+            `open_polygon`:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
+                parameter tio create an open polygon.
 
-        * `open_polygon`:  optional boolean - specifies if the shape should be open. Normally call `open()` with no
-        parameter tio create an open polygon.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.closed = not open_polygon
         return self
@@ -1673,15 +1580,13 @@ class Ellipse(Shape):
         """
         Creates a ellipse based on the centre point and the two radii.
 
-        **Parameters**
+        Args:
+            `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the ellipse.
+            `radius_x`:  number - The x radius of the ellipse.
+            `radius_y`:  number - The y radius of the ellipse.
 
-        * `center`:  (number, number) - A tuple of two numbers, giving the (x, y) position of the centre of the ellipse.
-        * `radius_x`:  number - The x radius of the ellipse.
-        * `radius_y`:  number - The y radius of the ellipse.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.center = center
         self.radius_x = radius_x
@@ -1691,11 +1596,6 @@ class Ellipse(Shape):
     def as_arc(self, start_angle, end_angle):
         """
         Modifies an ellipse, to show only an arc. An arc is part of the circumference of the ellipse.
-
-        **Parameters**
-
-        * `start_angle`:  number - The start angle of the arc
-        * `end_angle`:  number - The end angle of the arc
 
         This is used as a modifier with of_center_radius, to draw just an arc. To draw an arc use:
 
@@ -1712,9 +1612,12 @@ class Ellipse(Shape):
         Since an arc is a line, you should normally use the stroke method to draw it. If you attempt to
         fill the arc, it will fill it as if it was a segment.
 
-        **Returns**
+        Args:
+            `start_angle`:  number - The start angle of the arc
+            `end_angle`:  number - The end angle of the arc
 
-        self
+        Returns:
+            self
         """
         self.start_angle = start_angle
         self.end_angle = end_angle
@@ -1726,17 +1629,15 @@ class Ellipse(Shape):
         Modifies an ellipse, to show only a sector. A sector is a "pizza slice", like you would use
         in a pie chart.
 
-        **Parameters**
-
-        * `start_angle`:  number - The start angle of the sector
-        * `end_angle`:  number - The end angle of the sector
-
         This function works in a similar way to the as_arc function, but it includes the area
         of the sector. You can fill or stroke the area.
 
-        **Returns**
+        Args:
+            `start_angle`:  number - The start angle of the sector
+            `end_angle`:  number - The end angle of the sector
 
-        self
+        Returns:
+            self
         """
         self.start_angle = start_angle
         self.end_angle = end_angle
@@ -1747,17 +1648,15 @@ class Ellipse(Shape):
         """
         Modifies an ellipse, to show only a segment. A segment is the part of the circle that is cut off by a chord.
 
-        **Parameters**
-
-        * `start_angle`:  number - The start angle of the segment
-        * `end_angle`:  number - The end angle of the segment
-
         This function works in a similar way to the as_arc function, but it includes the area
         of the segment. You can fill or stroke the area.
 
-        **Returns**
+        Args:
+            `start_angle`:  number - The start angle of the segment
+            `end_angle`:  number - The end angle of the segment
 
-        self
+        Returns:
+            self
         """
         self.start_angle = start_angle
         self.end_angle = end_angle
@@ -1821,18 +1720,16 @@ class AngleMarker(Shape):
         """
         Creates a marker based on 3 points.
 
-        **Parameters**
-
-        * `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-        * `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
-        * `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point c.
-
         This will draw an angle marker for the angle formed by abc. The angle will be start at the line **ab**
         and be drawn in a clockwise direction to the line **cb**, with point b as the centre of the angle.
 
-        **Returns**
+        Args:
+            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
+            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
+            `c`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point c.
 
-        self
+        Returns:
+            self
         """
         self.a = a
         self.b = b
@@ -1843,13 +1740,11 @@ class AngleMarker(Shape):
         """
         Sets the radius of the arc. Default 8
 
-        **Parameters**
+        Args:
+            `radius`:  number - Radius of arc in user units.
 
-        * `radius`:  number - Radius of arc in user units.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.radius = radius
         return self
@@ -1858,13 +1753,11 @@ class AngleMarker(Shape):
         """
         Sets the number of arcs in the marker. Default 1. permitted values are 1, 2 or 3.
 
-        **Parameters**
+        Args:
+            `count`:  number - Number of arcs
 
-        * `count`:  number - Number of arcs
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.count = count
         return self
@@ -1873,19 +1766,17 @@ class AngleMarker(Shape):
         """
         Sets the gap between the arcs if `count` > 1.
 
-        **Parameters**
-
-        * `gap`:  number - Gap between arcs in user units.
-
         Sets the spacing of the arcs. This is only relevant if there is more than one arc (ie if count > 1), otherwise
         it is ignored.The default is 2.
 
         For double of triple arcs, the set of arcs is centred on the requested radius. So for example if radius is
         8 and gap is 2, and 3 arcs are specified, the arcs will have radii of 6, 8, and 10.
 
-        **Returns**
+        Args:
+            `gap`:  number - Gap between arcs in user units.
 
-        self
+        Returns:
+            self
         """
         self.gap = gap
         return self
@@ -1894,10 +1785,6 @@ class AngleMarker(Shape):
         """
         Marks the angle as a right angle.
 
-        **Parameters**
-
-        * `right_angle`:  bool - Draws the angle as a right angle.
-
         Normally you should call this method, with no parameter, to draw a right angle. To draw a normal angle marker don't call
         this function at all. The parameter is not needed unless you specifically want to use a flag to control the marker.
 
@@ -1905,9 +1792,11 @@ class AngleMarker(Shape):
         actually 90 degrees. This will create a strange effect. Only choose the right angle option if the angle is actually
         close to 90 degrees.
 
-        **Returns**
+        Args:
+            `right_angle`:  bool - Draws the angle as a right angle.
 
-        self
+        Returns:
+            self
         """
         self.right_angle = right_angle
         return self
@@ -1946,40 +1835,38 @@ class TickMarker(Shape):
         if self.count == 1:
             pos = (pmid[0], pmid[1])
             self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
         elif self.count == 2:
             pos = (pmid[0] - vector[0] * self.gap / 2, pmid[1] - vector[1] * self.gap / 2)
             self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
             pos = (pmid[0] + vector[0] * self.gap / 2, pmid[1] + vector[1] * self.gap / 2)
             self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
         elif self.count == 3:
             pos = (pmid[0] - vector[0] * self.gap, pmid[1] - vector[1] * self.gap)
             self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
             pos = (pmid[0], pmid[1])
             self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
             pos = (pmid[0] + vector[0] * self.gap, pmid[1] + vector[1] * self.gap)
             self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                    (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
+                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
         return self
 
     def of_start_end(self, a, b):
         """
         Creates a marker based on 2 points.
 
-        **Parameters**
-
-        * `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-        * `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
-
         This will draw a mark for the line formed by ab. The mark will be half way between a and b.
 
-        **Returns**
+        Args:
+            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
+            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
 
-        self
+        Returns:
+            self
         """
         self.a = a
         self.b = b
@@ -1989,13 +1876,11 @@ class TickMarker(Shape):
         """
         Sets the length of the marker. Default 4
 
-        **Parameters**
+        Args:
+            `length`:  number - Length of the marker in user units.
 
-        * `length`:  number - Length of the marker in user units.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.length = length
         return self
@@ -2004,13 +1889,11 @@ class TickMarker(Shape):
         """
         Sets the number of marks. Default 1. Permitted values are 1, 2 or 3.
 
-        **Parameters**
+        Args:
+            * `count`:  number - Number of marks
 
-        * `count`:  number - Number of marks
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.count = count
         return self
@@ -2019,16 +1902,14 @@ class TickMarker(Shape):
         """
         Sets the gap between the marks if `count` > 1.
 
-        **Parameters**
-
-        * `gap`:  number - Gap between marks in user units.
-
         Sets the spacing of the marks. This is only relevant if there is more than one arc (ie if count > 1), otherwise
         it is ignored.The default is 2.
 
-        **Returns**
+        Args:
+            `gap`:  number - Gap between marks in user units.
 
-        self
+        Returns:
+            self
         """
         self.gap = gap
         return self
@@ -2071,40 +1952,38 @@ class ParallelMarker(Shape):
         if self.count == 1:
             pos = (pmid[0], pmid[1])
             self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
         elif self.count == 2:
             pos = (pmid[0] - vector[0] * self.gap / 2, pmid[1] - vector[1] * self.gap / 2)
             self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
             pos = (pmid[0] + vector[0] * self.gap / 2, pmid[1] + vector[1] * self.gap / 2)
             self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
         elif self.count == 3:
             pos = (pmid[0] - vector[0] * self.gap, pmid[1] - vector[1] * self.gap)
             self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
             pos = (pmid[0], pmid[1])
             self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
             pos = (pmid[0] + vector[0] * self.gap, pmid[1] + vector[1] * self.gap)
             self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                 (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
+                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
         return self
 
     def of_start_end(self, a, b):
         """
         Creates a marker based on 2 points.
 
-        **Parameters**
-
-        * `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-        * `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
-
         This will draw a mark for the line formed by ab. The mark will be half way between a and b.
 
-        **Returns**
+        Args:
+            `a`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
+            `b`:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
 
-        self
+        Returns:
+            self
         """
         self.a = a
         self.b = b
@@ -2114,13 +1993,11 @@ class ParallelMarker(Shape):
         """
         Sets the length of the marker. Default 4
 
-        **Parameters**
+        Args:
+            `length`:  number - Length of the marker in user units.
 
-        * `length`:  number - Length of the marker in user units.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.length = length
         return self
@@ -2129,13 +2006,11 @@ class ParallelMarker(Shape):
         """
         Sets the number of marks. Default 1. Permitted values are 1, 2 or 3.
 
-        **Parameters**
+        Args:
+            * `count`:  number - Number of marks
 
-        * `count`:  number - Number of marks
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.count = count
         return self
@@ -2144,20 +2019,18 @@ class ParallelMarker(Shape):
         """
         Sets the gap between the marks if `count` > 1.
 
-        **Parameters**
-
-        * `gap`:  number - Gap between marks in user units.
-
         Sets the spacing of the marks. This is only relevant if there is more than one arc (ie if count > 1), otherwise
         it is ignored.The default is 2.
 
-        **Returns**
+        Args:
+            `gap`:  number - Gap between marks in user units.
 
-        self
+        Returns:
+            self
         """
         self.gap = gap
         return self
-    
+
     def _do_draw(self, x, y, ox1, oy1, ox2, oy2):
         self.ctx.move_to(x, y)
         self.ctx.line_to(x + ox1, y + oy1)
@@ -2222,13 +2095,12 @@ class Image():
 
     def __init__(self, ctx):
         """
-        **Parameters**
+        Args:
 
         * `ctx`: Pycairo drawing context - The context to draw on.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.ctx = ctx
         self.image = None
@@ -2241,13 +2113,11 @@ class Image():
         Load and image into an image surface. This is a static helper method that can be used to preload an image for the
         `of_file_position` function, if the same image is being rendered multiple times.
 
-        **Parameters**
+        Args:
+            `filename`: str - Path of file containing image.
 
-        * `filename`: str - Path of file containing image.
-
-        **Returns**
-
-        Pycairo ImageSurface object containing the image.
+        Returns:
+            Pycairo ImageSurface object containing the image.
         """
         return cairo.ImageSurface.create_from_png(filename)
 
@@ -2258,11 +2128,6 @@ class Image():
         By default, the image will be rendered with its top left corner at `position`. If user space is mirrored or
         rotated, it may appear differently on the page.
 
-        **Parameters**
-
-        * `image`: str or Pycairo ImageSurface - The iamge.
-        * `position`:  (number, number) - A tuple of two numbers, giving the required (x, y) position the image.
-
         There are two ways to pass an image into this function:
 
         * `image` can specify the filepath to a PNG file.
@@ -2272,9 +2137,12 @@ class Image():
         can be quite slow because it reads the file every time. In that case, you can use the `load_image` mathod to
         preload an image into an ImageSurface, and then pass that into this function.
 
-        **Returns**
+        Args:
+            `image`: str or Pycairo ImageSurface - The iamge.
+            `position`:  (number, number) - A tuple of two numbers, giving the required (x, y) position the image.
 
-        self
+        Returns:
+            self
         """
         self.image = image
         self.position = position
@@ -2284,18 +2152,16 @@ class Image():
         """
         Sets the image scale factor.
 
-        **Parameters**
-
-        * `scale_factor`: number - The image scale factor.
-
         Scales the image by a factor. For example, a factor of 2 will make the image appear twice as big on the page.
         If this function is not called, a scale factor of 1 is used by default.
 
         This scale factor is applied prior to any scaling of the userspace.
 
-        **Returns**
+        Args:
+            `scale_factor`: number - The image scale factor.
 
-        self
+        Returns:
+            self
         """
         self.scale_factor = scale_factor
         return self
@@ -2304,9 +2170,8 @@ class Image():
         """
         Renders the image.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         image = cairo.ImageSurface.create_from_png(self.image) if isinstance(self.image, str) else self.image
         self.ctx.save()
@@ -2341,13 +2206,12 @@ class Turtle():
 
     def __init__(self, ctx):
         """
-        **Parameters**
+        Args:
 
         * `ctx`: Pycairo drawing context - The context to draw on.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.ctx = ctx
         self.heading = 0
@@ -2363,9 +2227,8 @@ class Turtle():
         """
         Pushes the current turtle state (heading, position, and line style) onto a stack.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         state = self.heading, self.x, self.y, self.color, self.line_width, self.dash, self.cap
         self.stack.append(state)
@@ -2375,9 +2238,8 @@ class Turtle():
         """
         Pops the current turtle state (heading, position, and line style) from a stack.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         state = self.stack.pop()
         self.heading, self.x, self.y, self.color, self.line_width, self.dash, self.cap = state
@@ -2387,32 +2249,28 @@ class Turtle():
         """
         Moves the turtle forward, in its current heading direction, and draw a line in the current style.
 
-        **Parameters**
+        Args:
+            `distance`: number - The distance to move.
 
-        * `distance`: number - The distance to move.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         p1 = self.x, self.y
         self.x += distance*math.cos(self.heading)
         self.y += distance*math.sin(self.heading)
-        Line(self.ctx).of_start_end(p1, (self.x, self.y))\
-                      .stroke(next(self.color), line_width=self.line_width, dash=self.dash, cap=self.cap)
+        Line(self.ctx).of_start_end(p1, (self.x, self.y)) \
+            .stroke(next(self.color), line_width=self.line_width, dash=self.dash, cap=self.cap)
         return self
 
     def move(self, distance):
         """
         Moves the turtle forward, in its current heading direction without drawing a line.
 
-        **Parameters**
+        Args:
+            `distance`: number - The distance to move.
 
-        * `distance`: number - The distance to move.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.x += distance*math.cos(self.heading)
         self.y += distance*math.sin(self.heading)
@@ -2422,14 +2280,12 @@ class Turtle():
         """
         Moves the turtle to a new position without drawing a line.
 
-        **Parameters**
+        Args:
+            `x`: number - x position to move to
+            `y`: number - y position to move to
 
-        * `x`: number - x position to move to
-        * `y`: number - y position to move to
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.x = x
         self.y = y
@@ -2439,13 +2295,11 @@ class Turtle():
         """
         Change the current heading by moving to the left (ie counterclockwise)
 
-        **Parameters**
+        Args:
+            `angle`: number - Angles to move through
 
-        * `angle`: number - Angles to move through
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.heading -= angle
         return self
@@ -2454,13 +2308,11 @@ class Turtle():
         """
         Change the current heading by moving to the right (ie clockwise)
 
-        **Parameters**
+        Args:
+            `angle`: number - Angles to move through
 
-        * `angle`: number - Angles to move through
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.heading += angle
         return self
@@ -2469,13 +2321,11 @@ class Turtle():
         """
         Change the current heading to a new angle
 
-        **Parameters**
+        Args:
+            `angle`: number - New heading angle.
 
-        * `angle`: number - New heading angle.
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.heading = angle
         return self
@@ -2483,21 +2333,18 @@ class Turtle():
     def set_style(self, color=Color(0), line_width=1, dash=None, cap=SQUARE):
         """
         Set the line style.
-        Initialise the stroke parameters
 
-        **Parameters**
+        The parameters are as described for the `StrokeParams` object, except that the `color` parameter can accept a sequence.
 
-        * `color`: `Color` or sequence of `Color` objects - The `Color` to use for the line, None for default. If a sequence of colours is provided, each
-        new `forward` call will cycle through the colors in sequence.
-        * `line_width`: width of stroke line. None for default
-        * dash`: sequence, dash patter of line. None for default
-        * cap`: line end style, None for default.
+        Args:
+            `color`: `Color` or sequence of `Color` objects - The `Color` to use for the line, None for default. If a sequence of colours is provided, each
+                new `forward` call will cycle through the colors in sequence.
+            `line_width`: width of stroke line. None for default
+            dash`: sequence, dash patter of line. None for default
+            cap`: line end style, None for default.
 
-        These parameters are as described for the `StrokeParams` object, except that the `color` parameter can accept a sequnce..
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         if isinstance(color, Color):
             # Single color, create a 1 element tuple and cycle over it
@@ -2541,13 +2388,12 @@ class Transform():
 
     def __init__(self, ctx):
         """
-        **Parameters**
+        Args:
 
         * `ctx`: Pycairo drawing context - The context to draw on.
 
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         self.ctx = ctx
         self.ctx.save()
@@ -2567,18 +2413,16 @@ class Transform():
         """
         Scales user space.
 
-        **Parameters**
-
-        * `sx`: number - Scale in the x direction.
-        * `sy`: number - Scale in the x direction.
-        * `centre`: (number, number) - Centre of scaling
-
         This scales user space. Anything drawn in the new user space will change size by a factor of `sx` in the x
         direction and `sy` in the y direction. `centre` is the fixed point. By default it is the origin.
 
-        **Returns**
+        Args:
+            `sx`: number - Scale in the x direction.
+            `sy`: number - Scale in the x direction.
+            `centre`: (number, number) - Centre of scaling
 
-        self
+        Returns:
+            self
         """
         self.ctx.translate(centre[0], centre[1])
         self.ctx.scale(sx, sy)
@@ -2589,16 +2433,14 @@ class Transform():
         """
         Rotates user space.
 
-        **Parameters**
-
-        * `angle`: number - Rotation angle, clockwise, in radians.
-        * `centre`: (number, number) - Centre of scaling
-
         This rotates user space. Anything drawn in the new user space will rotated around centre. `centre` is the fixed point. By default it is the origin.
 
-        **Returns**
+        Args:
+            `angle`: number - Rotation angle, clockwise, in radians.
+            `centre`: (number, number) - Centre of scaling
 
-        self
+        Returns:
+            self
         """
         self.ctx.translate(centre[0], centre[1])
         self.ctx.rotate(angle)
@@ -2609,16 +2451,14 @@ class Transform():
         """
         Translates user space.
 
-        **Parameters**
-
-        * `tx`: number - Translate in the x direction.
-        * `ty`: number - Translate in the x direction.
-
         This translates user space. Anything drawn in the new user space will be shifted by `(tx, ty)`.
 
-        **Returns**
+        Args:
+            `tx`: number - Translate in the x direction.
+            `ty`: number - Translate in the x direction.
 
-        self
+        Returns:
+            self
         """
         self.ctx.translate(tx, ty)
         return self
@@ -2627,13 +2467,11 @@ class Transform():
         """
         Applies a transformation matrix to user space.
 
-        **Parameters**
+        Args:
+            `m`: tuple of 6 numbers - Transform matrix
 
-        * `m`: tuple of 6 numbers - Transform matrix
-
-        **Returns**
-
-        self
+        Returns:
+            self
         """
         # Convert the generativepy.math.matrix to a cairo.Matrix
         new_matrix = cairo.Matrix(m[0], m[1], m[3], m[4], m[2], m[5])
