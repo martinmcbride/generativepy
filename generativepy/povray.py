@@ -644,7 +644,10 @@ def make_povray_frame(draw, width, height):
         A frame.
     """
     scene = draw(width, height, 0, 1)
-    return scene.render(width=width, height=height, antialiasing=0.001)
+    rgbdata = scene.render(width=width, height=height, antialiasing=0.001)
+    rgbadata = np.full((width, height, 4), 255)
+    rgbadata[:, :, :-1] = rgbdata
+    return rgbadata
 
 
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
