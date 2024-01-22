@@ -123,7 +123,7 @@ def overlay_nparrays(array1, array2):
     """
 
     if (array1.shape[0] != array2.shape[0]
-            or array1.shape[1] != array2.shape[2]
+            or array1.shape[1] != array2.shape[1]
             or array1.shape[2] != 4
             or array2.shape[2] != 4):
         raise ValueError("array1 and array2 must be same shape and must contain 4 channel (RGBA) data.")
