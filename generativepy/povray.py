@@ -607,11 +607,10 @@ def make_povray_image(outfile, draw, width, height):
     """
     Used to create a single PNG image of a 3D povray scene.
 
-    `make_image` creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the
-    context. It then stores the image as a PNG file.
+    `make_povray_image` calls the user supplied `draw` function to create a povray scene. It then renders
+     the image to a PNG file.
 
     The draw function must have the signature described for `example_draw_function`.
-
 
     Args:
         outfile: str - The path and filename for the output PNG file. The '.png' extension is optional,
@@ -624,6 +623,32 @@ def make_povray_image(outfile, draw, width, height):
         outfile = outfile[:-4]
     scene = draw(width, height, 0, 1)
     scene.render(outfile + '.png', width=width, height=height, antialiasing=0.001)
+
+
+def make_povray_frame(draw, width, height):
+    """
+    Used to create a single povray image as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, 3). Povray images
+    are always RGB images.
+
+    `make_povray_frame` calls the user supplied `draw` function to create a povray scene. It then renders
+     the image to a NumPy array (a "frame").
+
+    The draw function must have the signature described for `example_draw_function`.
+
+    Args:
+        draw: function - A drawing function object, see below.
+        width: int - The width of the image that will be created, in pixels.
+        height: int - The height of the image that will be created, in pixels.
+
+    Returns:
+        A frame.
+    """
+    scene = draw(width, height, 0, 1)
+    rgbdata = scene.render(width=width, height=height, antialiasing=0.001)
+    rgbadata = np.full((width, height, 4), 255)
+    rgbadata[:, :, :-1] = rgbdata
+    return rgbadata
+
 
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
     """

@@ -69,7 +69,7 @@ def make_nparray_frames(paint, pixel_width, pixel_height, count, channels=3):
         count: int - number of frames ot create.
         channels: int - 1 for greyscale, 3 for rgb, 4 for rgba.
 
-    Returns:
+    Yields:
         Lazy iterator of frames.
     """
     for i in range(count):
@@ -107,6 +107,42 @@ def make_nparrays(outfile, paint, pixel_width, pixel_height, count, channels=3):
     """
     frames = make_nparray_frames(paint, pixel_width, pixel_height, count, channels)
     save_frames(outfile, frames)
+
+def overlay_nparrays(array1, array2):
+    """
+    Overlay array2 on top of array1. Any pixels in array2 that are fully white are treated as transparent.
+
+    Both frames nust be same size, and both must be 4 channel RGBA data.
+
+    Args:
+        array1: numpy frame - first (lower) frame.
+        array2: numpy frame - second (upper) frame.
+
+    Returns:
+        A numpy array frame buffer
+    """
+
+    if (array1.shape[0] != array2.shape[0]
+            or array1.shape[1] != array2.shape[1]
+            or array1.shape[2] != 4
+            or array2.shape[2] != 4):
+        raise ValueError("array1 and array2 must be same shape and must contain 4 channel (RGBA) data.")
+
+    # Create a mask. The mask has value 255 if the corresponding array2 pixel is pure white.
+    m0 = array2[:, :, 0]
+    m1 = array2[:, :, 1]
+    m2 = array2[:, :, 2]
+    mask = m0 & m1 & m2 # Bitwise AND of RGB values is 255 only if all 3 values are 255.
+
+    # Extend the mask to be width by height by 4 to match image data
+    mask = np.repeat(mask[:, :, np.newaxis], 4, axis=2)
+
+    # Array full of 255 for comparison
+    white = np.full_like(mask, 255)
+
+    # Create a merged image, using the array1 pixel if the mask is white, else array2
+    image = np.where(mask==white, array1, array2)
+    return image
 
 def save_nparray(outfile, array):
     """
