@@ -15,7 +15,7 @@ Test the geometry module.
 
 class TestGeometryImages(unittest.TestCase):
 
-    def test_markers(self):
+    def test_old_markers(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(0.8))
             red = Color('red')
@@ -82,10 +82,10 @@ class TestGeometryImages(unittest.TestCase):
         def creator(file):
             make_image(file, draw, 600, 500)
 
-        self.assertTrue(run_image_test('test_markers.png', creator))
+        self.assertTrue(run_image_test('test_old_markers.png', creator))
 
 
-    def test_old_markers(self):
+    def test_deprecated_markers(self):
         # Deprecated marker functions
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(0.8))
@@ -174,7 +174,7 @@ class TestGeometryImages(unittest.TestCase):
         def creator(file):
             make_image(file, draw, 600, 500)
 
-        self.assertTrue(run_image_test('test_old_markers.png', creator))
+        self.assertTrue(run_image_test('test_deprecated_markers.png', creator))
 
     def test_lines(self):
         def draw(ctx, width, height, frame_no, frame_count):
