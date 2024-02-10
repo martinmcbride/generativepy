@@ -1670,6 +1670,35 @@ def ellipse(ctx, center, radius_x, radius_y):
     Ellipse(ctx).of_center_radius(center, radius_x, radius_y).add()
 
 
+class Marker(Shape):
+    """
+    Handles general line markers, such as arrows, ticks, dots etc.
+    """
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.start = None
+        self.end = None
+        self.position = None
+        self.centre = None
+        self.type = None
+        self.radius = None
+        self.fill = None
+
+
+    def of_points(self, start, end, position=0.5):
+        self.start = V(start)
+        self.end = V(end)
+        self.position = position
+        self.centre = self.start.lerp(self.end, self.position
+                                      )
+
+
+    def as_dot(self, radius):
+        self.type = "dot"
+        self.radius = radius
+
+
 class AngleMarker(Shape):
     """
     The AngleMarker class is a special Shape that draws an angle marker.
