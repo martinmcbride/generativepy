@@ -1673,6 +1673,17 @@ def ellipse(ctx, center, radius_x, radius_y):
 class Marker(Shape):
     """
     Handles general line markers, such as arrows, ticks, dots etc.
+
+    Markers are separate objects that can be added on top of existing line objects. Typically a marker is created
+    like this:
+
+    `Marker(ctx).of_XXX(...).as_XXX(...).fill(...).stroke(...)`
+
+    The of_XXX determines the position of the marker, for example `of_points` positions the marker somewhere on a line between 2 points.
+
+    The as_XXX determines the type of marker, for example `as_dot` creates a dot marker.
+
+    Depending on the type of marker, it can then be filled, stroked, or both, as required.
     """
 
     def __init__(self, ctx):
@@ -1681,22 +1692,66 @@ class Marker(Shape):
         self.end = None
         self.position = None
         self.centre = None
+        self.draw_function = None
         self.type = None
         self.radius = None
-        self.fill = None
-
 
     def of_points(self, start, end, position=0.5):
+        """
+        Specifies a marker on a straight line.
+
+        The `start` and `end` of the line are specified as points. The centre of the marker can be positioned anywhere
+        on the line using the `position` parameter. For example, 0 places the marker at the start, 1 places the marker at the end,
+        0.25 places the marker a quarters of the from the start to the end.
+
+        Args:
+            start: 2-tuple - the position of the start of the line.
+            end: 2-tuple - the position of the end of the line.
+            position: number - the position of the centre of the marker along the line
+
+        Returns:
+            self
+        """
         self.start = V(start)
         self.end = V(end)
         self.position = position
         self.centre = self.start.lerp(self.end, self.position
-                                      )
-
+                                     )
+        return self
 
     def as_dot(self, radius):
+        """
+        Creates a round dot marker of the required radius.
+
+        For a simple dot marker, simply fill the shape with the required colour.
+
+        For a different effect, you can fill and stroke the shape in different colours. For a "hollow" circle
+        marker, fill the shape with the background colour and stroke it with the same colour and thickness as
+        the line it is attached to.
+
+        Args:
+            radius: number - the radius of the marker.
+
+        Returns:
+            self
+        """
         self.type = "dot"
         self.radius = radius
+        self.draw_function = self._draw_dot
+        return self
+
+    def _draw_dot(self):
+        """
+        Drawing function for dot shape. Used internally to the class.
+        """
+        self.ctx.arc(self.centre[0], self.centre[1], self.radius, 0, 2*math.pi)
+        if self.final_close:
+            self.ctx.close_path()
+
+    def add(self):
+        self._do_path_()
+        self.draw_function()
+        return self
 
 
 class AngleMarker(Shape):
