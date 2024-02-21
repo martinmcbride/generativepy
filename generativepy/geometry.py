@@ -1770,6 +1770,31 @@ class Marker(Shape):
         self.draw_function = self._draw_tick
         return self
 
+    def as_parallel(self, size, count=1, gap=2):
+        """
+        Creates a parallel marker of the required size.
+
+        The tick marker is a small crossing the parent line at a right angle. In geometry it is often
+        used to indicate that two lines are parallel.
+
+        Setting `count` to 2 or 3 creates double ot triple markers that can be used iof multiple sets of parallel
+        lines exist. `gap` value controls the gap between the tick marks.
+
+        Args:
+            size: number - the length of the marker.
+            count: number - the number of lines (1, 2, or 3).
+            gap: number - the gap between the lines if `count` > 1.
+
+        Returns:
+            self
+        """
+        self.type = "parallel"
+        self.size = size
+        self.count = count
+        self.gap = gap
+        self.draw_function = self._draw_parallel
+        return self
+
     def _draw_dot(self):
         """
         Drawing function for dot shape. Used internally to the class.
@@ -1808,6 +1833,38 @@ class Marker(Shape):
             pos = (self.centre[0] + self.parallel[0] * self.gap, self.centre[1] + self.parallel[1] * self.gap)
             _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
                           (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+
+    def _draw_parallel(self):
+        """
+        Drawing function for tick shape. Used internally in this method.
+        """
+        def _do_line(a, b, c):
+            self.ctx.move_to(*b)
+            self.ctx.line_to(*a)
+            self.ctx.line_to(*c)
+
+        self.ctx.new_path()
+        if self.count == 1:
+            pos = (self.centre[0], self.centre[1])
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+        if self.count == 2:
+            pos = (self.centre[0] - self.parallel[0] * self.gap / 2, self.centre[1] - self.parallel[1] * self.gap / 2)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+            pos = (self.centre[0] + self.parallel[0] * self.gap / 2, self.centre[1] + self.parallel[1] * self.gap / 2)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+        if self.count == 3:
+            pos = (self.centre[0] - self.parallel[0] * self.gap, self.centre[1] - self.parallel[1] * self.gap)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+            pos = (self.centre[0], self.centre[1])
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+            pos = (self.centre[0] + self.parallel[0] * self.gap, self.centre[1] + self.parallel[1] * self.gap)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
 
     def add(self):
         self._do_path_()
