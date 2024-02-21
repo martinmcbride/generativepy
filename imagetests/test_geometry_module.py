@@ -76,7 +76,30 @@ class TestGeometryImages(unittest.TestCase):
             a = (350, 50)
             b = (350, 150)
             Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            Marker(ctx).of_points(a, b, 0.7).as_dot(size).fill(blue).stroke(red, thickness)
+            Marker(ctx).of_points(a, b, 0.7).as_dot(size).fill(blue).stroke(
+                red, thickness
+            )
+
+            ## Draw lines with ticks
+            a = (50, 250)
+            b = (50, 350)
+            Line(ctx).of_start_end(a, b).stroke(red, thickness)
+            Marker(ctx).of_points(a, b).as_tick(size, 2, 5).stroke(red, thickness)
+
+            a = (100, 250)
+            b = (150, 350)
+            Line(ctx).of_start_end(a, b).stroke(red, thickness)
+            Marker(ctx).of_points(a, b, 0).as_tick(size, 1, 6).stroke(red, thickness)
+
+            a = (250, 250)
+            b = (200, 350)
+            Line(ctx).of_start_end(a, b).stroke(red, thickness)
+            Marker(ctx).of_points(a, b, 1).as_tick(size, 1, 6).stroke(red, thickness)
+
+            a = (350, 250)
+            b = (350, 350)
+            Line(ctx).of_start_end(a, b).stroke(red, thickness)
+            Marker(ctx).of_points(a, b, 0.7).as_tick(size, 3, 5).stroke(red, thickness)
 
         def creator(file):
             make_image(file, draw, 600, 500)
