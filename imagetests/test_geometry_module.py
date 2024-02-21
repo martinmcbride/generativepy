@@ -122,6 +122,13 @@ class TestGeometryImages(unittest.TestCase):
             Line(ctx).of_start_end(a, b).stroke(red, thickness)
             Marker(ctx).of_points(a, b, 0.7).as_parallel(size, 3, 6).stroke(red, thickness)
 
+            c = (450, 250)
+            r = 50
+            Circle(ctx).of_center_radius(c, r).as_arc(math.radians(-90), math.radians(150)).stroke(red, thickness)
+            Marker(ctx).of_circle(c, r, math.radians(0)).as_parallel(size, 1, 6).stroke(red, thickness)
+            Marker(ctx).of_circle(c, r, math.radians(120)).as_parallel(size, 1, 6).stroke(red, thickness)
+            Marker(ctx).of_circle(c, r, math.radians(-80), False).as_parallel(size, 1, 6).stroke(red, thickness)
+
         def creator(file):
             make_image(file, draw, 600, 600)
 

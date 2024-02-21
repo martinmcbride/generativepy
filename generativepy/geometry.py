@@ -1688,9 +1688,6 @@ class Marker(Shape):
 
     def __init__(self, ctx):
         super().__init__(ctx)
-        self.start = None           #Start of parent line
-        self.end = None             #End of parent line
-        self.position = None        #Position between start and end
         self.centre = None          #Calculated centre of marker
         self.parallel = None        #Unit vector pointing from start to end
         self.perpendicular = None   #Unit vector perpendicular to self.parallel
@@ -1716,12 +1713,33 @@ class Marker(Shape):
         Returns:
             self
         """
-        self.start = V(start)
-        self.end = V(end)
-        self.position = position
-        self.centre = self.start.lerp(self.end, self.position)
-        self.parallel = (self.end - self.start).unit
+        start = V(start)
+        end = V(end)
+        self.centre = start.lerp(end, position)
+        self.parallel = (end - start).unit
         self.perpendicular = (-self.parallel[1], self.parallel[0])
+        return self
+
+    def of_circle(self, circle_centre, circle_radius, angle, clockwise=True):
+        """
+        Specifies a marker on a circle.
+
+        The circle is specified by its centre and radius. The position of the marker is determined by the angle value.
+
+        Args:
+            circle_centre: 2-tuple - the position of the centre of the circle.
+            circle_radius: number - the radius of the circle.
+            angle: number - angle of the centre of the marker along the line, clockwise, started from +ve x direction, in radians
+            clockwise: bool - true if arrow points clockwise, false for counterclockwise. Only applies to markers that have a direction.
+
+        Returns:
+            self
+        """
+        circle_centre = V(circle_centre)
+        radius_vector = V.polar(circle_radius, angle)
+        self.centre = circle_centre + radius_vector
+        self.perpendicular = radius_vector.unit
+        self.parallel = V(-self.perpendicular[1], self.perpendicular[0]) if clockwise else V(self.perpendicular[1], -self.perpendicular[0])
         return self
 
     def as_dot(self, size):
@@ -2006,6 +2024,8 @@ class AngleMarker(Shape):
 
 class TickMarker(Shape):
     """
+    Deprecated - use the `Marker` class instead.
+
     The TickMarker class is a special Shape that draws a tick mark (a small line) across an existing line.
 
     An TickMarker can have 1, 2 or 3 ticks. It is normally used to indicate that two or more lines are the same length.
@@ -2123,6 +2143,8 @@ class TickMarker(Shape):
 
 class ParallelMarker(Shape):
     """
+    Deprecated - use the `Marker` class instead.
+
     The ParallelMarker class is a special Shape that draws an arrow mark across an existing line.
 
     An ParallelMarker can have 1, 2 or 3 arrows. It is normally used to indicate that two or more lines are the parallel.
@@ -2243,19 +2265,19 @@ class ParallelMarker(Shape):
 
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
     """
-    Deprecated, use `AngleMarker` class instead
+    Deprecated - use the `Marker` class instead.
     """
     AngleMarker(ctx).of_points(a, b, c).with_count(count).with_radius(radius).with_gap(gap).as_right_angle(right_angle).add()
 
 def tick(ctx, a, b, count=1, length=4, gap=1):
     """
-    Deprecated, use `ParallelMarker` class instead
+    Deprecated - use the `Marker` class instead.
     """
     TickMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
 
 def paratick(ctx, a, b, count=1, length=4, gap=1):
     """
-    Deprecated, use `Ellipse` class instead
+    Deprecated - use the `Marker` class instead.
     """
     ParallelMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
 
