@@ -394,3 +394,135 @@ class Vector():
     def __str__(self):
         return repr(self)
 
+class Vector3:
+    """
+    Class to represent a 3-vector including most of its common operations
+    """
+
+    def __init__(self, *args):
+        """
+        Can either accept 3 numbers, or a tuple containing 3 numerical elements.
+
+        Args:
+            args: various - see above
+
+        Returns:
+            Self
+        """
+        if len(args) == 1 and hasattr(args[0], "__iter__") and len(args[0]) == 3:
+            self.coords = tuple(args[0])
+        elif (
+            len(args) == 3
+            and isinstance(args[0], (int, float))
+            and isinstance(args[1], (int, float))
+            and isinstance(args[2], (int, float))
+        ):
+            self.coords = tuple(args)
+        else:
+            raise ValueError("Vector3 requires a sequence of length 3, or 3 numbers")
+
+    def lerp(self, other, factor):
+        """
+        Interpolate between this vector and other.
+
+        The `factor` parameter works like this:
+
+        * 0 - result is self
+        * 1 - result is other
+        * 0 to 1 - result between self and other
+        * > 1 - result extensds beyond other
+        * < 0 - result extends backwards before other
+
+        Args:
+            other: Vector3 - the other vector
+            factor: number - The interpolation amount.
+
+        Returns:
+            New rotated vector
+        """
+
+        return Vector3(
+            (1 - factor) * self.x + factor * other.x,
+            (1 - factor) * self.y + factor * other.y,
+            (1 - factor) * self.z + factor * other.z,
+        )
+
+    def __iter__(self):
+        return iter(self.coords)
+
+    def __len__(self):
+        return len(self.coords)
+
+    def __getitem__(self, index):
+        return self.coords[index]
+
+    def __eq__(self, other):
+        return isclose(self.x, other.x) and isclose(self.y, other.y)
+
+    def __neg__(self):
+        return self * -1
+
+    def __add__(self, other):
+        return Vector3(self.x + other.x, self.y + other.y, self.z + other.z)
+
+    def __sub__(self, other):
+        # add the negative of `other`
+        return self + (-other)
+
+    def __mul__(self, other):
+
+        # vector * scalar
+        if isinstance(other, (int, float)):
+            return Vector3(other * self.x, other * self.y, other * self.z)
+        return NotImplemented
+
+    def __rmul__(self, other):
+        if isinstance(other, (int, float)):
+            return self.__mul__(other)
+        return NotImplemented
+
+    def __truediv__(self, other):
+
+        # vector / scalar
+        if isinstance(other, (int, float)):
+            return Vector3(self.x / other, self.y / other, self.z / other)
+        else:
+            return NotImplemented
+
+    def __floordiv__(self, other):
+
+        # vector / scalar
+        if isinstance(other, (int, float)):
+            return Vector3(self.x // other, self.y // other, self.z // other)
+        else:
+            return NotImplemented
+
+    @property
+    def x(self):
+        """
+        Read-only property returns x component of vector.
+        """
+        return self.coords[0]
+
+    @property
+    def y(self):
+        """
+        Read-only property returns y component of vector.
+        """
+        return self.coords[1]
+
+    @property
+    def z(self):
+        """
+        Read-only property returns z component of vector.
+        """
+        return self.coords[2]
+
+    # String representation
+    def __repr__(self):
+        return "Vector3({0}, {1}, {2})".format(self.x, self.y, self.z)
+
+    def __str__(self):
+        return repr(self)
+
+
