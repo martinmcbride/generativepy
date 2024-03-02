@@ -1670,6 +1670,226 @@ def ellipse(ctx, center, radius_x, radius_y):
     Ellipse(ctx).of_center_radius(center, radius_x, radius_y).add()
 
 
+class Marker(Shape):
+    """
+    Handles general line markers, such as arrows, ticks, dots etc.
+
+    Markers are separate objects that can be added on top of existing line objects. Typically a marker is created
+    like this:
+
+    `Marker(ctx).of_XXX(...).as_XXX(...).fill(...).stroke(...)`
+
+    The of_XXX determines the position of the marker, for example `of_points` positions the marker somewhere on a line between 2 points.
+
+    The as_XXX determines the type of marker, for example `as_dot` creates a dot marker.
+
+    Depending on the type of marker, it can then be filled, stroked, or both, as required.
+    """
+
+    def __init__(self, ctx):
+        super().__init__(ctx)
+        self.centre = None          #Calculated centre of marker
+        self.parallel = None        #Unit vector pointing from start to end
+        self.perpendicular = None   #Unit vector perpendicular to self.parallel
+        self.draw_function = None
+        self.type = None
+        self.size = None
+        self.count = None
+        self.gap = None
+
+    def of_points(self, start, end, position=0.5):
+        """
+        Specifies a marker on a straight line.
+
+        The `start` and `end` of the line are specified as points. The centre of the marker can be positioned anywhere
+        on the line using the `position` parameter. For example, 0 places the marker at the start, 1 places the marker at the end,
+        0.25 places the marker a quarters of the from the start to the end.
+
+        Args:
+            start: 2-tuple - the position of the start of the line.
+            end: 2-tuple - the position of the end of the line.
+            position: number - the position of the centre of the marker along the line
+
+        Returns:
+            self
+        """
+        start = V(start)
+        end = V(end)
+        self.centre = start.lerp(end, position)
+        self.parallel = (end - start).unit
+        self.perpendicular = (-self.parallel[1], self.parallel[0])
+        return self
+
+    def of_circle(self, circle_centre, circle_radius, angle, clockwise=True):
+        """
+        Specifies a marker on a circle.
+
+        The circle is specified by its centre and radius. The position of the marker is determined by the angle value.
+
+        Args:
+            circle_centre: 2-tuple - the position of the centre of the circle.
+            circle_radius: number - the radius of the circle.
+            angle: number - angle of the centre of the marker along the line, clockwise, started from +ve x direction, in radians
+            clockwise: bool - true if arrow points clockwise, false for counterclockwise. Only applies to markers that have a direction.
+
+        Returns:
+            self
+        """
+        circle_centre = V(circle_centre)
+        radius_vector = V.polar(circle_radius, angle)
+        self.centre = circle_centre + radius_vector
+        self.perpendicular = radius_vector.unit
+        self.parallel = V(-self.perpendicular[1], self.perpendicular[0]) if clockwise else V(self.perpendicular[1], -self.perpendicular[0])
+        return self
+
+    def as_dot(self, size):
+        """
+        Creates a round dot marker of the required radius.
+
+        For a simple dot marker, simply fill the shape with the required colour.
+
+        For a different effect, you can fill and stroke the shape in different colours. For a "hollow" circle
+        marker, fill the shape with the background colour and stroke it with the same colour and thickness as
+        the line it is attached to.
+
+        Args:
+            size: number - the radius of the marker.
+
+        Returns:
+            self
+        """
+        self.type = "dot"
+        self.size = size
+        self.draw_function = self._draw_dot
+        return self
+
+    def as_tick(self, size, count=1, gap=2):
+        """
+        Creates a tick marker of the required size.
+
+        The tick marker is a short line crossing the parent line at a right angle. In geometry it is often
+        used to indicate that two lines have equal length.
+
+        Setting `count` to 2 or 3 creates double ot triple markers that can be used iof multiple sets of equal
+        lines exist. `gap` value controls the gap between the tick marks.
+
+        Args:
+            size: number - the length of the marker.
+            count: number - the number of lines (1, 2, or 3).
+            gap: number - the gap between the lines if `count` > 1.
+
+        Returns:
+            self
+        """
+        self.type = "tick"
+        self.size = size
+        self.count = count
+        self.gap = gap
+        self.draw_function = self._draw_tick
+        return self
+
+    def as_parallel(self, size, count=1, gap=2):
+        """
+        Creates a parallel marker of the required size.
+
+        The tick marker is a small crossing the parent line at a right angle. In geometry it is often
+        used to indicate that two lines are parallel.
+
+        Setting `count` to 2 or 3 creates double ot triple markers that can be used iof multiple sets of parallel
+        lines exist. `gap` value controls the gap between the tick marks.
+
+        Args:
+            size: number - the length of the marker.
+            count: number - the number of lines (1, 2, or 3).
+            gap: number - the gap between the lines if `count` > 1.
+
+        Returns:
+            self
+        """
+        self.type = "parallel"
+        self.size = size
+        self.count = count
+        self.gap = gap
+        self.draw_function = self._draw_parallel
+        return self
+
+    def _draw_dot(self):
+        """
+        Drawing function for dot shape. Used internally to the class.
+        """
+        self.ctx.arc(self.centre[0], self.centre[1], self.size, 0, 2 * math.pi)
+        if self.final_close:
+            self.ctx.close_path()
+
+    def _draw_tick(self):
+        """
+        Drawing function for tick shape. Used internally in this method.
+        """
+        def _do_line(a, b):
+            self.ctx.move_to(*a)
+            self.ctx.line_to(*b)
+
+        self.ctx.new_path()
+        if self.count == 1:
+            pos = (self.centre[0], self.centre[1])
+            _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
+                          (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+        elif self.count == 2:
+            pos = (self.centre[0] - self.parallel[0] * self.gap / 2, self.centre[1] - self.parallel[1] * self.gap / 2)
+            _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
+                          (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+            pos = (self.centre[0] + self.parallel[0] * self.gap / 2, self.centre[1] + self.parallel[1] * self.gap / 2)
+            _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
+                          (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+        elif self.count == 3:
+            pos = (self.centre[0] - self.parallel[0] * self.gap, self.centre[1] - self.parallel[1] * self.gap)
+            _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
+                          (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+            pos = (self.centre[0], self.centre[1])
+            _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
+                          (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+            pos = (self.centre[0] + self.parallel[0] * self.gap, self.centre[1] + self.parallel[1] * self.gap)
+            _do_line((pos[0] + self.perpendicular[0] * self.size / 2, pos[1] + self.perpendicular[1] * self.size / 2),
+                          (pos[0] - self.perpendicular[0] * self.size / 2, pos[1] - self.perpendicular[1] * self.size / 2))
+
+    def _draw_parallel(self):
+        """
+        Drawing function for tick shape. Used internally in this method.
+        """
+        def _do_line(a, b, c):
+            self.ctx.move_to(*b)
+            self.ctx.line_to(*a)
+            self.ctx.line_to(*c)
+
+        self.ctx.new_path()
+        if self.count == 1:
+            pos = (self.centre[0], self.centre[1])
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+        if self.count == 2:
+            pos = (self.centre[0] - self.parallel[0] * self.gap / 2, self.centre[1] - self.parallel[1] * self.gap / 2)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+            pos = (self.centre[0] + self.parallel[0] * self.gap / 2, self.centre[1] + self.parallel[1] * self.gap / 2)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+        if self.count == 3:
+            pos = (self.centre[0] - self.parallel[0] * self.gap, self.centre[1] - self.parallel[1] * self.gap)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+            pos = (self.centre[0], self.centre[1])
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+            pos = (self.centre[0] + self.parallel[0] * self.gap, self.centre[1] + self.parallel[1] * self.gap)
+            _do_line(pos, (pos[0] + (-self.parallel[0] + self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] + self.perpendicular[1]) * self.size / 2),
+                     (pos[0] + (-self.parallel[0] - self.perpendicular[0]) * self.size / 2, pos[1] + (-self.parallel[1] - self.perpendicular[1]) * self.size / 2))
+
+    def add(self):
+        self._do_path_()
+        self.draw_function()
+        return self
+
+
 class AngleMarker(Shape):
     """
     The AngleMarker class is a special Shape that draws an angle marker.
@@ -1804,6 +2024,8 @@ class AngleMarker(Shape):
 
 class TickMarker(Shape):
     """
+    Deprecated - use the `Marker` class instead.
+
     The TickMarker class is a special Shape that draws a tick mark (a small line) across an existing line.
 
     An TickMarker can have 1, 2 or 3 ticks. It is normally used to indicate that two or more lines are the same length.
@@ -1921,6 +2143,8 @@ class TickMarker(Shape):
 
 class ParallelMarker(Shape):
     """
+    Deprecated - use the `Marker` class instead.
+
     The ParallelMarker class is a special Shape that draws an arrow mark across an existing line.
 
     An ParallelMarker can have 1, 2 or 3 arrows. It is normally used to indicate that two or more lines are the parallel.
@@ -2041,19 +2265,19 @@ class ParallelMarker(Shape):
 
 def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
     """
-    Deprecated, use `AngleMarker` class instead
+    Deprecated - use the `Marker` class instead.
     """
     AngleMarker(ctx).of_points(a, b, c).with_count(count).with_radius(radius).with_gap(gap).as_right_angle(right_angle).add()
 
 def tick(ctx, a, b, count=1, length=4, gap=1):
     """
-    Deprecated, use `ParallelMarker` class instead
+    Deprecated - use the `Marker` class instead.
     """
     TickMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
 
 def paratick(ctx, a, b, count=1, length=4, gap=1):
     """
-    Deprecated, use `Ellipse` class instead
+    Deprecated - use the `Marker` class instead.
     """
     ParallelMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
 
