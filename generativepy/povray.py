@@ -650,6 +650,35 @@ def make_povray_frame(draw, width, height):
     return rgbadata
 
 
+def make_povray_frames(draw, width, height, count):
+    """
+    Used to sequence of povray images as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, 3). Povray images
+    are always RGB images.
+
+    `make_povray_frames` repetedly calls the user supplied `draw` function to create a series of povray scenes. On each call to `draw`, the
+    `frame_no` parameter. It runs from 0 ro `count` -1.
+
+    Each image is rendered to a NumPy array (a "frame").
+
+    The draw function must have the signature described for `example_draw_function`.
+
+    Args:
+        draw: function - A drawing function object, see below.
+        width: int - The width of the image that will be created, in pixels.
+        height: int - The height of the image that will be created, in pixels.
+        count: int - The number of frames to create.
+
+    Yield:
+        A lazy iterator returning a sequncve of frames. The number of frames is determined by the `count` parameter.
+    """
+    for i in range(count):
+        scene = draw(width, height, i, count)
+        rgbdata = scene.render(width=width, height=height, antialiasing=0.001)
+        rgbadata = np.full((width, height, 4), 255)
+        rgbadata[:, :, :-1] = rgbdata
+        yield rgbadata
+
+
 def example_povray_draw_function(pixel_width, pixel_height, frame_no, frame_count):
     """
     This is an example draw function for use with `make_povray_image` and similar functions. It is a dummy
