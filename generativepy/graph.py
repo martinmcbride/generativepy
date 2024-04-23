@@ -11,11 +11,17 @@ import copy
 from dataclasses import dataclass
 
 from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters
-from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL
+from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER
 from generativepy.color import Color
 from generativepy import drawing
 
+# Point styles for graphs
+POINT_CIRCLE = 0 # Circular points
 
+# Point styles for graphs
+SCATTER_NO_LINE = 0 # All points on scatter chart are left unconnected
+SCATTER_STALK = 1 # Stalk chart style
+SCATTER_CONNECTED = 2 # Points are joined one to the next
 
 @dataclass
 class AxesAppearance:
@@ -564,7 +570,9 @@ class Scatter():
         self.axes = axes
         self.points = []
         self.stroke_params = StrokeParameters()
-        self.fill = Color(0)
+        self.fill = FillParameters()
+        self.point_style = POINT_CIRCLE
+        self.point_size = 4
 
     def stroke(self, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
         """
@@ -586,20 +594,23 @@ class Scatter():
         self.stroke_params = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
         return self
 
-    def point_style(self, size, style, pattern=Color(0), fill_rule=WINDING):
+    def with_point_style(self, size, style=POINT_CIRCLE, pattern=Color(0), fill_rule=WINDING):
         """
         Sets the style of the points
         Args:
             size: number - the size of the point in user space.
-            style: POINTXXX constant - the style of the point
+            style: POINTXXX constant - the style of the point. Default circular.
             pattern: the fill `Pattern` or `Color` to use for the points.
             fill_rule: the fill rule to use for the points
 
         Returns:
             self
         """
+        self.point_style = style
+        self.point_size = 4
+        self.fill = FillParameters(pattern, fill_rule)
 
-    def of_scatter(self, x_values, y_values, style):
+    def of_scatter(self, x_values, y_values, style=SCATTER_NO_LINE):
         '''
         Plot a scatter chart of the sample values
 
@@ -607,7 +618,7 @@ class Scatter():
             x_values: sequence of numbers - the x values for each sample.
             y_values: sequence of numbers - the y values for each sample. The number of x and y values should be equal. If not,
             the minimum count will be used. Eg if there are 10 x values and 8 y values, only 8 points will be plotted.
-            style: SCATTERXXX constant - the style of the plot.
+            style: SCATTERXXX constant - the style of the plot. Defaul no line.
 
         Returns:
             self
