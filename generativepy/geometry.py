@@ -381,10 +381,11 @@ class Shape():
         """
         Fill the shape. This draws the shape to the supplied context.
 
-        Parameters are as described for `FillParameters`.
+        Parameters are as described for `FillParameters`. Alternatively, if a `FillParameters` object is supplied as a pattern, it will be used and the
+        other parameters will be ignored.
 
         Args:
-            pattern: the fill `Pattern` or `Color` to use, None for default
+            pattern: the fill `Pattern` or `Color` to use, or a `FillParameters` object. None for default
             fill_rule: the fill rule to use, None for default.
 
         Returns:
@@ -394,7 +395,10 @@ class Shape():
             self.add()
             self.added = True
 
-        FillParameters(pattern, fill_rule).apply(self.ctx)
+        if isinstance(pattern, FillParameters):
+            pattern.apply(self.ctx)
+        else:
+            FillParameters(pattern, fill_rule).apply(self.ctx)
 
         self.ctx.fill_preserve()
         return self
@@ -403,10 +407,11 @@ class Shape():
         """
         Outline the shape. This draws the shape to the supplied context.
 
-        Parameters are as described for `StrokeParameters`.
+        Parameters are as described for `StrokeParameters`.  Alternatively, if a `StrokeParameters` object is supplied as a pattern, it will be used and the
+        other parameters will be ignored.
 
         Args:
-            pattern:  the fill `Pattern` or `Color` to use for the outline, None for default
+            pattern:  the fill `Pattern` or `Color` to use for the outline, or a `StrokeParameters` object. None for default
             line_width: width of stroke line. None for default
             dash: sequence, dash patter of line. None for default
             cap: line end style, None for default.
@@ -420,7 +425,10 @@ class Shape():
             self.add()
             self.added = True
 
-        StrokeParameters(pattern, line_width, dash, cap, join, miter_limit).apply(self.ctx)
+        if isinstance(pattern, StrokeParameters):
+            pattern.apply(self.ctx)
+        else:
+            StrokeParameters(pattern, line_width, dash, cap, join, miter_limit).apply(self.ctx)
 
         self.ctx.stroke_preserve()
         return self

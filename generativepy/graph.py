@@ -10,10 +10,18 @@ import numpy as np
 import copy
 from dataclasses import dataclass
 
-from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters
-from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL
+from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters, Circle, Polygon, Line
+from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER
 from generativepy.color import Color
 from generativepy import drawing
+
+# Point styles for graphs
+POINT_CIRCLE = 0  # Circular points
+
+# Point styles for graphs
+SCATTER_NO_LINE = 0  # All points on scatter chart are left unconnected
+SCATTER_STALK = 1  # Stalk chart style
+SCATTER_CONNECTED = 2  # Points are joined one to the next
 
 @dataclass
 class AxesAppearance:
@@ -550,5 +558,85 @@ class Plot(Shape):
             self.points += [self.axes.transform_from_graph(p) for p in close]
             self.closed = True
         return self
+
+
+class Scatter:
+    '''
+    Plot a scatter chart in a set of axes.
+    Note that a Scatter plot is not a `Shape` object. It simply draws a scatter plot on the supplied axes.
+    '''
+
+    def __init__(self, axes):
+        self.axes = axes
+        self.ctx = axes.ctx
+        self.stroke_params = StrokeParameters()
+        self.fill = FillParameters()
+        self.point_style = POINT_CIRCLE
+        self.point_size = 4
+        self.line_style = SCATTER_NO_LINE
+
+    def with_line_style(self, style=SCATTER_NO_LINE, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
+        """
+        Outline the shape. This draws the shape to the supplied context.
+
+        Parameters are as described for `StrokeParameters`.
+
+        Args:
+            style: SCATTERXXX constant - the style of the plot. Default no line.
+            pattern:  the fill `Pattern` or `Color` to use for the outline, None for default
+            line_width: width of stroke line. None for default
+            dash: sequence, dash patter of line. None for default
+            cap: line end style, None for default.
+            join: line join style, None for default.
+            miter_limit: mitre limit, number, None for default
+
+        Returns:
+            self
+        """
+        self.line_style = style
+        self.stroke_params = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
+        return self
+
+    def with_point_style(self, size, style=POINT_CIRCLE, pattern=Color(0), fill_rule=WINDING):
+        """
+        Sets the style of the points
+        Args:
+            size: number - the size of the point in user space.
+            style: POINTXXX constant - the style of the point. Default circular.
+            pattern: the fill `Pattern` or `Color` to use for the points.
+            fill_rule: the fill rule to use for the points
+
+        Returns:
+            self
+        """
+        self.point_style = style
+        self.point_size = size
+        self.fill = FillParameters(pattern, fill_rule)
+        return self
+
+    def plot(self, x_values, y_values):
+        '''
+        Plot a scatter chart of the sample values
+
+        Args:
+            x_values: sequence of numbers - the x values for each sample.
+            y_values: sequence of numbers - the y values for each sample. The number of x and y values should be equal. If not,
+            the minimum count will be used. Eg if there are 10 x values and 8 y values, only 8 points will be plotted.
+
+        Returns:
+            self
+        '''
+
+        points = [self.axes.transform_from_graph((x, y)) for x, y in zip(x_values, y_values)]
+        if self.line_style == SCATTER_CONNECTED:
+            Polygon(self.ctx).of_points(points).open().stroke(self.stroke_params)
+        if self.line_style == SCATTER_STALK:
+            bases = [self.axes.transform_from_graph((x, 0)) for x in x_values]
+            for p, b in zip(points, bases):
+                Line(self.ctx).of_start_end(b, p).stroke(self.stroke_params)
+        for p in points:
+            Circle(self.ctx).of_center_radius(p, self.point_size).fill(self.fill.pattern, self.fill.fill_rule)
+        return self
+
 
 
