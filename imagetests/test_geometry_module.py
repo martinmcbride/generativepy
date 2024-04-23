@@ -6,7 +6,7 @@ from generativepy.drawing import (
     ROUND,
     BEVEL,
     FONT_WEIGHT_BOLD,
-    FONT_SLANT_ITALIC,
+    FONT_SLANT_ITALIC, EVEN_ODD,
 )
 from image_test_helper import run_image_test
 from generativepy.color import Color
@@ -40,6 +40,7 @@ from generativepy.geometry import (
     TickMarker,
     RegularPolygon,
     Marker,
+    FillParameters, StrokeParameters,
 )
 import math
 
@@ -106,28 +107,42 @@ class TestGeometryImages(unittest.TestCase):
             b = (50, 550)
             Line(ctx).of_start_end(a, b).stroke(red, thickness)
             Marker(ctx).of_points(a, b).as_parallel(size, 2, 6).stroke(red, thickness)
-    
+
             a = (100, 450)
             b = (150, 550)
             Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            Marker(ctx).of_points(a, b, 0).as_parallel(size, 1, 6).stroke(red, thickness)
-    
+            Marker(ctx).of_points(a, b, 0).as_parallel(size, 1, 6).stroke(
+                red, thickness
+            )
+
             a = (250, 450)
             b = (200, 550)
             Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            Marker(ctx).of_points(a, b, 1).as_parallel(size, 1, 6).stroke(red, thickness)
-    
+            Marker(ctx).of_points(a, b, 1).as_parallel(size, 1, 6).stroke(
+                red, thickness
+            )
+
             a = (350, 450)
             b = (350, 550)
             Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            Marker(ctx).of_points(a, b, 0.7).as_parallel(size, 3, 6).stroke(red, thickness)
+            Marker(ctx).of_points(a, b, 0.7).as_parallel(size, 3, 6).stroke(
+                red, thickness
+            )
 
             c = (450, 250)
             r = 50
-            Circle(ctx).of_center_radius(c, r).as_arc(math.radians(-90), math.radians(150)).stroke(red, thickness)
-            Marker(ctx).of_circle(c, r, math.radians(0)).as_parallel(size, 1, 6).stroke(red, thickness)
-            Marker(ctx).of_circle(c, r, math.radians(120)).as_parallel(size, 1, 6).stroke(red, thickness)
-            Marker(ctx).of_circle(c, r, math.radians(-80), False).as_parallel(size, 1, 6).stroke(red, thickness)
+            Circle(ctx).of_center_radius(c, r).as_arc(
+                math.radians(-90), math.radians(150)
+            ).stroke(red, thickness)
+            Marker(ctx).of_circle(c, r, math.radians(0)).as_parallel(size, 1, 6).stroke(
+                red, thickness
+            )
+            Marker(ctx).of_circle(c, r, math.radians(120)).as_parallel(
+                size, 1, 6
+            ).stroke(red, thickness)
+            Marker(ctx).of_circle(c, r, math.radians(-80), False).as_parallel(
+                size, 1, 6
+            ).stroke(red, thickness)
 
         def creator(file):
             make_image(file, draw, 600, 600)
@@ -972,3 +987,23 @@ class TestGeometryImages(unittest.TestCase):
             make_image(file, draw, 500, 500)
 
         self.assertTrue(run_image_test("test_transform.png", creator))
+
+    def test_parameters(self):
+        """
+        Test geometry objects using FillParameters and StrokeParameters
+        Returns:
+
+        """
+
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, width=5, background=Color(0.8))
+
+            fill = FillParameters(Color("tomato"), EVEN_ODD)
+            stroke = StrokeParameters(Color("indigo"), 0.05, cap=BUTT, join=BEVEL, dash=(0.1,))
+
+            Circle(ctx).of_center_radius((2.5, 1), 0.7).fill(fill).stroke(stroke)
+
+        def creator(file):
+            make_image(file, draw, 500, 500)
+
+        self.assertTrue(run_image_test("test_parameters.png", creator))
