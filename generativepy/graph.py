@@ -15,6 +15,8 @@ from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL
 from generativepy.color import Color
 from generativepy import drawing
 
+
+
 @dataclass
 class AxesAppearance:
     '''
@@ -550,5 +552,77 @@ class Plot(Shape):
             self.points += [self.axes.transform_from_graph(p) for p in close]
             self.closed = True
         return self
+
+
+class Scatter():
+    '''
+    Plot a scatter chart in a set of axes.
+    Note that a Scatter plot is not a `Shape` object. It simply draws a scatter plot on the supplied axes.
+    '''
+
+    def __init__(self, axes):
+        self.axes = axes
+        self.points = []
+        self.stroke_params = StrokeParameters()
+        self.fill = Color(0)
+
+    def stroke(self, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
+        """
+        Outline the shape. This draws the shape to the supplied context.
+
+        Parameters are as described for `StrokeParameters`.
+
+        Args:
+            pattern:  the fill `Pattern` or `Color` to use for the outline, None for default
+            line_width: width of stroke line. None for default
+            dash: sequence, dash patter of line. None for default
+            cap: line end style, None for default.
+            join: line join style, None for default.
+            miter_limit: mitre limit, number, None for default
+
+        Returns:
+            self
+        """
+        self.stroke_params = StrokeParameters(pattern, line_width, dash, cap, join, miter_limit)
+        return self
+
+    def point_style(self, size, style, pattern=Color(0), fill_rule=WINDING):
+        """
+        Sets the style of the points
+        Args:
+            size: number - the size of the point in user space.
+            style: POINTXXX constant - the style of the point
+            pattern: the fill `Pattern` or `Color` to use for the points.
+            fill_rule: the fill rule to use for the points
+
+        Returns:
+            self
+        """
+
+    def of_scatter(self, x_values, y_values, style):
+        '''
+        Plot a scatter chart of the sample values
+
+        Args:
+            x_values: sequence of numbers - the x values for each sample.
+            y_values: sequence of numbers - the y values for each sample. The number of x and y values should be equal. If not,
+            the minimum count will be used. Eg if there are 10 x values and 8 y values, only 8 points will be plotted.
+            style: SCATTERXXX constant - the style of the plot.
+
+        Returns:
+            self
+        '''
+        self.points = []
+        start = self.axes.start[0]
+        end = self.axes.start[0] + self.axes.extent[0]
+        if extent:
+            start = max(start, extent[0])
+            end = min(end, extent[1])
+        self.points += [self.axes.transform_from_graph((x, fn(x))) for x in np.linspace(start, end, precision)]
+        if close:
+            self.points += [self.axes.transform_from_graph(p) for p in close]
+            self.closed = True
+        return self
+
 
 
