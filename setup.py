@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
  
 setup(name='generativepy',
-      version='23.11',
+      version='24.04',
       url='https://github.com/martinmcbride/generativepy',
       license='MIT',
       author='Martin McBride',
