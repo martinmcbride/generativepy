@@ -501,7 +501,7 @@ class Plot(Shape):
         '''
         self.points = []
         start = self.axes.start[1]
-        end = self.axes.start[1] + self.axes.extent[0]
+        end = self.axes.start[1] + self.axes.extent[1]
         if extent:
             start = max(start, extent[0])
             end = min(end, extent[1])
