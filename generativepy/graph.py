@@ -14,6 +14,7 @@ from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters,
 from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER
 from generativepy.color import Color
 from generativepy import drawing
+from generativepy.math import Vector as V
 
 # Point styles for graphs
 POINT_CIRCLE = 0  # Circular points
@@ -405,14 +406,34 @@ class Axes:
 
     def transform_from_graph(self, point):
         '''
-        Scale the ctx so that point (x, y) will be correctly positioned in the axes coordinates
+        Coverts a point/list of points defined in axes coordinates to the equivalent vector(s) in user space
+
+        Args:
+            point: Either a single point (a sequence of 2 numbers), or a sequence of points
 
         Returns:
-            x, y
+            User space vector
         '''
-        x = ((point[0] - self.start[0]) * self.width / self.extent[0]) + self.position[0]
-        y = self.height + self.position[1] - ((point[1] - self.start[1]) * self.height / self.extent[1])
-        return x, y
+
+        def _transform_point(point): # Transform a single point
+            if not (hasattr(point, "__getitem__") and hasattr(point, "__iter__") and hasattr(point, "__len__")):
+                raise TypeError("point must be a List, Tuple or Vector")
+            if len(point) != 2:
+                raise ValueError("point must have 2 elements")
+            x = ((point[0] - self.start[0]) * self.width / self.extent[0]) + self.position[0]
+            y = self.height + self.position[1] - ((point[1] - self.start[1]) * self.height / self.extent[1])
+            return V(x, y)
+
+        if not (hasattr(point, "__getitem__") and hasattr(point, "__iter__") and hasattr(point, "__len__")):
+            raise TypeError("point must be a List, Tuple or Vector")
+        if len(point) > 0 and type(point[0]) in (int, float):
+            # If there is at least one element and it is a number, assume it is a single point
+            return _transform_point(point)
+        else:
+            # All other cases assume it is a list of (zero or more) points
+            return [_transform_point(p) for p in point]
+
+
 
 
 class Plot(Shape):
