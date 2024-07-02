@@ -19,6 +19,23 @@ def compare_images(path1, path2):
             diff = ImageChops.difference(im1, im2)
             if diff.getbbox():
                 diff.save(path1+"difference.png")
+                R, G, B = diff.convert('RGB').split()
+                r = R.load()
+                g = G.load()
+                b = B.load()
+                w, h = diff.size
+
+                # Convert non-black pixels to white
+                for i in range(w):
+                    for j in range(h):
+                        if (r[i, j] != 0 or g[i, j] != 0 or b[i, j] != 0):
+                            r[i, j] = 255
+                            g[i, j] = 255
+                            b[i, j] = 255
+
+                # Merge just the R channel as all channels
+                im = Image.merge('RGB', (R, R, R))
+                im.save(path1+"diff-enhance.png")
                 return False
 
     return True

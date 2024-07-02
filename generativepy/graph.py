@@ -426,7 +426,7 @@ class Axes:
 
         if not (hasattr(point, "__getitem__") and hasattr(point, "__iter__") and hasattr(point, "__len__")):
             raise TypeError("point must be a List, Tuple or Vector")
-        if len(point) > 0 and type(point[0]) in (int, float):
+        if len(point) > 0 and isinstance(point[0], (int, float)):
             # If there is at least one element and it is a number, assume it is a single point
             return _transform_point(point)
         else:
