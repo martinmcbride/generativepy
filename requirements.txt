@@ -1,6 +1,5 @@
-generativepy~=24.11
 numpy~=1.26.4
-cairo~=1.27.0
+pycairo~=1.27.0
 pillow~=10.4.0
 setuptools~=75.6.0
 vapory~=0.1.2
