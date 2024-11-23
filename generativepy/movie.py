@@ -14,8 +14,8 @@ import numpy as np
 from PIL import Image
 from generativepy.utils import temp_file
 from moviepy.audio.io.AudioFileClip import AudioFileClip
-from moviepy.editor import VideoClip
-from moviepy.video.compositing.concatenate import concatenate_videoclips
+from moviepy.video import VideoClip
+from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
 import subprocess as sp
 import pathlib
 import logging
