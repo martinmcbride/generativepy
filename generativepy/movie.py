@@ -14,7 +14,7 @@ import numpy as np
 from PIL import Image
 from generativepy.utils import temp_file
 from moviepy.audio.io.AudioFileClip import AudioFileClip
-from moviepy.video import VideoClip
+from moviepy.video.VideoClip import VideoClip
 from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
 import subprocess as sp
 import pathlib
@@ -114,8 +114,8 @@ def create_videoclip(frames, duration, frame_rate, audio_in=None):
     video_clip = VideoClip(make_frame, duration=duration)
     if audio_in:
         print("Adding audio clip", audio_in)
-        audio_clip = AudioFileClip(audio_in).subclip(0, duration)
-        video_clip = video_clip.set_audio(audio_clip)
+        audio_clip = AudioFileClip(audio_in).subclipped(0, duration)
+        video_clip = video_clip.with_audio(audio_clip)
     return video_clip
 
 
