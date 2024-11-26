@@ -19,6 +19,7 @@ from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
 import subprocess as sp
 import pathlib
 import logging
+import time
 
 
 def normalise_array(array):
@@ -193,4 +194,4 @@ class MovieBuilder():
                        "-shortest",
                        "-r", str(self.frame_rate),
                        video_out ]
-            process = sp.Popen(command)
+            process = sp.run(command)
