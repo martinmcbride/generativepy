@@ -40,6 +40,26 @@ class TestGraphImages(unittest.TestCase):
 
         self.assertTrue(run_image_test("test_graph_simple.png", creator))
 
+    def test_graph_border(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            # Creates a set of axes.
+            axes = Axes(ctx, position=(50, 50), width=500, height=400).of_start((-4, -3)).of_extent((10, 8)).with_border(True)
+            axes.draw()
+
+            # Add various curves
+            axes.clip()
+            Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color("red"))
+            Plot(axes).of_xy_function(lambda x: 1.5**x).stroke(pattern=Color("green"))
+            Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color("blue"))
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test("test_graph_border.png", creator))
+
     def test_graph_multiple(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(1))

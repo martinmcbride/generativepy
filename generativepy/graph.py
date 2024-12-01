@@ -45,6 +45,7 @@ class AxesAppearance:
     y_div_formatter: any = None
     start: any = (0, 0)
     extent: any = (10, 10)
+    border: any = False
 
     # x and y offset of tick labels. The actual offset is:
     # text height (height of 0 character using fontparams) DIVIDED by ticklabeloffset
@@ -134,6 +135,19 @@ class Axes:
         '''
         self.appearance.subdivisions = True
         self.appearance.subdivisionfactor = factor
+        return self
+
+    def with_border(self, has_border):
+        '''
+        Draw subdivision lines on graph
+
+        Args:
+            factor: (x, y) Number of subdivisions per division in each direction
+
+        Returns:
+            self
+        '''
+        self.appearance.border = has_border
         return self
 
     def background(self, pattern):
@@ -253,18 +267,20 @@ class Axes:
         self._draw_axes()
         self._draw_axes_values()
         self.unclip()
+        if self.appearance.border:
+            self._draw_border()
 
     def _draw_background(self):
         self.appearance.background.apply(self.ctx)
         self.ctx.rectangle(self.position[0], self.position[1], self.width, self.height)
         self.ctx.fill()
 
-    def draw_border(self):
-        params = copy.copy(self.appearance.divlines)
+    def _draw_border(self):
+        params = copy.copy(self.appearance.axislines)
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
         self.ctx.rectangle(self.position[0], self.position[1], self.width, self.height)
-        #self.ctx.stroke()
+        self.ctx.stroke()
 
     def _draw_divlines(self):
         params = copy.copy(self.appearance.divlines)
