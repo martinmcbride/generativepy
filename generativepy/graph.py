@@ -25,6 +25,12 @@ SCATTER_NO_LINE = 0  # All points on scatter chart are left unconnected
 SCATTER_STALK = 1  # Stalk chart style
 SCATTER_CONNECTED = 2  # Points are joined one to the next
 
+# Axis positions
+AXIS_NONE = 0
+AXIS_ZERO = 1
+AXIS_MIN = 2
+AXIS_MAX = 3
+
 @dataclass
 class AxesAppearance:
     '''
@@ -46,6 +52,8 @@ class AxesAppearance:
     start: any = (0, 0)
     extent: any = (10, 10)
     border: any = False
+    x_axis_pos: int = AXIS_ZERO
+    y_axis_pos: int = AXIS_ZERO
 
     # x and y offset of tick labels. The actual offset is:
     # text height (height of 0 character using fontparams) DIVIDED by ticklabeloffset
@@ -107,7 +115,7 @@ class Axes:
 
     def with_divisions(self, divisions):
         '''
-        Set divisons spacing
+        Set divisions spacing
 
         Args:
             divisions: (x, y) spacing divisions in each direction
@@ -116,6 +124,23 @@ class Axes:
             self
         '''
         self.appearance.divisions = divisions
+        return self
+
+    def with_axis_positions(self, x_axis_pos, y_axis_pos):
+        '''
+        Set axis positions
+
+        x and y axes can be individually positioned at zero, at the minimum edge, at the maximum edge, or not shows at all
+
+        Args:
+            x_axis_pos: Position of x axis
+            y_axis_pos: Position of y axis
+
+        Returns:
+            self
+        '''
+        self.appearance.x_axis_pos = x_axis_pos
+        self.appearance.y_axis_pos = y_axis_pos
         return self
 
     def with_division_formatters(self, x_div_formatter=None, y_div_formatter=None):
@@ -265,7 +290,6 @@ class Axes:
             self._draw_subdivlines()
         self._draw_divlines()
         self._draw_axes()
-        self._draw_axes_values()
         self.unclip()
         if self.appearance.border:
             self._draw_border()
@@ -319,42 +343,44 @@ class Axes:
         self.ctx.arc(*self.transform_from_graph((0, 0)), self.appearance.text_height/1.1, 0, 2 * math.pi)
         self.ctx.stroke()
 
-    def _draw_axes_values(self):
         params = copy.copy(self.appearance.axislines)
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
 
-        xoffset = self.appearance.text_height/self.appearance.ticklabeloffset
-        yoffset = self.appearance.text_height/self.appearance.ticklabeloffset
-        for p in self._get_divs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0]):
-            if abs(p)>0.001:
-                position = self.transform_from_graph((p, 0))
-                pstr = self._format_div(p, self.appearance.divisions[0], self.appearance.x_div_formatter)
-                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
-                    .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
-                          self.appearance.fontparams.slant) \
-                    .size(self.appearance.fontparams.size*self.appearance.featurescale) \
-                    .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
-                params.apply(self.ctx)
-                self.ctx.new_path()
-                self.ctx.move_to(position[0], position[1])
-                self.ctx.line_to(position[0], position[1] + yoffset)
-                self.ctx.stroke()
+        xoffset = self.appearance.text_height / self.appearance.ticklabeloffset
+        yoffset = self.appearance.text_height / self.appearance.ticklabeloffset
 
-        for p in self._get_divs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1]):
-            if abs(p)>0.001:
-                position = self.transform_from_graph((0, p))
-                pstr = self._format_div(p, self.appearance.divisions[1], self.appearance.y_div_formatter)
-                Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
-                    .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
-                          self.appearance.fontparams.slant) \
-                    .size(self.appearance.fontparams.size*self.appearance.featurescale) \
-                    .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
-                params.apply(self.ctx)
-                self.ctx.new_path()
-                self.ctx.move_to(position[0], position[1])
-                self.ctx.line_to(position[0] - xoffset, position[1])
-                self.ctx.stroke()
+        if self.appearance.x_axis_pos != AXIS_NONE:
+            for p in self._get_divs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0]):
+                if abs(p)>0.001:
+                    position = self.transform_from_graph((p, 0))
+                    pstr = self._format_div(p, self.appearance.divisions[0], self.appearance.x_div_formatter)
+                    Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
+                        .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
+                              self.appearance.fontparams.slant) \
+                        .size(self.appearance.fontparams.size*self.appearance.featurescale) \
+                        .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
+                    params.apply(self.ctx)
+                    self.ctx.new_path()
+                    self.ctx.move_to(position[0], position[1])
+                    self.ctx.line_to(position[0], position[1] + yoffset)
+                    self.ctx.stroke()
+
+        if self.appearance.y_axis_pos != AXIS_NONE:
+            for p in self._get_divs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1]):
+                if abs(p)>0.001:
+                    position = self.transform_from_graph((0, p))
+                    pstr = self._format_div(p, self.appearance.divisions[1], self.appearance.y_div_formatter)
+                    Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
+                        .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
+                              self.appearance.fontparams.slant) \
+                        .size(self.appearance.fontparams.size*self.appearance.featurescale) \
+                        .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
+                    params.apply(self.ctx)
+                    self.ctx.new_path()
+                    self.ctx.move_to(position[0], position[1])
+                    self.ctx.line_to(position[0] - xoffset, position[1])
+                    self.ctx.stroke()
 
     def clip(self):
         '''

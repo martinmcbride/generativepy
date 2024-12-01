@@ -11,7 +11,7 @@ from generativepy.drawing import (
 )
 from image_test_helper import run_image_test
 from generativepy.color import Color
-from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance
+from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance, AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX
 from generativepy.geometry import LinearGradient, FillParameters, FontParameters, StrokeParameters
 
 """
@@ -403,3 +403,29 @@ class TestGraphImages(unittest.TestCase):
             make_image(file, draw, 600, 600)
 
         self.assertTrue(run_image_test("test_graph_scatter.png", creator))
+
+
+    def test_graph_axes_position(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            positions = [25, 275, 525, 775]
+            axis_types = [AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX]
+
+            for xpos, xaxis in zip(positions, axis_types):
+                for ypos, yaxis in zip(positions, axis_types):
+
+                    # Creates a set of axes.
+                    axes = Axes(ctx, position=(xpos, ypos), width=200, height=200).of_start((-4, -3)).of_extent((10, 8)).with_axis_positions(xaxis, yaxis)
+                    axes.draw()
+
+                    # Add various curves
+                    axes.clip()
+                    Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color("red"))
+                    axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 1000, 1000)
+
+        self.assertTrue(run_image_test("test_graph_axes_position.png", creator))
+
