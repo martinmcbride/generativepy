@@ -11,8 +11,8 @@ from generativepy.drawing import (
 )
 from image_test_helper import run_image_test
 from generativepy.color import Color
-from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK
-from generativepy.geometry import LinearGradient
+from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance
+from generativepy.geometry import LinearGradient, FillParameters, FontParameters, StrokeParameters
 
 """
 Test the graph module.
@@ -216,6 +216,35 @@ class TestGraphImages(unittest.TestCase):
             make_image(file, draw, 600, 600)
 
         self.assertTrue(run_image_test("test_graph_styles.png", creator))
+
+    def test_graph_appearance(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            appearance = AxesAppearance(start=(-100, -1.1),
+                                        extent=(500, 2.2),
+                                        divisions=(90, 0.5),
+                                        subdivisions=(2, 5),
+                                        background=FillParameters(Color("wheat")),
+                                        textcolor=FillParameters(Color("darkgreen")),
+                                        fontparams=FontParameters(font="Times", size=20, slant=FONT_SLANT_ITALIC, weight=FONT_WEIGHT_NORMAL),
+                                        axislines=StrokeParameters(Color("darkblue"), line_width=3),
+                                        divlines=StrokeParameters(Color("steelblue"), line_width=3),
+                                        subdivlines=StrokeParameters(Color("lightblue"), line_width=2, dash=[4, 2]),
+                                        )
+            # Creates a set of axes.
+            axes = Axes(ctx, position=(50, 50), width=500, height=400, appearance=appearance)
+            axes.draw()
+
+            # Add curve
+            axes.clip()
+            Plot(axes).of_function(lambda x: math.sin(x * math.pi / 180), precision=100).stroke(pattern=Color("red"))
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test("test_graph_appearance.png", creator))
 
     def test_large_graph_scale(self):
         def draw(ctx, width, height, frame_no, frame_count):

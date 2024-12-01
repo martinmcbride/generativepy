@@ -2,6 +2,7 @@
 # Created: 2019-06-04
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+import dataclasses
 import itertools
 
 import cairo
@@ -27,20 +28,27 @@ SCATTER_CONNECTED = 2  # Points are joined one to the next
 @dataclass
 class AxesAppearance:
     '''
-    Parameters that control the appearance of the axes (colours, line styles).
+    Parameters that control the appearance and  position of the axes (colours, line styles).
     '''
-    background = FillParameters(Color(1))
-    textcolor = Color(0.2)
-    fontparams = FontParameters('arial', size=15, weight=FONT_WEIGHT_BOLD)
-    divlines = StrokeParameters(Color(0.8, 0.8, 1), line_width=2, cap=BUTT)
-    subdivlines = StrokeParameters(Color(0.9, 0.9, 1), line_width=2, cap=BUTT)
-    axislines = StrokeParameters(Color(0.2), line_width=2, cap=BUTT)
-    featurescale = 1
+    background: any = dataclasses.field(default_factory=lambda: FillParameters(Color(1)))
+    textcolor: any = Color(0.2)
+    fontparams: any = dataclasses.field(default_factory=lambda: FontParameters('arial', size=15, weight=FONT_WEIGHT_BOLD))
+    divlines: any = dataclasses.field(default_factory=lambda: StrokeParameters(Color(0.8, 0.8, 1), line_width=2, cap=BUTT))
+    subdivlines: any = dataclasses.field(default_factory=lambda: StrokeParameters(Color(0.9, 0.9, 1), line_width=2, cap=BUTT))
+    axislines: any = dataclasses.field(default_factory=lambda: StrokeParameters(Color(0.2), line_width=2, cap=BUTT))
+    featurescale: any = 1
+    divisions: any = (1, 1)
+    subdivisions: any = False
+    subdivisionfactor: any = (1, 1)
+    text_height: any = 0
+    x_div_formatter: any = None
+    y_div_formatter: any = None
+    start: any = (0, 0)
+    extent: any = (10, 10)
 
     # x and y offset of tick labels. The actual offset is:
     # text height (height of 0 character using fontparams) DIVIDED by ticklabeloffset
-    ticklabeloffset = 1.1
-
+    ticklabeloffset: any = 1.1
 
 
 class Axes:
@@ -48,21 +56,13 @@ class Axes:
     Controls the range and appearance of a set of Cartesian axes
     '''
 
-    def __init__(self, ctx, position, width, height):
+    def __init__(self, ctx, position, width, height, appearance=None):
 
         self.ctx = ctx
-        self.appearance = AxesAppearance()
         self.position = position
         self.width = width
         self.height = height
-        self.start = (0, 0)
-        self.extent = (10, 10)
-        self.divisions = (1, 1)
-        self.subdivisons = False
-        self.subdivisionfactor = (1, 1)
-        self.text_height = 0
-        self.x_div_formatter = None
-        self.y_div_formatter = None
+        self.appearance = dataclasses.replace(appearance) if appearance is not None else AxesAppearance()
 
     def of_start(self, start):
         '''
@@ -74,7 +74,7 @@ class Axes:
         Returns:
             self
         '''
-        self.start = start
+        self.appearance.start = start
         return self
 
     def of_extent(self, extent):
@@ -87,7 +87,7 @@ class Axes:
         Returns:
             self
         '''
-        self.extent = extent
+        self.appearance.extent = extent
         return self
 
     def with_feature_scale(self, scale):
@@ -114,12 +114,12 @@ class Axes:
         Returns:
             self
         '''
-        self.divisions = divisions
+        self.appearance.divisions = divisions
         return self
 
     def with_division_formatters(self, x_div_formatter=None, y_div_formatter=None):
-        self.x_div_formatter = x_div_formatter
-        self.y_div_formatter = y_div_formatter
+        self.appearance.x_div_formatter = x_div_formatter
+        self.appearance.y_div_formatter = y_div_formatter
         return self
 
     def with_subdivisions(self, factor):
@@ -132,8 +132,8 @@ class Axes:
         Returns:
             self
         '''
-        self.subdivisons = True
-        self.subdivisionfactor = factor
+        self.appearance.subdivisions = True
+        self.appearance.subdivisionfactor = factor
         return self
 
     def background(self, pattern):
@@ -239,7 +239,7 @@ class Axes:
 
         self.ctx.new_path()
         # Get the text height using the selected font. This is used to control text offset and other sizes.
-        _, self.text_height = Text(self.ctx).of('0', (0, 0)) \
+        _, self.appearance.text_height = Text(self.ctx).of('0', (0, 0)) \
             .font(self.appearance.fontparams.font,
                   self.appearance.fontparams.weight,
                   self.appearance.fontparams.slant) \
@@ -247,7 +247,7 @@ class Axes:
             .get_size()
         self.clip()
         self._draw_background()
-        if self.subdivisons:
+        if self.appearance.subdivisions:
             self._draw_subdivlines()
         self._draw_divlines()
         self._draw_axes()
@@ -259,41 +259,48 @@ class Axes:
         self.ctx.rectangle(self.position[0], self.position[1], self.width, self.height)
         self.ctx.fill()
 
+    def draw_border(self):
+        params = copy.copy(self.appearance.divlines)
+        params.line_width *= self.appearance.featurescale
+        params.apply(self.ctx)
+        self.ctx.rectangle(self.position[0], self.position[1], self.width, self.height)
+        #self.ctx.stroke()
+
     def _draw_divlines(self):
         params = copy.copy(self.appearance.divlines)
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
-        for p in self._get_divs(self.start[0], self.extent[0], self.divisions[0]):
-            self.ctx.move_to(*self.transform_from_graph((p, self.start[1])))
-            self.ctx.line_to(*self.transform_from_graph((p, self.start[1] + self.extent[1])))
-        for p in self._get_divs(self.start[1], self.extent[1], self.divisions[1]):
-            self.ctx.move_to(*self.transform_from_graph((self.start[0], p)))
-            self.ctx.line_to(*self.transform_from_graph((self.start[0] + self.extent[0], p)))
+        for p in self._get_divs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0]):
+            self.ctx.move_to(*self.transform_from_graph((p, self.appearance.start [1])))
+            self.ctx.line_to(*self.transform_from_graph((p, self.appearance.start [1] + self.appearance.extent[1])))
+        for p in self._get_divs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1]):
+            self.ctx.move_to(*self.transform_from_graph((self.appearance.start [0], p)))
+            self.ctx.line_to(*self.transform_from_graph((self.appearance.start [0] + self.appearance.extent[0], p)))
         self.ctx.stroke()
 
     def _draw_subdivlines(self):
         params = copy.copy(self.appearance.subdivlines)
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
-        for p in self._get_subdivs(self.start[0], self.extent[0], self.divisions[0], self.subdivisionfactor[0]):
-            self.ctx.move_to(*self.transform_from_graph((p, self.start[1])))
-            self.ctx.line_to(*self.transform_from_graph((p, self.start[1] + self.extent[1])))
-        for p in self._get_subdivs(self.start[1], self.extent[1], self.divisions[1], self.subdivisionfactor[1]):
-            self.ctx.move_to(*self.transform_from_graph((self.start[0], p)))
-            self.ctx.line_to(*self.transform_from_graph((self.start[0] + self.extent[0], p)))
+        for p in self._get_subdivs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0], self.appearance.subdivisionfactor[0]):
+            self.ctx.move_to(*self.transform_from_graph((p, self.appearance.start [1])))
+            self.ctx.line_to(*self.transform_from_graph((p, self.appearance.start [1] + self.appearance.extent[1])))
+        for p in self._get_subdivs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1], self.appearance.subdivisionfactor[1]):
+            self.ctx.move_to(*self.transform_from_graph((self.appearance.start [0], p)))
+            self.ctx.line_to(*self.transform_from_graph((self.appearance.start [0] + self.appearance.extent[0], p)))
         self.ctx.stroke()
 
     def _draw_axes(self):
         params = copy.copy(self.appearance.axislines)
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
-        self.ctx.move_to(*self.transform_from_graph((0, self.start[1])))
-        self.ctx.line_to(*self.transform_from_graph((0, self.start[1] + self.extent[1])))
-        self.ctx.move_to(*self.transform_from_graph((self.start[0], 0)))
-        self.ctx.line_to(*self.transform_from_graph((self.start[0] + self.extent[0], 0)))
+        self.ctx.move_to(*self.transform_from_graph((0, self.appearance.start [1])))
+        self.ctx.line_to(*self.transform_from_graph((0, self.appearance.start [1] + self.appearance.extent[1])))
+        self.ctx.move_to(*self.transform_from_graph((self.appearance.start [0], 0)))
+        self.ctx.line_to(*self.transform_from_graph((self.appearance.start [0] + self.appearance.extent[0], 0)))
         self.ctx.stroke()
         self.ctx.new_path()
-        self.ctx.arc(*self.transform_from_graph((0, 0)), self.text_height/1.1, 0, 2 * math.pi)
+        self.ctx.arc(*self.transform_from_graph((0, 0)), self.appearance.text_height/1.1, 0, 2 * math.pi)
         self.ctx.stroke()
 
     def _draw_axes_values(self):
@@ -301,12 +308,12 @@ class Axes:
         params.line_width *= self.appearance.featurescale
         params.apply(self.ctx)
 
-        xoffset = self.text_height/self.appearance.ticklabeloffset
-        yoffset = self.text_height/self.appearance.ticklabeloffset
-        for p in self._get_divs(self.start[0], self.extent[0], self.divisions[0]):
+        xoffset = self.appearance.text_height/self.appearance.ticklabeloffset
+        yoffset = self.appearance.text_height/self.appearance.ticklabeloffset
+        for p in self._get_divs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0]):
             if abs(p)>0.001:
                 position = self.transform_from_graph((p, 0))
-                pstr = self._format_div(p, self.divisions[0], self.x_div_formatter)
+                pstr = self._format_div(p, self.appearance.divisions[0], self.appearance.x_div_formatter)
                 Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
                     .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
                           self.appearance.fontparams.slant) \
@@ -318,10 +325,10 @@ class Axes:
                 self.ctx.line_to(position[0], position[1] + yoffset)
                 self.ctx.stroke()
 
-        for p in self._get_divs(self.start[1], self.extent[1], self.divisions[1]):
+        for p in self._get_divs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1]):
             if abs(p)>0.001:
                 position = self.transform_from_graph((0, p))
-                pstr = self._format_div(p, self.divisions[1], self.y_div_formatter)
+                pstr = self._format_div(p, self.appearance.divisions[1], self.appearance.y_div_formatter)
                 Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
                     .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
                           self.appearance.fontparams.slant) \
@@ -420,8 +427,8 @@ class Axes:
                 raise TypeError("point must be a List, Tuple or Vector")
             if len(point) != 2:
                 raise ValueError("point must have 2 elements")
-            x = ((point[0] - self.start[0]) * self.width / self.extent[0]) + self.position[0]
-            y = self.height + self.position[1] - ((point[1] - self.start[1]) * self.height / self.extent[1])
+            x = ((point[0] - self.appearance.start [0]) * self.width / self.appearance.extent[0]) + self.position[0]
+            y = self.height + self.position[1] - ((point[1] - self.appearance.start [1]) * self.height / self.appearance.extent[1])
             return V(x, y)
 
         if not (hasattr(point, "__getitem__") and hasattr(point, "__iter__") and hasattr(point, "__len__")):
@@ -495,8 +502,8 @@ class Plot(Shape):
             self
         '''
         self.points = []
-        start = self.axes.start[0]
-        end = self.axes.start[0] + self.axes.extent[0]
+        start = self.axes.appearance.start[0]
+        end = self.axes.appearance.start[0] + self.axes.appearance.extent[0]
         if extent:
             start = max(start, extent[0])
             end = min(end, extent[1])
@@ -521,8 +528,8 @@ class Plot(Shape):
             self
         '''
         self.points = []
-        start = self.axes.start[1]
-        end = self.axes.start[1] + self.axes.extent[1]
+        start = self.axes.appearance.start[1]
+        end = self.axes.appearance.start[1] + self.axes.appearance.extent[1]
         if extent:
             start = max(start, extent[0])
             end = min(end, extent[1])
