@@ -361,7 +361,7 @@ class Axes:
             self.ctx.line_to(*self.transform_from_graph((self.appearance.start[0] + self.appearance.extent[0], axis_line_pos)))
             self.ctx.stroke()
             for p in self._get_divs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0]):
-                if abs(p)>0.001:
+                if abs(p)>0.001 or self.appearance.y_axis_pos != AXIS_ZERO:
                     position = self.transform_from_graph((p, axis_line_pos))
                     pstr = self._format_div(p, self.appearance.divisions[0], self.appearance.x_div_formatter)
                     Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
@@ -382,7 +382,7 @@ class Axes:
             self.ctx.line_to(*self.transform_from_graph((axis_line_pos, self.appearance.start[1] + self.appearance.extent[1])))
             self.ctx.stroke()
             for p in self._get_divs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1]):
-                if abs(p)>0.001:
+                if abs(p)>0.001 or self.appearance.x_axis_pos != AXIS_ZERO:
                     position = self.transform_from_graph((axis_line_pos, p))
                     pstr = self._format_div(p, self.appearance.divisions[1], self.appearance.y_div_formatter)
                     Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
