@@ -1,18 +1,10 @@
 import unittest
 import math
-from generativepy.drawing import (
-    setup,
-    make_image,
-    ROUND,
-    BUTT,
-    FONT_SLANT_ITALIC,
-    FONT_WEIGHT_NORMAL,
-    BASELINE,
-)
+from generativepy.drawing import (setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, BASELINE, FONT_WEIGHT_BOLD, )
 from image_test_helper import run_image_test
 from generativepy.color import Color
-from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK
-from generativepy.geometry import LinearGradient
+from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance, AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX
+from generativepy.geometry import LinearGradient, FillParameters, FontParameters, StrokeParameters
 
 """
 Test the graph module.
@@ -39,6 +31,26 @@ class TestGraphImages(unittest.TestCase):
             make_image(file, draw, 600, 600)
 
         self.assertTrue(run_image_test("test_graph_simple.png", creator))
+
+    def test_graph_border(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            # Creates a set of axes.
+            axes = Axes(ctx, position=(50, 50), width=500, height=400).of_start((-4, -3)).of_extent((10, 8)).with_border(True)
+            axes.draw()
+
+            # Add various curves
+            axes.clip()
+            Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color("red"))
+            Plot(axes).of_xy_function(lambda x: 1.5**x).stroke(pattern=Color("green"))
+            Plot(axes).of_polar_function(lambda x: 2 * x).stroke(pattern=Color("blue"))
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test("test_graph_border.png", creator))
 
     def test_graph_multiple(self):
         def draw(ctx, width, height, frame_no, frame_count):
@@ -217,6 +229,36 @@ class TestGraphImages(unittest.TestCase):
 
         self.assertTrue(run_image_test("test_graph_styles.png", creator))
 
+    def test_graph_appearance(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            appearance = AxesAppearance(start=(-100, -1.1),
+                                        extent=(500, 2.2),
+                                        divisions=(90, 0.5),
+                                        subdivisions=True,
+                                        subdivisionfactor=(2, 5),
+                                        background=FillParameters(Color("wheat")),
+                                        textcolor=FillParameters(Color("darkgreen")),
+                                        fontparams=FontParameters(font="Times", size=20, slant=FONT_SLANT_ITALIC, weight=FONT_WEIGHT_NORMAL),
+                                        axislines=StrokeParameters(Color("darkblue"), line_width=3),
+                                        divlines=StrokeParameters(Color("steelblue"), line_width=3),
+                                        subdivlines=StrokeParameters(Color("lightblue"), line_width=2, dash=[4, 2]),
+                                        )
+            # Creates a set of axes.
+            axes = Axes(ctx, position=(50, 50), width=500, height=400, appearance=appearance)
+            axes.draw()
+
+            # Add curve
+            axes.clip()
+            Plot(axes).of_function(lambda x: math.sin(x * math.pi / 180), precision=100).stroke(pattern=Color("red"))
+            axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 600, 600)
+
+        self.assertTrue(run_image_test("test_graph_appearance.png", creator))
+
     def test_large_graph_scale(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(1))
@@ -353,3 +395,34 @@ class TestGraphImages(unittest.TestCase):
             make_image(file, draw, 600, 600)
 
         self.assertTrue(run_image_test("test_graph_scatter.png", creator))
+
+
+    def test_graph_axes_position(self):
+        def draw(ctx, width, height, frame_no, frame_count):
+            setup(ctx, width, height, background=Color(1))
+
+            positions = [25, 275, 525, 775]
+            axis_types = [AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX]
+            appearance = AxesAppearance(fontparams=FontParameters('arial', size=12, weight=FONT_WEIGHT_BOLD))
+
+            for xpos, xaxis in zip(positions, axis_types):
+                for ypos, yaxis in zip(positions, axis_types):
+
+                    # Creates a set of axes.
+                    axes = (Axes(ctx, position=(xpos, ypos), width=200, height=200, appearance=appearance)
+                            .of_start((-4, -3))
+                            .of_extent((10, 8))
+                            .with_axis_positions(xaxis, yaxis)
+                            .with_ticklabeloffset(2))
+                    axes.draw()
+
+                    # Add various curves
+                    axes.clip()
+                    Plot(axes).of_function(lambda x: x * x).stroke(pattern=Color("red"))
+                    axes.unclip()
+
+        def creator(file):
+            make_image(file, draw, 1000, 1000)
+
+        self.assertTrue(run_image_test("test_graph_axes_position.png", creator))
+
