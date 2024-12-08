@@ -164,15 +164,32 @@ class Axes:
 
     def with_border(self, has_border):
         '''
-        Draw subdivision lines on graph
+        Draw border around graph,  The border will be drawn with the style of the axis lines.
 
         Args:
-            factor: (x, y) Number of subdivisions per division in each direction
+            has_border: Boolean determines if border is drawn around axis.
 
         Returns:
             self
         '''
         self.appearance.border = has_border
+        return self
+
+    def with_ticklabeloffset(self, ticklabeloffset):
+        '''
+        Use the tick label offset. The tick text is offset from the tick position on the axis by a fixed amount in the x amd y directions.
+
+        This offset is equal to the text height of the labels divided by the ticklabeloffset. The ticklabeloffset defaults to 1.1, which
+        usually works well provided the divisions are reasonably far apart. If the divisions are quite close, or ifthe label font is
+        unusually large or small, try adjsuting this value. The larger tha value, the closer the text will be to the axis.
+
+        Args:
+            ticklabeloffset: Number, the offset
+
+        Returns:
+            self
+        '''
+        self.appearance.ticklabeloffset = ticklabeloffset
         return self
 
     def background(self, pattern):

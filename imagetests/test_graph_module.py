@@ -1,14 +1,6 @@
 import unittest
 import math
-from generativepy.drawing import (
-    setup,
-    make_image,
-    ROUND,
-    BUTT,
-    FONT_SLANT_ITALIC,
-    FONT_WEIGHT_NORMAL,
-    BASELINE,
-)
+from generativepy.drawing import (setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, BASELINE, FONT_WEIGHT_BOLD, )
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance, AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX
@@ -411,12 +403,17 @@ class TestGraphImages(unittest.TestCase):
 
             positions = [25, 275, 525, 775]
             axis_types = [AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX]
+            appearance = AxesAppearance(fontparams=FontParameters('arial', size=12, weight=FONT_WEIGHT_BOLD))
 
             for xpos, xaxis in zip(positions, axis_types):
                 for ypos, yaxis in zip(positions, axis_types):
 
                     # Creates a set of axes.
-                    axes = Axes(ctx, position=(xpos, ypos), width=200, height=200).of_start((-4, -3)).of_extent((10, 8)).with_axis_positions(xaxis, yaxis)
+                    axes = (Axes(ctx, position=(xpos, ypos), width=200, height=200, appearance=appearance)
+                            .of_start((-4, -3))
+                            .of_extent((10, 8))
+                            .with_axis_positions(xaxis, yaxis)
+                            .with_ticklabeloffset(2))
                     axes.draw()
 
                     # Add various curves
