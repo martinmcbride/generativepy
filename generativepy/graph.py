@@ -354,7 +354,11 @@ class Axes:
         xoffset = self.appearance.text_height / self.appearance.ticklabeloffset
         yoffset = self.appearance.text_height / self.appearance.ticklabeloffset
 
+        has_origin_marker = self.appearance.x_axis_pos == AXIS_ZERO and self.appearance.y_axis_pos == AXIS_ZERO
+
         self.clip_x()
+        tick_direction = -1 if self.appearance.x_axis_pos == AXIS_MAX else 1
+        tick_align = (drawing.RIGHT, drawing.BOTTOM) if self.appearance.x_axis_pos == AXIS_MAX else (drawing.RIGHT, drawing.TOP)
         if self.appearance.x_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.x_axis_pos == AXIS_ZERO else self.appearance.start[1] if self.appearance.x_axis_pos == AXIS_MIN else self.appearance.start[1] + self.appearance.extent[1]
             line_params.apply(self.ctx)
@@ -362,22 +366,24 @@ class Axes:
             self.ctx.line_to(*self.transform_from_graph((self.appearance.start[0] + self.appearance.extent[0], axis_line_pos)))
             self.ctx.stroke()
             for p in self._get_divs(self.appearance.start [0], self.appearance.extent[0], self.appearance.divisions[0]):
-                if abs(p)>0.001 or self.appearance.y_axis_pos != AXIS_ZERO:
+                if abs(p)>0.001 or not has_origin_marker:
                     position = self.transform_from_graph((p, axis_line_pos))
                     pstr = self._format_div(p, self.appearance.divisions[0], self.appearance.x_div_formatter)
-                    Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
+                    Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset*tick_direction)) \
                         .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
                               self.appearance.fontparams.slant) \
                         .size(self.appearance.fontparams.size*self.appearance.featurescale) \
-                        .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
+                        .align(*tick_align).fill(self.appearance.textcolor)
                     line_params.apply(self.ctx)
                     self.ctx.new_path()
                     self.ctx.move_to(position[0], position[1])
-                    self.ctx.line_to(position[0], position[1] + yoffset)
+                    self.ctx.line_to(position[0], position[1] + yoffset*tick_direction)
                     self.ctx.stroke()
         self.unclip()
 
         self.clip_y()
+        tick_direction = -1 if self.appearance.y_axis_pos == AXIS_MAX else 1
+        tick_align = (drawing.LEFT, drawing.TOP) if self.appearance.y_axis_pos == AXIS_MAX else (drawing.RIGHT, drawing.TOP)
         if self.appearance.y_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.y_axis_pos == AXIS_ZERO else self.appearance.start[0] if self.appearance.y_axis_pos == AXIS_MIN else self.appearance.start[0] + self.appearance.extent[0]
             line_params.apply(self.ctx)
@@ -385,22 +391,22 @@ class Axes:
             self.ctx.line_to(*self.transform_from_graph((axis_line_pos, self.appearance.start[1] + self.appearance.extent[1])))
             self.ctx.stroke()
             for p in self._get_divs(self.appearance.start [1], self.appearance.extent[1], self.appearance.divisions[1]):
-                if abs(p)>0.001 or self.appearance.x_axis_pos != AXIS_ZERO:
+                if abs(p)>0.001 or not has_origin_marker:
                     position = self.transform_from_graph((axis_line_pos, p))
                     pstr = self._format_div(p, self.appearance.divisions[1], self.appearance.y_div_formatter)
-                    Text(self.ctx).of(pstr, (position[0] - xoffset, position[1] + yoffset)) \
+                    Text(self.ctx).of(pstr, (position[0] - xoffset*tick_direction, position[1] + yoffset)) \
                         .font(self.appearance.fontparams.font, self.appearance.fontparams.weight,
                               self.appearance.fontparams.slant) \
                         .size(self.appearance.fontparams.size*self.appearance.featurescale) \
-                        .align(drawing.RIGHT, drawing.TOP).fill(self.appearance.textcolor)
+                        .align(*tick_align).fill(self.appearance.textcolor)
                     line_params.apply(self.ctx)
                     self.ctx.new_path()
                     self.ctx.move_to(position[0], position[1])
-                    self.ctx.line_to(position[0] - xoffset, position[1])
+                    self.ctx.line_to(position[0] - xoffset*tick_direction, position[1])
                     self.ctx.stroke()
         self.unclip()
 
-        if self.appearance.x_axis_pos == AXIS_ZERO and self.appearance.y_axis_pos == AXIS_ZERO:
+        if has_origin_marker:
             line_params.apply(self.ctx)
             self.ctx.new_path()
             self.ctx.arc(*self.transform_from_graph((0, 0)), self.appearance.text_height/1.1, 0, 2 * math.pi)

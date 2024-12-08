@@ -6,6 +6,7 @@ Generative art and graphing library for creating images and animations.
  
 * Fix bug is extents for `of_xy_function`.
 * Axes.transform_from_graph can accept a point or a sequence of points.
+* Allow axes labels to be positioned around edges of graph if required. 
 
 ## Version 24.04 notes
 
