@@ -306,8 +306,8 @@ class Axes:
         if self.appearance.subdivisions:
             self._draw_subdivlines()
         self._draw_divlines()
-        self._draw_axes()
         self.unclip()
+        self._draw_axes()
         if self.appearance.border:
             self._draw_border()
 
@@ -354,6 +354,7 @@ class Axes:
         xoffset = self.appearance.text_height / self.appearance.ticklabeloffset
         yoffset = self.appearance.text_height / self.appearance.ticklabeloffset
 
+        self.clip_x()
         if self.appearance.x_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.x_axis_pos == AXIS_ZERO else self.appearance.start[1] if self.appearance.x_axis_pos == AXIS_MIN else self.appearance.start[1] + self.appearance.extent[1]
             line_params.apply(self.ctx)
@@ -374,7 +375,9 @@ class Axes:
                     self.ctx.move_to(position[0], position[1])
                     self.ctx.line_to(position[0], position[1] + yoffset)
                     self.ctx.stroke()
+        self.unclip()
 
+        self.clip_y()
         if self.appearance.y_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.y_axis_pos == AXIS_ZERO else self.appearance.start[0] if self.appearance.y_axis_pos == AXIS_MIN else self.appearance.start[0] + self.appearance.extent[0]
             line_params.apply(self.ctx)
@@ -395,6 +398,7 @@ class Axes:
                     self.ctx.move_to(position[0], position[1])
                     self.ctx.line_to(position[0] - xoffset, position[1])
                     self.ctx.stroke()
+        self.unclip()
 
         if self.appearance.x_axis_pos == AXIS_ZERO and self.appearance.y_axis_pos == AXIS_ZERO:
             line_params.apply(self.ctx)
@@ -402,6 +406,24 @@ class Axes:
             self.ctx.arc(*self.transform_from_graph((0, 0)), self.appearance.text_height/1.1, 0, 2 * math.pi)
             self.ctx.stroke()
 
+
+    def clip_x(self):
+        '''
+        Set the clip region to width of the axes area.
+        The height clip allows a region above and below the graph to be painted
+        '''
+        self.ctx.rectangle(self.position[0], self.position[1] - self.height, self.width, 3*self.height)
+        self.ctx.save()
+        self.ctx.clip()
+
+    def clip_y(self):
+        '''
+        Set the clip region to height of the axes area.
+        The width clip allows a region toe the left and right of the graph to be painted
+        '''
+        self.ctx.rectangle(self.position[0] - self.width, self.position[1], 3*self.width, self.height)
+        self.ctx.save()
+        self.ctx.clip()
 
     def clip(self):
         '''
@@ -502,8 +524,6 @@ class Axes:
         else:
             # All other cases assume it is a list of (zero or more) points
             return [_transform_point(p) for p in point]
-
-
 
 
 class Plot(Shape):
