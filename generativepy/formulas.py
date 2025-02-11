@@ -140,7 +140,7 @@ def rasterise_formula(name, formula, color, dpi=600, packages=None):
     process.communicate()
     process.wait()
 
-    process = subprocess.Popen('dvipng -T tight -D {} {}.dvi'.format(dpi, unique_name), shell=True,
+    process = subprocess.Popen('dvipng -T tight -D {} --truecolor {}.dvi'.format(dpi, unique_name), shell=True,
                                stdout=subprocess.PIPE)
     process.communicate()
     process.wait()
