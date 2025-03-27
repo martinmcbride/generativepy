@@ -22,7 +22,7 @@ def _create_tex(formula, packages):
     Create tex from the formula and any optional packages.
     Return latex string
     """
-    tex_elements = [r'\documentclass[preview]{standalone}', r'\usepackage{amsmath}']
+    tex_elements = [r'\documentclass{minimal}', r'\usepackage{amsmath}']
     if packages:
         tex_elements += [r'\usepackage{' + package + '}' for package in packages]
     tex_elements += [r'\begin{document}', r'\begin{equation*}']
