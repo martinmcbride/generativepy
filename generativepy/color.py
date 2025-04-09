@@ -815,6 +815,34 @@ class BookColorScheme:
         return self._BLACK
 
     @property
+    def RED(self):
+        return self._RED
+
+    @property
+    def GREEN(self):
+        return self._GREEN
+
+    @property
+    def BLUE(self):
+        return self._BLUE
+
+    @property
+    def CYAN(self):
+        return self._CYAN
+
+    @property
+    def MAGENTA(self):
+        return self._MAGENTA
+
+    @property
+    def YELLOW(self):
+        return self._YELLOW
+
+    @property
+    def ORANGE(self):
+        return self._ORANGE
+    
+    @property
     def REDFILL(self):
         return self._REDFILL
 
