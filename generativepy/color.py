@@ -782,7 +782,7 @@ class BookColorScheme:
         self._BACKGROUND = Color(1)
         self._WHITE = Color(1)
         self._GREY = Color(0.5)
-        self._BLACK = Color(0)
+        self._BLACK = Color(0.2)
         self._RED = Color("crimson")
         self._GREEN = Color("limegreen")
         self._BLUE = Color("royalblue")
