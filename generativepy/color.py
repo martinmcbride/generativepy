@@ -770,3 +770,74 @@ class DarkColorScheme:
     @property
     def ORANGE(self):
         return self._ORANGE
+
+class BookColorScheme:
+    """
+    An example colour scheme suitable for printed books and ebooks.
+    The normal colours such as RED are suitable for lines, the fill colours such as REDFILL are lighter, suitable for
+    filling shapes
+    """
+
+    def __init__(self):
+        self._BACKGROUND = Color(1)
+        self._WHITE = Color(1)
+        self._GREY = Color(0.5)
+        self._BLACK = Color(0)
+        self._RED = Color("crimson")
+        self._GREEN = Color("limegreen")
+        self._BLUE = Color("royalblue")
+        self._CYAN = Color("mediumturquoise")
+        self._MAGENTA = Color("darkorchid")
+        self._YELLOW = Color("gold")
+        self._ORANGE = Color("sienna")
+        self._REDFILL = self._RED.light1
+        self._GREENFILL = self._GREEN.light1
+        self._BLUEFILL = self._BLUE.light1
+        self._YELLOWFILL = self._YELLOW.light1
+        self._CYANFILL = self._CYAN.light1
+        self._MAGENTAFILL = self._MAGENTA.light1
+        self._ORANGEFILL = self._ORANGE.light1
+
+    @property
+    def BACKGROUND(self):
+        return self._BACKGROUND
+
+    @property
+    def WHITE(self):
+        return self._WHITE
+
+    @property
+    def GREY(self):
+        return self._GREY
+
+    @property
+    def BLACK(self):
+        return self._BLACK
+
+    @property
+    def REDFILL(self):
+        return self._REDFILL
+
+    @property
+    def GREENFILL(self):
+        return self._GREENFILL
+
+    @property
+    def BLUEFILL(self):
+        return self._BLUEFILL
+
+    @property
+    def CYANFILL(self):
+        return self._CYANFILL
+
+    @property
+    def MAGENTAFILL(self):
+        return self._MAGENTAFILL
+
+    @property
+    def YELLOWFILL(self):
+        return self._YELLOWFILL
+
+    @property
+    def ORANGEFILL(self):
+        return self._ORANGEFILL
