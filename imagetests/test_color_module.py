@@ -442,9 +442,6 @@ class TestDrawingModule(unittest.TestCase):
 
             Transform(ctx).translate(50, 50)
 
-            for c in colors:
-                print(c.h, c.s, c.l)
-
             for i, (outline, fill) in enumerate(zip(colors, fillcolors)):
                 Square(ctx).of_corner_size((i*100, 0), 90).fill(fill).stroke(outline, 4)
 
