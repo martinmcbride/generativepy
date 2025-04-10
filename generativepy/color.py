@@ -783,20 +783,20 @@ class BookColorScheme:
         self._WHITE = Color(1)
         self._GREY = Color(0.5)
         self._BLACK = Color(0.2)
-        self._RED = Color("crimson")
-        self._GREEN = Color("limegreen")
-        self._BLUE = Color("royalblue")
-        self._CYAN = Color("mediumturquoise")
-        self._MAGENTA = Color("darkorchid")
-        self._YELLOW = Color("gold")
-        self._ORANGE = Color("sienna")
-        self._REDFILL = self._RED.light1
-        self._GREENFILL = self._GREEN.light1
-        self._BLUEFILL = self._BLUE.light1
-        self._YELLOWFILL = self._YELLOW.light1
-        self._CYANFILL = self._CYAN.light1
-        self._MAGENTAFILL = self._MAGENTA.light1
-        self._ORANGEFILL = self._ORANGE.light1
+        self._RED = Color.of_hsl(0/6, 0.6, 0.4)
+        self._GREEN = Color.of_hsl(2/6, 0.6, 0.4)
+        self._BLUE = Color.of_hsl(4/6, 0.6, 0.4)
+        self._CYAN = Color.of_hsl(3/6, 0.6, 0.4)
+        self._MAGENTA = Color.of_hsl(5/6, 0.6, 0.4)
+        self._YELLOW = Color.of_hsl(1/6, 0.6, 0.4)
+        self._ORANGE = Color.of_hsl(0.4/6, 0.6, 0.4)
+        self._REDFILL = Color.of_hsl(0/6, 0.5, 0.8)
+        self._GREENFILL = Color.of_hsl(2/6, 0.5, 0.75)
+        self._BLUEFILL = Color.of_hsl(4/6, 0.5, 0.75)
+        self._CYANFILL = Color.of_hsl(3/6, 0.5, 0.75)
+        self._MAGENTAFILL = Color.of_hsl(5/6, 0.5, 0.75)
+        self._YELLOWFILL = Color.of_hsl(1/6, 0.5, 0.75)
+        self._ORANGEFILL = Color.of_hsl(0.5/6, 0.5, 0.75)
 
     @property
     def BACKGROUND(self):
