@@ -783,7 +783,7 @@ class BookColorScheme:
         self._WHITE = Color(1)
         self._GREY = Color(0.5)
         self._BLACK = Color(0.2)
-        s = 0.3
+        s = 0.6
         l = 0.4
         self._RED = Color.of_hsl(0/6, 0.5, l)
         self._GREEN = Color.of_hsl(2/6, s, l)
@@ -791,16 +791,16 @@ class BookColorScheme:
         self._CYAN = Color.of_hsl(3/6, s, l)
         self._MAGENTA = Color.of_hsl(5/6, s, l)
         self._YELLOW = Color.of_hsl(1/6, s, l)
-        self._ORANGE = Color.of_hsl(l/6, 0.5, l)
-        s = 0.3
-        l = 0.75
+        self._ORANGE = Color.of_hsl(l/6, s, l)
+        s = 0.6
+        l = 0.8
         self._REDFILL = Color.of_hsl(0/6, s, l)
         self._GREENFILL = Color.of_hsl(2/6, s, l)
         self._BLUEFILL = Color.of_hsl(4/6, s, l)
         self._CYANFILL = Color.of_hsl(3/6, s, l)
         self._MAGENTAFILL = Color.of_hsl(5/6, s, l)
         self._YELLOWFILL = Color.of_hsl(1/6, s, l)
-        self._ORANGEFILL = Color.of_hsl(s/6, 0.5, l)
+        self._ORANGEFILL = Color.of_hsl(s/6, s, l)
 
     @property
     def BACKGROUND(self):
