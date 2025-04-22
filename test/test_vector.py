@@ -103,6 +103,11 @@ class TestVector(unittest.TestCase):
         #rmul
         v2 = -3 * v1
         self.assertEqual(v2, Vector(-30, -60))
+        #dot product
+        v1 = Vector(1, 2)
+        v2 = Vector(3, 5)
+        v3 = v1*v2
+        self.assertEqual(v3, 13)
 
     def test_matrix_mul(self):
         m = Matrix(2, 3, 4, 5, 6, 7)

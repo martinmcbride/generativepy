@@ -326,6 +326,8 @@ class Vector():
         # vector * scalar
         if isinstance(other, (int, float)):
             return Vector(other * self.x, other * self.y)
+        if isinstance(other, Vector):
+            return self.x*other.x + self.y*other.y
         return NotImplemented
 
     def __rmul__(self, other):
