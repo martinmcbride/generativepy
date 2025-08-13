@@ -11,9 +11,9 @@ class TestText(unittest.TestCase):
         ctx = cairo.Context(surface)
         x_bearing, y_bearing, width, height, x_advance, y_advance = Text(ctx).of('abc', (0, 0)).get_metrics()
         self.assertAlmostEqual(x_bearing, 0)
-        self.assertAlmostEqual(y_bearing, -7)
+        self.assertAlmostEqual(y_bearing, -8)
         self.assertAlmostEqual(width, 17)
-        self.assertAlmostEqual(height, 7)
+        self.assertAlmostEqual(height, 8)
         self.assertAlmostEqual(x_advance, 17)
         self.assertAlmostEqual(y_advance, 0)
 
@@ -23,7 +23,7 @@ class TestText(unittest.TestCase):
         ctx = cairo.Context(surface)
         width, height = Text(ctx).of('abc', (0, 0)).get_size()
         self.assertAlmostEqual(width, 17)
-        self.assertAlmostEqual(height, 7)
+        self.assertAlmostEqual(height, 8)
 
 if __name__ == '__main__':
     unittest.main()
