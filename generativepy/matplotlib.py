@@ -37,14 +37,14 @@ class Plot3dZofXY():
         fig, ax = self.plt.subplots(subplot_kw={"projection": "3d"})
 
         # Make data.
-        X = np.arange(-5, 5, 0.25)
-        Y = np.arange(-5, 5, 0.25)
-        X, Y = np.meshgrid(X, Y)
+        Xval = np.arange(-5, 5, 0.25)
+        Yval = np.arange(-5, 5, 0.25)
+        X, Y = np.meshgrid(Xval, Yval)
         Z = np.ones_like(X)
-        Z = np.sin(np.sqrt(X * X + Y * Y))
-        # for i, x in enumerate(X):
-        #     for j, y in enumerate(Y):
-        #         Z[i, j] = math.sqrt(x*x + y*y)
+        #Z = np.sin(np.sqrt(X * X + Y * Y))
+        for i, x in enumerate(Xval):
+            for j, y in enumerate(Yval):
+                Z[i, j] = self.function(x, y)
 
         # Plot the surface.
         surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
