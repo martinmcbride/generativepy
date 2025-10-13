@@ -5,8 +5,16 @@
 """
 The matplotlib module uses the matplotlib library to create 3D plots
 """
-from matplotlib import pyplot
+import dataclasses
+import math
+from dataclasses import dataclass
+
+from generativepy.color import Color
+from matplotlib import pyplot, cm
 import numpy as np
+from matplotlib.ticker import LinearLocator
+
+
 
 class Plot3dZofXY():
 
@@ -19,26 +27,37 @@ class Plot3dZofXY():
             self
         """
         self.plt = plt
+        self.function = lambda x, y: 0
+
+    def of(self, function):
+        self.function = function
+        return self
 
     def render(self):
-        x = np.arange(-5, 5, 0.01)
-        y = np.arange(-5, 5, 0.01)
+        fig, ax = self.plt.subplots(subplot_kw={"projection": "3d"})
 
-        X, Y = np.meshgrid(x, y)
+        # Make data.
+        X = np.arange(-5, 5, 0.25)
+        Y = np.arange(-5, 5, 0.25)
+        X, Y = np.meshgrid(X, Y)
+        Z = np.ones_like(X)
+        Z = np.sin(np.sqrt(X * X + Y * Y))
+        # for i, x in enumerate(X):
+        #     for j, y in enumerate(Y):
+        #         Z[i, j] = math.sqrt(x*x + y*y)
 
-        Z = 1 - X*X - Y*Y
+        # Plot the surface.
+        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
+                               linewidth=0, antialiased=True)
 
-        fig, ax = self.plt.subplots(subplotkw={'projection': '3d'})
-        im = ax.plotsurface(X, Y, Z, cmap='plasma')
+        # Customize the z axis.
+        ax.set_zlim(-1.01, 1.01)
+        ax.zaxis.set_major_locator(LinearLocator(10))
+        # A StrMethodFormatter is used automatically
+        ax.zaxis.set_major_formatter('{x:.02f}')
 
-        fig.colorbar(im, shrink=0.5, aspect=5, pad=0.07)
-
-        ax.grid(False)
-
-        ax.setxticks([])
-        ax.setyticks([])
-        ax.set_zticks([])
-
+        # Add a color bar which maps values to colors.
+        fig.colorbar(surf, shrink=0.5, aspect=5)
 
 
 def make_mpl_image(outfile, draw, width, height, channels=3):
@@ -58,9 +77,7 @@ def make_mpl_image(outfile, draw, width, height, channels=3):
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
-    #draw(pyplot, width, height, 0, 1)
-    fig, ax = pyplot.subplots()
-    ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+    draw(pyplot, width, height, 0, 1)
     pyplot.savefig(outfile + '.png', bbox_inches='tight')
 
 
