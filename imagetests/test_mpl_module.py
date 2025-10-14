@@ -12,7 +12,7 @@ class TestMPLImages(unittest.TestCase):
              .of_extent((10, 10, 5)).with_divisions((2, 2, 1)).with_view_rot(15, -60).render())
 
         def creator(file):
-            make_mpl_image(file, draw, 1000, 800)
+            make_mpl_image(file, draw, 500, 400)
 
         self.assertTrue(run_image_test("test_mpl_simple.png", creator))
 

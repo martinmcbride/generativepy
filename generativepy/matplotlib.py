@@ -175,8 +175,9 @@ def resize_image(filepath, newsize):
     oldsize = img1.size
     if oldsize[0]==newsize[0] and oldsize[1]==newsize[1]:
         return
-    img2 = PIL.Image.new("RGB", newsize, 1)
-    pos = (oldsize[0] - newsize[0])//2, (oldsize[1] - newsize[1])//2
+    img2 = PIL.Image.new("RGB", newsize, (255, 255, 255))
+    pos = (newsize[0] - oldsize[0])//2, (newsize[1] - oldsize[1])//2
+    print(oldsize, newsize, pos)
     img2.paste(img1, pos)
     img2.save(filepath)
 
