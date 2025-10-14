@@ -28,36 +28,78 @@ class Plot3dZofXY():
         """
         self.plt = plt
         self.function = lambda x, y: 0
+        self.start = (-5, -5, -5)
+        self.extent = (10, 10, 10)
+        self.divisions = (1, 1, 1)
+        self.precision = 100
+
 
     def of(self, function):
         self.function = function
+        return self
+
+    def of_start(self, start):
+        '''
+        Sets the start value of the axes
+
+        Args:
+            start: (x, y, z) value of bottom left corner of axes
+
+        Returns:
+            self
+        '''
+        self.start = start
+        return self
+
+    def of_extent(self, extent):
+        '''
+        Sets the range of the axes
+
+        Args:
+            extent: (x, y, z) range of axes
+
+        Returns:
+            self
+        '''
+        self.extent = extent
+        return self
+
+    def with_divisions(self, divisions):
+        '''
+        Set divisions spacing
+
+        Args:
+            divisions: (x, y, z) spacing divisions in each direction
+
+        Returns:
+            self
+        '''
+        self.divisions = divisions
         return self
 
     def render(self):
         fig, ax = self.plt.subplots(subplot_kw={"projection": "3d"})
 
         # Make data.
-        Xval = np.arange(-5, 5, 0.25)
-        Yval = np.arange(-5, 5, 0.25)
+        Xval = np.arange(self.start[0], self.extent[0] + self.start[0], self.extent[0]/self.precision)
+        Yval = np.arange(self.start[1], self.extent[1] + self.start[1], self.extent[1]/self.precision)
         X, Y = np.meshgrid(Xval, Yval)
         Z = np.ones_like(X)
-        #Z = np.sin(np.sqrt(X * X + Y * Y))
         for i, x in enumerate(Xval):
             for j, y in enumerate(Yval):
                 Z[i, j] = self.function(x, y)
 
         # Plot the surface.
-        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm,
-                               linewidth=0, antialiased=True)
+        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, antialiased=True)
 
         # Customize the z axis.
-        ax.set_zlim(-1.01, 1.01)
+        ax.set_zlim(self.start[2], self.extent[2] + self.start[2])
         ax.zaxis.set_major_locator(LinearLocator(10))
         # A StrMethodFormatter is used automatically
         ax.zaxis.set_major_formatter('{x:.02f}')
 
         # Add a color bar which maps values to colors.
-        fig.colorbar(surf, shrink=0.5, aspect=5)
+        fig.colorbar(surf, shrink=0.5, aspect=5, pad=0.07)
 
 
 def make_mpl_image(outfile, draw, width, height, channels=3):
