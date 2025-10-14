@@ -9,16 +9,19 @@ import dataclasses
 import math
 from dataclasses import dataclass
 
+import PIL.Image
+
 from generativepy.color import Color
 from matplotlib import pyplot, cm
 import numpy as np
 from matplotlib.ticker import LinearLocator
 
+MPL_DPI = 80
 
 
 class Plot3dZofXY():
 
-    def __init__(self, plt):
+    def __init__(self, plt, width, height):
         """
         Args:
             plot: Pycairo drawing context - The context to draw on.
@@ -27,6 +30,8 @@ class Plot3dZofXY():
             self
         """
         self.plt = plt
+        self.width = width
+        self.height = height
         self.function = lambda x, y: 0
         self.start = (-5, -5, -5)
         self.extent = (10, 10, 10)
@@ -131,7 +136,7 @@ class Plot3dZofXY():
         return ticks
 
     def render(self):
-        fig, ax = self.plt.subplots(subplot_kw={"projection": "3d"})
+        fig, ax = self.plt.subplots(subplot_kw={"projection": "3d"}, figsize=(self.width/MPL_DPI, self.height/MPL_DPI))
 
         # Make data.
         Xval = np.arange(self.start[0], self.extent[0] + self.start[0], self.extent[0]/self.precision)
@@ -165,6 +170,15 @@ class Plot3dZofXY():
         self.plt.gca().azim = self.azim
         self.plt.gca().elev = self.elev
 
+def resize_image(filepath, newsize):
+    img1 = PIL.Image.open(filepath)
+    oldsize = img1.size
+    if oldsize[0]==newsize[0] and oldsize[1]==newsize[1]:
+        return
+    img2 = PIL.Image.new("RGB", newsize, 1)
+    pos = (oldsize[0] - newsize[0])//2, (oldsize[1] - newsize[1])//2
+    img2.paste(img1, pos)
+    img2.save(filepath)
 
 def make_mpl_image(outfile, draw, width, height, channels=3):
     """
@@ -184,8 +198,8 @@ def make_mpl_image(outfile, draw, width, height, channels=3):
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
     draw(pyplot, width, height, 0, 1)
-    pyplot.savefig(outfile + '.png', bbox_inches='tight')
-
+    pyplot.savefig(outfile + '.png', bbox_inches='tight', dpi=100)
+    resize_image(outfile + '.png', (width, height))
 
 def example_mpl_draw_function(plt, pixel_width, pixel_height, frame_no, frame_count):
     """
