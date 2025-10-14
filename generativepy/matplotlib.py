@@ -198,7 +198,7 @@ def make_mpl_image(outfile, draw, width, height, channels=3):
     """
     if outfile.lower().endswith('.png'):
         outfile = outfile[:-4]
-    draw(pyplot, width, height, 0, 1)
+    draw(pyplot, int(width*0.95), int(height*0.95), 0, 1)
     pyplot.savefig(outfile + '.png', bbox_inches='tight', dpi=100)
     resize_image(outfile + '.png', (width, height))
 
