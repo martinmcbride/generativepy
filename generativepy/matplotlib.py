@@ -32,7 +32,10 @@ class Plot3dZofXY():
         self.extent = (10, 10, 10)
         self.divisions = (1, 1, 1)
         self.precision = 100
-
+        self.cmap = cm.plasma
+        self.elev = 30
+        self.azim = -60
+        self.contour_plot = True
 
     def of(self, function):
         self.function = function
@@ -77,6 +80,56 @@ class Plot3dZofXY():
         self.divisions = divisions
         return self
 
+    def with_colormap(self, cmap):
+        '''
+        Set color map.
+
+        Args:
+            cmap: a color map. Can use standard ones provided in maplotlib library, cm.plasma etc
+
+        Returns:
+            self
+        '''
+        self.cmap = cmap
+        return self
+
+    def with_view_rot(self, elev, azim):
+        '''
+        Set view rotation.
+
+        Args:
+            elev: the elevation, in degrees
+            elev: the azimuth, in degrees
+
+        Returns:
+            self
+        '''
+        self.elev = elev
+        self.azim = azim
+        return self
+
+    def with_contour_plot(self, visible):
+        '''
+        Add a contour plot under main plat
+
+        Args:
+            visible: True to make contour plot visible
+
+        Returns:
+            self
+        '''
+        self.contour_plot = visible
+        return self
+
+    def get_ticks(self, start, extent, division):
+        v = ((start + division)//division)*division
+        ticks = [v]
+        while v < (start + extent):
+            v += division
+            if v < (start + extent):
+                ticks.append(v)
+        return ticks
+
     def render(self):
         fig, ax = self.plt.subplots(subplot_kw={"projection": "3d"})
 
@@ -90,16 +143,27 @@ class Plot3dZofXY():
                 Z[i, j] = self.function(x, y)
 
         # Plot the surface.
-        surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, antialiased=True)
+        surf = ax.plot_surface(X, Y, Z, cmap=self.cmap, antialiased=True)
 
-        # Customize the z axis.
+        # Customize the axes
+        ax.set_xticks(self.get_ticks(self.start[0], self.extent[0], self.divisions[0]))
+        ax.set_yticks(self.get_ticks(self.start[1], self.extent[1], self.divisions[1]))
         ax.set_zlim(self.start[2], self.extent[2] + self.start[2])
-        ax.zaxis.set_major_locator(LinearLocator(10))
-        # A StrMethodFormatter is used automatically
-        ax.zaxis.set_major_formatter('{x:.02f}')
+        # ax.zaxis.set_major_locator(LinearLocator(10))
+        # # A StrMethodFormatter is used automatically
+        # ax.zaxis.set_major_formatter('{x:.02f}')
+        ax.set_zticks(self.get_ticks(self.start[2], self.extent[2], self.divisions[2]))
+
+        ## Contour map
+        if self.contour_plot:
+            ax.contourf(X, Y, Z, zdir="z", cmap=self.cmap, offset=self.start[2])
 
         # Add a color bar which maps values to colors.
         fig.colorbar(surf, shrink=0.5, aspect=5, pad=0.07)
+
+        # SEt view rotation
+        self.plt.gca().azim = self.azim
+        self.plt.gca().elev = self.elev
 
 
 def make_mpl_image(outfile, draw, width, height, channels=3):
