@@ -2,6 +2,15 @@
 
 Generative art and graphing library for creating images and animations.
 
+## Latest version
+
+* Fix minor bugs in formula rendering.
+* Add matplotlib module, create matplotlib graphs from genertativepy.
+* Add dot product to Vector class.
+* Add BookColorScheme, suitable for print and web.
+* Add axis positions (axes can be drawn on boundary or on axis).
+* Update for latest moviepy version.
+
 ## Version 24.11 notes
  
 * Fix bug is extents for `of_xy_function`.
