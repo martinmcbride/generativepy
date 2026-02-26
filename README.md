@@ -11,13 +11,13 @@ Generative art and graphing library for creating images and animations.
 * Add axis positions (axes can be drawn on boundary or on axis).
 * Update for latest moviepy version.
 
-## Version 24.11 notes
+## Version 4.3 notes (listed as V24.11 on pypi.org)
  
 * Fix bug is extents for `of_xy_function`.
 * Axes.transform_from_graph can accept a point or a sequence of points.
 * Allow axes labels to be positioned around edges of graph if required. 
 
-## Version 24.04 notes
+## Version 4.2 notes (listed as V24.04 on pypi.org)
 
 3D drawing is likely to change in a future release. The rest of the library is reasonably stable. 
 
