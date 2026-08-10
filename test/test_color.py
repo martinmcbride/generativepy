@@ -84,6 +84,19 @@ class TestColour(unittest.TestCase):
         self.assertAlmostEqual(color.rgba[2], 0.44705882)
         self.assertAlmostEqual(color.rgba[3], 1)
 
+    def test_css_rgb_mixed_case(self):
+        color = Color('SAlmon')
+        self.assertAlmostEqual(color.rgb[0], 0.98039215)
+        self.assertAlmostEqual(color.rgb[1], 0.50196078)
+        self.assertAlmostEqual(color.rgb[2], 0.44705882)
+
+    def test_css_rgba_mixed_case(self):
+        color = Color('SalmoN')
+        self.assertAlmostEqual(color.rgba[0], 0.98039215)
+        self.assertAlmostEqual(color.rgba[1], 0.50196078)
+        self.assertAlmostEqual(color.rgba[2], 0.44705882)
+        self.assertAlmostEqual(color.rgba[3], 1)
+
     def test_cssa_rgba_transparent(self):
         color = Color('salmon', 0)
         self.assertAlmostEqual(color.rgba[0], 0.98039215)
