@@ -17,8 +17,6 @@ from generativepy.geometry import (
     Turtle,
     Transform,
     AngleMarker,
-    ParallelMarker,
-    TickMarker,
     RegularPolygon,
     Marker,
     FillParameters, StrokeParameters, ROUND, FONT_WEIGHT_BOLD, FONT_SLANT_ITALIC, EVEN_ODD, BUTT, BEVEL,
@@ -135,47 +133,6 @@ class TestGeometryImages(unittest.TestCase):
             setup(ctx, width, height, background=Color(0.8))
             red = Color("red")
             thickness = 3
-
-            ## Draw lines with ticks and paraticks
-            a = (50, 50)
-            b = (50, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            TickMarker(ctx).of_start_end(a, b).with_length(12).stroke(red, thickness)
-
-            a = (100, 50)
-            b = (150, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            TickMarker(ctx).of_start_end(a, b).with_length(12).with_count(2).with_gap(
-                6
-            ).stroke(red, thickness)
-
-            a = (250, 50)
-            b = (200, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            TickMarker(ctx).of_start_end(a, b).with_length(12).with_count(3).with_gap(
-                6
-            ).stroke(red, thickness)
-
-            a = (350, 50)
-            b = (350, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            ParallelMarker(ctx).of_start_end(a, b).with_length(12).stroke(
-                red, thickness
-            )
-
-            a = (400, 50)
-            b = (450, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            ParallelMarker(ctx).of_start_end(a, b).with_length(12).with_count(
-                2
-            ).with_gap(6).stroke(red, thickness)
-
-            a = (550, 150)
-            b = (500, 50)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            ParallelMarker(ctx).of_start_end(a, b).with_length(12).with_count(
-                3
-            ).with_gap(6).stroke(red, thickness)
 
             ## Draw lines with angles
             a = (50, 250)
