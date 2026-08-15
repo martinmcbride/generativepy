@@ -1,13 +1,5 @@
 import unittest
-from generativepy.drawing import (
-    setup,
-    make_image,
-    BUTT,
-    ROUND,
-    BEVEL,
-    FONT_WEIGHT_BOLD,
-    FONT_SLANT_ITALIC, EVEN_ODD,
-)
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.geometry import (
@@ -40,7 +32,7 @@ from generativepy.geometry import (
     TickMarker,
     RegularPolygon,
     Marker,
-    FillParameters, StrokeParameters,
+    FillParameters, StrokeParameters, ROUND, FONT_WEIGHT_BOLD, FONT_SLANT_ITALIC, EVEN_ODD, BUTT, BEVEL,
 )
 import math
 

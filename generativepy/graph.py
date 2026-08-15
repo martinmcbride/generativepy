@@ -11,8 +11,8 @@ import numpy as np
 import copy
 from dataclasses import dataclass
 
-from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters, Circle, Polygon, Line
-from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER
+from generativepy.geometry import (Text, Shape, FillParameters, StrokeParameters, FontParameters, Circle, Polygon, Line,
+                                   BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER, RIGHT, TOP, BOTTOM, LEFT)
 from generativepy.color import Color
 from generativepy import drawing
 from generativepy.math import Vector as V
@@ -358,7 +358,7 @@ class Axes:
 
         self.clip_x()
         tick_direction = -1 if self.appearance.x_axis_pos == AXIS_MAX else 1
-        tick_align = (drawing.RIGHT, drawing.BOTTOM) if self.appearance.x_axis_pos == AXIS_MAX else (drawing.RIGHT, drawing.TOP)
+        tick_align = (RIGHT, BOTTOM) if self.appearance.x_axis_pos == AXIS_MAX else (RIGHT, TOP)
         if self.appearance.x_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.x_axis_pos == AXIS_ZERO else self.appearance.start[1] if self.appearance.x_axis_pos == AXIS_MIN else self.appearance.start[1] + self.appearance.extent[1]
             line_params.apply(self.ctx)
@@ -383,7 +383,7 @@ class Axes:
 
         self.clip_y()
         tick_direction = -1 if self.appearance.y_axis_pos == AXIS_MAX else 1
-        tick_align = (drawing.LEFT, drawing.TOP) if self.appearance.y_axis_pos == AXIS_MAX else (drawing.RIGHT, drawing.TOP)
+        tick_align = (LEFT, TOP) if self.appearance.y_axis_pos == AXIS_MAX else (RIGHT, TOP)
         if self.appearance.y_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.y_axis_pos == AXIS_ZERO else self.appearance.start[0] if self.appearance.y_axis_pos == AXIS_MIN else self.appearance.start[0] + self.appearance.extent[0]
             line_params.apply(self.ctx)

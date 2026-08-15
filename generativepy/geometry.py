@@ -20,14 +20,52 @@ import itertools
 import cairo
 import math
 from dataclasses import dataclass
-from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
-from generativepy.drawing import WINDING
-from generativepy.drawing import FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD
-from generativepy.drawing import FONT_SLANT_NORMAL, FONT_SLANT_ITALIC, FONT_SLANT_OBLIQUE
-from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
-from generativepy.drawing import LINE, RAY, SEGMENT
 from generativepy.math import Vector as V
 from generativepy.color import Color
+
+# Text align
+
+# Centre text horizontally
+CENTER = 0
+
+# Centre text vertically
+MIDDLE = 0
+
+# Left align text
+LEFT = 1
+
+# Right align text
+RIGHT = 2
+TOP = 3
+BOTTOM = 4
+BASELINE = 5
+
+# Fill rule
+EVEN_ODD=0
+WINDING=1
+
+## Line cap/join
+MITER = 0   # join
+ROUND = 1   # join/cap
+BEVEL = 2   # join
+BUTT = 3    # cap
+SQUARE = 4  # cap
+
+## Line extension
+
+SEGMENT = 0
+RAY = 1
+LINE = 2
+
+## Font styles
+
+FONT_WEIGHT_NORMAL = 0
+FONT_WEIGHT_BOLD = 1
+
+FONT_SLANT_NORMAL = 0
+FONT_SLANT_ITALIC = 1
+FONT_SLANT_OBLIQUE = 2
+
 
 class Pattern:
     """

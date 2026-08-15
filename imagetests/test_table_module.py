@@ -1,8 +1,8 @@
 import unittest
 
-from generativepy.geometry import Text
+from generativepy.geometry import Text, CENTER, MIDDLE
 
-from generativepy.drawing import setup, make_image, CENTER, MIDDLE
+from generativepy.drawing import setup, make_image
 from generativepy.table import Table
 from image_test_helper import run_image_test
 from generativepy.color import Color

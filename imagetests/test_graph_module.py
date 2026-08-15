@@ -1,10 +1,11 @@
 import unittest
 import math
-from generativepy.drawing import (setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, BASELINE, FONT_WEIGHT_BOLD, )
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance, AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX
-from generativepy.geometry import LinearGradient, FillParameters, FontParameters, StrokeParameters
+from generativepy.geometry import (LinearGradient, FillParameters, FontParameters, StrokeParameters,
+                                   ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD)
 
 """
 Test the graph module.

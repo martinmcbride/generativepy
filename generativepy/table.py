@@ -6,12 +6,9 @@
 from dataclasses import dataclass
 import numpy as np
 
-import cairo
-from generativepy.drawing import BUTT
-
 from generativepy.color import Color
 
-from generativepy.geometry import FillParameters, StrokeParameters
+from generativepy.geometry import FillParameters, StrokeParameters, BUTT
 
 class TableLayout():
     """

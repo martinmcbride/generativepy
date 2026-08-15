@@ -1,11 +1,8 @@
 import unittest
-from generativepy.drawing import setup, make_image, BUTT, ROUND, BEVEL
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
-from generativepy.geometry import LinearGradient, Text, Circle, circle, Bezier, Polygon, Square, square, Rectangle,\
-                                  rectangle, Line, line, Ellipse, ellipse, tick, paratick, arrowhead, polygon,\
-                                  angle_marker, Path, Triangle, triangle, Turtle
-import math
+from generativepy.geometry import LinearGradient, Circle, Square, Rectangle
 
 """
 Test gradient fills
