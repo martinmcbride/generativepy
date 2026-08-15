@@ -619,13 +619,6 @@ class Rectangle(Shape):
         return self
 
 
-def rectangle(ctx, corner, width, height):
-    """
-    Deprecated, use `Rectangle` class instead
-    """
-    Rectangle(ctx).of_corner_size(corner, width, height).add()
-
-
 class Square(Shape):
     """
     The Square class represents a square shape.
@@ -657,13 +650,6 @@ class Square(Shape):
         self.y = corner[1]
         self.width = width
         return self
-
-
-def square(ctx, corner, width):
-    """
-    Deprecated, use `Square` class instead
-    """
-    Square(ctx).of_corner_size(corner, width).add()
 
 
 class Triangle(Shape):
@@ -701,13 +687,6 @@ class Triangle(Shape):
         self.b = b
         self.c = c
         return self
-
-
-def triangle(ctx, a, b, c):
-    """
-    Deprecated, use `Triangle` class instead
-    """
-    Triangle(ctx).of_corners(a, b, c).add()
 
 
 class Text(Shape):
@@ -999,26 +978,6 @@ class Text(Shape):
         return self
 
 
-
-def text(ctx, txt, x, y, font=None, size=None, weight=None, slant=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
-    """
-    Deprecated, use `Text` class instead
-    """
-    shape = Text(ctx).of(txt, (x, y)).align(alignx, aligny)
-    if font:
-        shape = shape.font(font, weight, slant)
-    if size:
-        shape = shape.size(size)
-    if flip:
-        shape = shape.flip()
-
-    if color:
-        ctx.set_source_rgba(*color)
-
-    shape.add()
-    ctx.fill()
-
-
 class Line(Shape):
     """
     The Line class draws a line.
@@ -1162,13 +1121,6 @@ class Line(Shape):
         return self
 
 
-def line(ctx, start, end):
-    """
-    Deprecated, use `Line` class instead
-    """
-    Line(ctx).of_start_end(start, end).add()
-
-
 class Bezier(Shape):
     """
     The Bezier class draws a bezier curve.
@@ -1309,16 +1261,6 @@ class Polygon(Shape):
         return self
 
 
-def polygon(ctx, points, closed=True):
-    """
-    Deprecated, use `Polygon` class instead
-    """
-    shape = Polygon(ctx).of_points(points)
-    if not closed:
-        shape.open()
-    shape.add()
-
-
 class Circle(Shape):
     """
     The Circle class draws circles, arcs, sectors and segments.
@@ -1435,12 +1377,6 @@ class Circle(Shape):
         self.end_angle = end_angle
         self.type = Circle.segment
         return self
-
-def circle(ctx, center, radius):
-    """
-    Deprecated, use `Circle` class instead
-    """
-    Circle(ctx).of_center_radius(center, radius).add()
 
 
 class RegularPolygon(Shape):
@@ -1709,12 +1645,6 @@ class Ellipse(Shape):
         self.type = Circle.segment
         return self
 
-def ellipse(ctx, center, radius_x, radius_y):
-    """
-    Deprecated, use `Ellipse` class instead
-    """
-    Ellipse(ctx).of_center_radius(center, radius_x, radius_y).add()
-
 
 class Marker(Shape):
     """
@@ -1965,9 +1895,9 @@ class AngleMarker(Shape):
             self.radius /= 1.4
             v = (math.cos(ang1), math.sin(ang1))
             pv = (math.cos(ang2), math.sin(ang2))
-            polygon(self.ctx, [(self.b[0] + v[0] * self.radius, self.b[1] + v[1] * self.radius),
+            self._polygon(self.ctx, [(self.b[0] + v[0] * self.radius, self.b[1] + v[1] * self.radius),
                                (self.b[0] + (v[0] + pv[0]) * self.radius, self.b[1] + (v[1] + pv[1]) * self.radius),
-                               (self.b[0] + pv[0] * self.radius, self.b[1] + pv[1] * self.radius)], False)
+                               (self.b[0] + pv[0] * self.radius, self.b[1] + pv[1] * self.radius)])
         elif self.count == 2:
             self.ctx.arc(self.b[0], self.b[1], self.radius - self.gap / 2, ang1, ang2)
             self.ctx.new_sub_path()
@@ -2066,6 +1996,15 @@ class AngleMarker(Shape):
         """
         self.right_angle = right_angle
         return self
+
+    def _polygon(self, ctx, points, open=True):
+        """
+        Used to draw right angle maker
+        """
+        shape = Polygon(ctx).of_points(points)
+        if open:
+            shape.open()
+        shape.add()
 
 
 class TickMarker(Shape):
@@ -2307,43 +2246,6 @@ class ParallelMarker(Shape):
         self.ctx.move_to(x, y)
         self.ctx.line_to(x + ox2, y + oy2)
 
-
-
-def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
-    """
-    Deprecated - use the `Marker` class instead.
-    """
-    AngleMarker(ctx).of_points(a, b, c).with_count(count).with_radius(radius).with_gap(gap).as_right_angle(right_angle).add()
-
-def tick(ctx, a, b, count=1, length=4, gap=1):
-    """
-    Deprecated - use the `Marker` class instead.
-    """
-    TickMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
-
-def paratick(ctx, a, b, count=1, length=4, gap=1):
-    """
-    Deprecated - use the `Marker` class instead.
-    """
-    ParallelMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
-
-def arrowhead(ctx, a, b, length=4):
-
-    def draw(x, y, ox1, oy1, ox2, oy2):
-        ctx.move_to(x + ox1, y + oy1)
-        ctx.line_to(x, y)
-        ctx.line_to(x + ox2, y + oy2)
-
-    # Length of line
-    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
-    # Unit vector along line
-    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
-    # Unit vector perpendicular to line
-    pvector = (-vector[1], vector[0])
-
-    ctx.new_path()
-    draw(b[0], b[1], (-vector[0] + pvector[0]) * length / 2, (-vector[1] + pvector[1]) * length / 2,
-         (-vector[0] - pvector[0]) * length / 2, (-vector[1] - pvector[1]) * length / 2)
 
 class Image():
     """
