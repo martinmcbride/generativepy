@@ -691,6 +691,12 @@ class Scatter:
         self.point_style = POINT_CIRCLE
         self.point_size = 4
         self.line_style = SCATTER_NO_LINE
+        self.points = ()
+
+    def of_points(self, points):
+        self.points = points
+        return self
+
 
     def with_line_style(self, style=SCATTER_NO_LINE, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
         """
@@ -731,7 +737,7 @@ class Scatter:
         self.fill = FillParameters(pattern, fill_rule)
         return self
 
-    def plot(self, x_values, y_values):
+    def plot(self):
         '''
         Plot a scatter chart of the sample values
 
@@ -744,14 +750,15 @@ class Scatter:
             self
         '''
 
-        points = [self.axes.transform_from_graph((x, y)) for x, y in zip(x_values, y_values)]
+        graph_points = [self.axes.transform_from_graph(p) for p in self.points]
         if self.line_style == SCATTER_CONNECTED:
-            Polygon(self.ctx).of_points(points).open().stroke(self.stroke_params)
+            Polygon(self.ctx).of_points(graph_points).open().stroke(self.stroke_params)
         if self.line_style == SCATTER_STALK:
+            x_values = [p[0] for p in self.points]
             bases = [self.axes.transform_from_graph((x, 0)) for x in x_values]
-            for p, b in zip(points, bases):
+            for p, b in zip(graph_points, bases):
                 Line(self.ctx).of_start_end(b, p).stroke(self.stroke_params)
-        for p in points:
+        for p in graph_points:
             Circle(self.ctx).of_center_radius(p, self.point_size).fill(self.fill.pattern, self.fill.fill_rule)
         return self
 
