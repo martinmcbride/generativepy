@@ -1,8 +1,6 @@
-numpy~=1.26.4
+numpy~=2.5.1
 pycairo~=1.27.0
 pillow~=10.4.0
-setuptools~=75.6.0
-vapory~=0.1.2
-moderngl~=5.12.0
-imageio~=2.33.1
-moviepy~=2.0.0
+setuptools~=83.0.0
+imageio~=2.37.0
+moviepy~=2.2.1
