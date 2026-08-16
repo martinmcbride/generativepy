@@ -15,49 +15,6 @@ import cairo
 import generativepy.utils
 import numpy as np
 
-# Text align
-
-# Centre text horizontally
-CENTER = 0
-
-# Centre text vertically
-MIDDLE = 0
-
-# Left align text
-LEFT = 1
-
-# Right align text
-RIGHT = 2
-TOP = 3
-BOTTOM = 4
-BASELINE = 5
-
-# Fill rule
-EVEN_ODD=0
-WINDING=1
-
-## Line cap/join
-MITER = 0   # join
-ROUND = 1   # join/cap
-BEVEL = 2   # join
-BUTT = 3    # cap
-SQUARE = 4  # cap
-
-## Line extension
-
-SEGMENT = 0
-RAY = 1
-LINE = 2
-
-## Font styles
-
-FONT_WEIGHT_NORMAL = 0
-FONT_WEIGHT_BOLD = 1
-
-FONT_SLANT_NORMAL = 0
-FONT_SLANT_ITALIC = 1
-FONT_SLANT_OBLIQUE = 2
-
 
 def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, starty=0, background=None, flip=False):
     """

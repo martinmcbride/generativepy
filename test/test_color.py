@@ -4,7 +4,7 @@ from generativepy.color import Color, make_colormap
 
 class TestColour(unittest.TestCase):
 
-    # Test RGB and RGBA colours
+    # Test RGB and RGBA colours, including invalid values
     def test_rgb_rgb_black(self):
         color = Color(0, 0, 0)
         self.assertEqual(color.rgb, (0, 0, 0))
@@ -29,11 +29,19 @@ class TestColour(unittest.TestCase):
         color = Color(1, 0.5, 0.25, 0.4)
         self.assertEqual(color.rgba, (1, 0.5, 0.25, 0.4))
 
+    def test_rgb_invalid_color(self):
+        with self.assertRaises(ValueError):
+            color = Color(None, 0.5, 0.25)
+
+    def test_rgba_invalid_color(self):
+        with self.assertRaises(ValueError):
+            color = Color(1, 0.5, 0.25, None)
+
+    # Test grey and grey+alpha modes
     def test_grey_rgb_black(self):
         color = Color(0)
         self.assertEqual(color.rgb, (0, 0, 0))
 
-    # Test grey and grey+alpha modes
     def test_grey_rgb_color(self):
         color = Color(0.25)
         self.assertEqual(color.rgb, (0.25, 0.25, 0.25))
@@ -54,6 +62,14 @@ class TestColour(unittest.TestCase):
         color = Color(0.25, 0.4)
         self.assertEqual(color.rgba, (0.25, 0.25, 0.25, 0.4))
 
+    def test_grey_invalid_color(self):
+        with self.assertRaises(ValueError):
+            color = Color(None)
+
+    def test_greya_invalid_color(self):
+        with self.assertRaises(ValueError):
+            color = Color(1, None)
+
     # Test CSS and CSS plus alpha modes
     def test_css_rgb(self):
         color = Color('salmon')
@@ -63,6 +79,19 @@ class TestColour(unittest.TestCase):
 
     def test_css_rgba(self):
         color = Color('salmon')
+        self.assertAlmostEqual(color.rgba[0], 0.98039215)
+        self.assertAlmostEqual(color.rgba[1], 0.50196078)
+        self.assertAlmostEqual(color.rgba[2], 0.44705882)
+        self.assertAlmostEqual(color.rgba[3], 1)
+
+    def test_css_rgb_mixed_case(self):
+        color = Color('SAlmon')
+        self.assertAlmostEqual(color.rgb[0], 0.98039215)
+        self.assertAlmostEqual(color.rgb[1], 0.50196078)
+        self.assertAlmostEqual(color.rgb[2], 0.44705882)
+
+    def test_css_rgba_mixed_case(self):
+        color = Color('SalmoN')
         self.assertAlmostEqual(color.rgba[0], 0.98039215)
         self.assertAlmostEqual(color.rgba[1], 0.50196078)
         self.assertAlmostEqual(color.rgba[2], 0.44705882)
@@ -81,6 +110,14 @@ class TestColour(unittest.TestCase):
         self.assertAlmostEqual(color.rgba[1], 0.50196078)
         self.assertAlmostEqual(color.rgba[2], 0.44705882)
         self.assertAlmostEqual(color.rgba[3], 0.7)
+
+    def test_css_invalid_color_name(self):
+        with self.assertRaises(ValueError):
+            color = Color("invalidname")
+
+    def test_cssa_invalid_color_name(self):
+        with self.assertRaises(ValueError):
+            color = Color("invalidname", 0.5)
 
     # Test getters
     def test_get_r(self):

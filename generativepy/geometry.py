@@ -20,14 +20,52 @@ import itertools
 import cairo
 import math
 from dataclasses import dataclass
-from generativepy.drawing import LEFT, CENTER, RIGHT, BOTTOM, MIDDLE, BASELINE, TOP
-from generativepy.drawing import WINDING
-from generativepy.drawing import FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD
-from generativepy.drawing import FONT_SLANT_NORMAL, FONT_SLANT_ITALIC, FONT_SLANT_OBLIQUE
-from generativepy.drawing import MITER, ROUND, BEVEL, BUTT, SQUARE
-from generativepy.drawing import LINE, RAY, SEGMENT
 from generativepy.math import Vector as V
 from generativepy.color import Color
+
+# Text align
+
+# Centre text horizontally
+CENTER = 0
+
+# Centre text vertically
+MIDDLE = 0
+
+# Left align text
+LEFT = 1
+
+# Right align text
+RIGHT = 2
+TOP = 3
+BOTTOM = 4
+BASELINE = 5
+
+# Fill rule
+EVEN_ODD=0
+WINDING=1
+
+## Line cap/join
+MITER = 0   # join
+ROUND = 1   # join/cap
+BEVEL = 2   # join
+BUTT = 3    # cap
+SQUARE = 4  # cap
+
+## Line extension
+
+SEGMENT = 0
+RAY = 1
+LINE = 2
+
+## Font styles
+
+FONT_WEIGHT_NORMAL = 0
+FONT_WEIGHT_BOLD = 1
+
+FONT_SLANT_NORMAL = 0
+FONT_SLANT_ITALIC = 1
+FONT_SLANT_OBLIQUE = 2
+
 
 class Pattern:
     """
@@ -581,13 +619,6 @@ class Rectangle(Shape):
         return self
 
 
-def rectangle(ctx, corner, width, height):
-    """
-    Deprecated, use `Rectangle` class instead
-    """
-    Rectangle(ctx).of_corner_size(corner, width, height).add()
-
-
 class Square(Shape):
     """
     The Square class represents a square shape.
@@ -619,13 +650,6 @@ class Square(Shape):
         self.y = corner[1]
         self.width = width
         return self
-
-
-def square(ctx, corner, width):
-    """
-    Deprecated, use `Square` class instead
-    """
-    Square(ctx).of_corner_size(corner, width).add()
 
 
 class Triangle(Shape):
@@ -663,13 +687,6 @@ class Triangle(Shape):
         self.b = b
         self.c = c
         return self
-
-
-def triangle(ctx, a, b, c):
-    """
-    Deprecated, use `Triangle` class instead
-    """
-    Triangle(ctx).of_corners(a, b, c).add()
 
 
 class Text(Shape):
@@ -961,26 +978,6 @@ class Text(Shape):
         return self
 
 
-
-def text(ctx, txt, x, y, font=None, size=None, weight=None, slant=None, color=None, alignx=LEFT, aligny=BASELINE, flip=False):
-    """
-    Deprecated, use `Text` class instead
-    """
-    shape = Text(ctx).of(txt, (x, y)).align(alignx, aligny)
-    if font:
-        shape = shape.font(font, weight, slant)
-    if size:
-        shape = shape.size(size)
-    if flip:
-        shape = shape.flip()
-
-    if color:
-        ctx.set_source_rgba(*color)
-
-    shape.add()
-    ctx.fill()
-
-
 class Line(Shape):
     """
     The Line class draws a line.
@@ -1124,13 +1121,6 @@ class Line(Shape):
         return self
 
 
-def line(ctx, start, end):
-    """
-    Deprecated, use `Line` class instead
-    """
-    Line(ctx).of_start_end(start, end).add()
-
-
 class Bezier(Shape):
     """
     The Bezier class draws a bezier curve.
@@ -1271,16 +1261,6 @@ class Polygon(Shape):
         return self
 
 
-def polygon(ctx, points, closed=True):
-    """
-    Deprecated, use `Polygon` class instead
-    """
-    shape = Polygon(ctx).of_points(points)
-    if not closed:
-        shape.open()
-    shape.add()
-
-
 class Circle(Shape):
     """
     The Circle class draws circles, arcs, sectors and segments.
@@ -1397,12 +1377,6 @@ class Circle(Shape):
         self.end_angle = end_angle
         self.type = Circle.segment
         return self
-
-def circle(ctx, center, radius):
-    """
-    Deprecated, use `Circle` class instead
-    """
-    Circle(ctx).of_center_radius(center, radius).add()
 
 
 class RegularPolygon(Shape):
@@ -1671,12 +1645,6 @@ class Ellipse(Shape):
         self.type = Circle.segment
         return self
 
-def ellipse(ctx, center, radius_x, radius_y):
-    """
-    Deprecated, use `Ellipse` class instead
-    """
-    Ellipse(ctx).of_center_radius(center, radius_x, radius_y).add()
-
 
 class Marker(Shape):
     """
@@ -1927,9 +1895,9 @@ class AngleMarker(Shape):
             self.radius /= 1.4
             v = (math.cos(ang1), math.sin(ang1))
             pv = (math.cos(ang2), math.sin(ang2))
-            polygon(self.ctx, [(self.b[0] + v[0] * self.radius, self.b[1] + v[1] * self.radius),
+            self._polygon(self.ctx, [(self.b[0] + v[0] * self.radius, self.b[1] + v[1] * self.radius),
                                (self.b[0] + (v[0] + pv[0]) * self.radius, self.b[1] + (v[1] + pv[1]) * self.radius),
-                               (self.b[0] + pv[0] * self.radius, self.b[1] + pv[1] * self.radius)], False)
+                               (self.b[0] + pv[0] * self.radius, self.b[1] + pv[1] * self.radius)])
         elif self.count == 2:
             self.ctx.arc(self.b[0], self.b[1], self.radius - self.gap / 2, ang1, ang2)
             self.ctx.new_sub_path()
@@ -2029,283 +1997,15 @@ class AngleMarker(Shape):
         self.right_angle = right_angle
         return self
 
-
-class TickMarker(Shape):
-    """
-    Deprecated - use the `Marker` class instead.
-
-    The TickMarker class is a special Shape that draws a tick mark (a small line) across an existing line.
-
-    An TickMarker can have 1, 2 or 3 ticks. It is normally used to indicate that two or more lines are the same length.
-
-    The TickMarker only draws the ticks, it doesn't draw the line itself. That would normally be
-    drawn using a Line object, Polygon object, or similar.
-    """
-
-    def __init__(self, ctx):
-        super().__init__(ctx)
-        self.a = (0, 0)
-        self.b = (0, 0)
-        self.length = 4
-        self.count = 1
-        self.gap = 1
-
-    def add(self):
-        self._do_path_()
-        pmid = ((self.a[0] + self.b[0]) / 2, (self.a[1] + self.b[1]) / 2)
-        # self.length of line
-        l = math.sqrt((self.a[0] - self.b[0]) * (self.a[0] - self.b[0]) + (self.a[1] - self.b[1]) * (self.a[1] - self.b[1]))
-        # Unit vector along line
-        # Draw a tick on a line - deprecated, use TickMarker class instead
-        vector = ((self.b[0] - self.a[0]) / l, (self.b[1] - self.a[1]) / l)
-        # Unit vector perpendicular to line
-        pvector = (-vector[1], vector[0])
-
-        self.ctx.new_path()
-        if self.count == 1:
-            pos = (pmid[0], pmid[1])
-            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
-        elif self.count == 2:
-            pos = (pmid[0] - vector[0] * self.gap / 2, pmid[1] - vector[1] * self.gap / 2)
-            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
-            pos = (pmid[0] + vector[0] * self.gap / 2, pmid[1] + vector[1] * self.gap / 2)
-            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
-        elif self.count == 3:
-            pos = (pmid[0] - vector[0] * self.gap, pmid[1] - vector[1] * self.gap)
-            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
-            pos = (pmid[0], pmid[1])
-            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
-            pos = (pmid[0] + vector[0] * self.gap, pmid[1] + vector[1] * self.gap)
-            self._do_line((pos[0] + pvector[0] * self.length / 2, pos[1] + pvector[1] * self.length / 2),
-                          (pos[0] - pvector[0] * self.length / 2, pos[1] - pvector[1] * self.length / 2))
-        return self
-
-    def of_start_end(self, a, b):
+    def _polygon(self, ctx, points, open=True):
         """
-        Creates a marker based on 2 points.
-
-        This will draw a mark for the line formed by ab. The mark will be half way between a and b.
-
-        Args:
-            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
-
-        Returns:
-            self
+        Used to draw right angle maker
         """
-        self.a = a
-        self.b = b
-        return self
+        shape = Polygon(ctx).of_points(points)
+        if open:
+            shape.open()
+        shape.add()
 
-    def with_length(self, length):
-        """
-        Sets the length of the marker. Default 4
-
-        Args:
-            length:  number - Length of the marker in user units.
-
-        Returns:
-            self
-        """
-        self.length = length
-        return self
-
-    def with_count(self, count):
-        """
-        Sets the number of marks. Default 1. Permitted values are 1, 2 or 3.
-
-        Args:
-            * count:  number - Number of marks
-
-        Returns:
-            self
-        """
-        self.count = count
-        return self
-
-    def with_gap(self, gap):
-        """
-        Sets the gap between the marks if `count` > 1.
-
-        Sets the spacing of the marks. This is only relevant if there is more than one arc (ie if count > 1), otherwise
-        it is ignored.The default is 2.
-
-        Args:
-            gap:  number - Gap between marks in user units.
-
-        Returns:
-            self
-        """
-        self.gap = gap
-        return self
-
-    def _do_line(self, a, b):
-        self.ctx.move_to(*a)
-        self.ctx.line_to(*b)
-
-
-class ParallelMarker(Shape):
-    """
-    Deprecated - use the `Marker` class instead.
-
-    The ParallelMarker class is a special Shape that draws an arrow mark across an existing line.
-
-    An ParallelMarker can have 1, 2 or 3 arrows. It is normally used to indicate that two or more lines are the parallel.
-
-    The ParallelMarker only draws the arrows, it doesn't draw the line itself. That would normally be
-    drawn using a Line object, Polygon object, or similar.
-    """
-
-    def __init__(self, ctx):
-        super().__init__(ctx)
-        self.a = (0, 0)
-        self.b = (0, 0)
-        self.length = 4
-        self.count = 1
-        self.gap = 1
-
-    def add(self):
-        self._do_path_()
-        # Midpoint of line
-        pmid = ((self.a[0] + self.b[0]) / 2, (self.a[1] + self.b[1]) / 2)
-        # self.length of line
-        l = math.sqrt((self.a[0] - self.b[0]) * (self.a[0] - self.b[0]) + (self.a[1] - self.b[1]) * (self.a[1] - self.b[1]))
-        # Unit vector along line
-        vector = ((self.b[0] - self.a[0]) / l, (self.b[1] - self.a[1]) / l)
-        # Unit vector perpendicular to line
-        pvector = (-vector[1], vector[0])
-
-        self.ctx.new_path()
-        if self.count == 1:
-            pos = (pmid[0], pmid[1])
-            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
-        elif self.count == 2:
-            pos = (pmid[0] - vector[0] * self.gap / 2, pmid[1] - vector[1] * self.gap / 2)
-            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
-            pos = (pmid[0] + vector[0] * self.gap / 2, pmid[1] + vector[1] * self.gap / 2)
-            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
-        elif self.count == 3:
-            pos = (pmid[0] - vector[0] * self.gap, pmid[1] - vector[1] * self.gap)
-            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
-            pos = (pmid[0], pmid[1])
-            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
-            pos = (pmid[0] + vector[0] * self.gap, pmid[1] + vector[1] * self.gap)
-            self._do_draw(pos[0], pos[1], (-vector[0] + pvector[0]) * self.length / 2, (-vector[1] + pvector[1]) * self.length / 2,
-                          (-vector[0] - pvector[0]) * self.length / 2, (-vector[1] - pvector[1]) * self.length / 2)
-        return self
-
-    def of_start_end(self, a, b):
-        """
-        Creates a marker based on 2 points.
-
-        This will draw a mark for the line formed by ab. The mark will be half way between a and b.
-
-        Args:
-            a:  (number, number) - A tuple of two numbers, giving the (x, y) position of point a.
-            b:  (number, number) - A tuple of two numbers, giving the (x, y) position of point b.
-
-        Returns:
-            self
-        """
-        self.a = a
-        self.b = b
-        return self
-
-    def with_length(self, length):
-        """
-        Sets the length of the marker. Default 4
-
-        Args:
-            length:  number - Length of the marker in user units.
-
-        Returns:
-            self
-        """
-        self.length = length
-        return self
-
-    def with_count(self, count):
-        """
-        Sets the number of marks. Default 1. Permitted values are 1, 2 or 3.
-
-        Args:
-            * count:  number - Number of marks
-
-        Returns:
-            self
-        """
-        self.count = count
-        return self
-
-    def with_gap(self, gap):
-        """
-        Sets the gap between the marks if `count` > 1.
-
-        Sets the spacing of the marks. This is only relevant if there is more than one arc (ie if count > 1), otherwise
-        it is ignored.The default is 2.
-
-        Args:
-            gap:  number - Gap between marks in user units.
-
-        Returns:
-            self
-        """
-        self.gap = gap
-        return self
-
-    def _do_draw(self, x, y, ox1, oy1, ox2, oy2):
-        self.ctx.move_to(x, y)
-        self.ctx.line_to(x + ox1, y + oy1)
-        self.ctx.move_to(x, y)
-        self.ctx.line_to(x + ox2, y + oy2)
-
-
-
-def angle_marker(ctx, a, b, c, count=1, radius=8, gap=2, right_angle=False):
-    """
-    Deprecated - use the `Marker` class instead.
-    """
-    AngleMarker(ctx).of_points(a, b, c).with_count(count).with_radius(radius).with_gap(gap).as_right_angle(right_angle).add()
-
-def tick(ctx, a, b, count=1, length=4, gap=1):
-    """
-    Deprecated - use the `Marker` class instead.
-    """
-    TickMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
-
-def paratick(ctx, a, b, count=1, length=4, gap=1):
-    """
-    Deprecated - use the `Marker` class instead.
-    """
-    ParallelMarker(ctx).of_start_end(a, b).with_count(count).with_length(length).with_gap(gap).add()
-
-def arrowhead(ctx, a, b, length=4):
-
-    def draw(x, y, ox1, oy1, ox2, oy2):
-        ctx.move_to(x + ox1, y + oy1)
-        ctx.line_to(x, y)
-        ctx.line_to(x + ox2, y + oy2)
-
-    # Length of line
-    l = math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]))
-    # Unit vector along line
-    vector = ((b[0] - a[0]) / l, (b[1] - a[1]) / l)
-    # Unit vector perpendicular to line
-    pvector = (-vector[1], vector[0])
-
-    ctx.new_path()
-    draw(b[0], b[1], (-vector[0] + pvector[0]) * length / 2, (-vector[1] + pvector[1]) * length / 2,
-         (-vector[0] - pvector[0]) * length / 2, (-vector[1] - pvector[1]) * length / 2)
 
 class Image():
     """

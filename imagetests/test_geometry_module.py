@@ -1,46 +1,25 @@
 import unittest
-from generativepy.drawing import (
-    setup,
-    make_image,
-    BUTT,
-    ROUND,
-    BEVEL,
-    FONT_WEIGHT_BOLD,
-    FONT_SLANT_ITALIC, EVEN_ODD,
-)
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.geometry import (
     Image,
     Text,
     Circle,
-    circle,
     Bezier,
     Polygon,
     Square,
-    square,
     Rectangle,
-    rectangle,
     Line,
-    line,
     Ellipse,
-    ellipse,
-    tick,
-    paratick,
-    arrowhead,
-    polygon,
-    angle_marker,
     Path,
     Triangle,
-    triangle,
     Turtle,
     Transform,
     AngleMarker,
-    ParallelMarker,
-    TickMarker,
     RegularPolygon,
     Marker,
-    FillParameters, StrokeParameters,
+    FillParameters, StrokeParameters, ROUND, FONT_WEIGHT_BOLD, FONT_SLANT_ITALIC, EVEN_ODD, BUTT, BEVEL,
 )
 import math
 
@@ -149,52 +128,11 @@ class TestGeometryImages(unittest.TestCase):
 
         self.assertTrue(run_image_test("test_markers.png", creator))
 
-    def test_old_markers(self):
+    def test_angle_markers(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, background=Color(0.8))
             red = Color("red")
             thickness = 3
-
-            ## Draw lines with ticks and paraticks
-            a = (50, 50)
-            b = (50, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            TickMarker(ctx).of_start_end(a, b).with_length(12).stroke(red, thickness)
-
-            a = (100, 50)
-            b = (150, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            TickMarker(ctx).of_start_end(a, b).with_length(12).with_count(2).with_gap(
-                6
-            ).stroke(red, thickness)
-
-            a = (250, 50)
-            b = (200, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            TickMarker(ctx).of_start_end(a, b).with_length(12).with_count(3).with_gap(
-                6
-            ).stroke(red, thickness)
-
-            a = (350, 50)
-            b = (350, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            ParallelMarker(ctx).of_start_end(a, b).with_length(12).stroke(
-                red, thickness
-            )
-
-            a = (400, 50)
-            b = (450, 150)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            ParallelMarker(ctx).of_start_end(a, b).with_length(12).with_count(
-                2
-            ).with_gap(6).stroke(red, thickness)
-
-            a = (550, 150)
-            b = (500, 50)
-            Line(ctx).of_start_end(a, b).stroke(red, thickness)
-            ParallelMarker(ctx).of_start_end(a, b).with_length(12).with_count(
-                3
-            ).with_gap(6).stroke(red, thickness)
 
             ## Draw lines with angles
             a = (50, 250)
@@ -232,109 +170,11 @@ class TestGeometryImages(unittest.TestCase):
         def creator(file):
             make_image(file, draw, 600, 500)
 
-        self.assertTrue(run_image_test("test_old_markers.png", creator))
-
-    def test_deprecated_markers(self):
-        # Deprecated marker functions
-        def draw(ctx, width, height, frame_no, frame_count):
-            setup(ctx, width, height, background=Color(0.8))
-
-            ctx.set_source_rgba(*Color(0, 0, 0.5))
-            ctx.set_line_width(3)
-
-            ## Draw lines with ticks, paraticks and arrowheads
-            a = (50, 50)
-            b = (50, 150)
-            line(ctx, a, b)
-            ctx.stroke()
-            tick(ctx, a, b, length=12, gap=6)
-            ctx.stroke()
-            arrowhead(ctx, a, b, length=24)
-            ctx.stroke()
-
-            a = (100, 50)
-            b = (150, 150)
-            line(ctx, a, b)
-            ctx.stroke()
-            tick(ctx, a, b, 2, length=12, gap=6)
-            ctx.stroke()
-
-            a = (250, 50)
-            b = (200, 150)
-            line(ctx, a, b)
-            ctx.stroke()
-            tick(ctx, a, b, 3, length=12, gap=6)
-            ctx.stroke()
-
-            a = (350, 50)
-            b = (350, 150)
-            line(ctx, a, b)
-            ctx.stroke()
-            paratick(ctx, a, b, length=12, gap=6)
-            ctx.stroke()
-
-            a = (400, 50)
-            b = (450, 150)
-            line(ctx, a, b)
-            ctx.stroke()
-            paratick(ctx, a, b, 2, length=12, gap=6)
-            ctx.stroke()
-
-            a = (550, 150)
-            b = (500, 50)
-            line(ctx, a, b)
-            ctx.stroke()
-            paratick(ctx, a, b, 3, length=12, gap=6)
-            ctx.stroke()
-
-            ## Draw lines with angles
-            a = (50, 250)
-            b = (50, 450)
-            c = (150, 450)
-            polygon(ctx, (a, b, c), closed=False)
-            ctx.stroke()
-            angle_marker(ctx, a, b, c, radius=24, gap=6, right_angle=True)
-            ctx.stroke()
-
-            a = (250, 250)
-            b = (200, 450)
-            c = (300, 450)
-            polygon(ctx, (a, b, c), closed=False)
-            ctx.stroke()
-            angle_marker(ctx, a, b, c, 3, radius=24, gap=6)
-            ctx.stroke()
-
-            a = (300, 250)
-            b = (400, 300)
-            c = (500, 300)
-            polygon(ctx, (a, b, c), closed=False)
-            ctx.stroke()
-            angle_marker(ctx, c, b, a, radius=24, gap=6)
-            ctx.stroke()
-
-            a = (300, 350)
-            b = (400, 400)
-            c = (500, 400)
-            polygon(ctx, (a, b, c), closed=False)
-            ctx.stroke()
-            angle_marker(ctx, a, b, c, 2, radius=24, gap=6)
-            ctx.stroke()
-
-        def creator(file):
-            make_image(file, draw, 600, 500)
-
-        self.assertTrue(run_image_test("test_deprecated_markers.png", creator))
+        self.assertTrue(run_image_test("test_angle_markers.png", creator))
 
     def test_lines(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=5, background=Color(0.8))
-
-            # The line function is a convenience function that adds a line as a new path.
-            # You can fill or stroke it as you wish.
-            line(ctx, (1, 1), (2, 3))
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.set_line_width(0.1)
-            ctx.stroke()
 
             # Line objects can only be stroked as they do not contain an area.
             Line(ctx).of_start_end((3, 1), (4, 4)).stroke(Color("fuchsia"), 0.2)
@@ -423,12 +263,6 @@ class TestGeometryImages(unittest.TestCase):
     def test_ellipse(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=5, background=Color(0.8))
-
-            # The ellipse function is a convenience function that adds a ellipse as a new the path.
-            # You can fill or stroke it as you wish.
-            ellipse(ctx, (1, 1), 0.7, 1.1)
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.fill()
 
             # Ellipse objects can be filled, stroked, filled and stroked.
             Ellipse(ctx).of_center_radius((2.5, 1), 0.7, 0.3).fill(
@@ -589,12 +423,6 @@ class TestGeometryImages(unittest.TestCase):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=5, background=Color(0.8))
 
-            # The circle function is a convenience function that adds a circle as a new the path.
-            # You can fill or stroke it as you wish.
-            circle(ctx, (1, 1), 0.7)
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.fill()
-
             # Circle objects can be filled, stroked, filled and stroked.
             Circle(ctx).of_center_radius((2.5, 1), 0.7).fill(Color(0, 0, 1)).stroke(
                 Color(0), 0.05
@@ -631,12 +459,6 @@ class TestGeometryImages(unittest.TestCase):
     def test_polygon(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=500, background=Color(0.8))
-
-            # The polygon function is a convenience function that adds a polygon as a new path.
-            # You can fill or stroke it as you wish.
-            polygon(ctx, ((100, 100), (150, 50), (200, 150), (200, 200)))
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.fill()
 
             Polygon(ctx).of_points(
                 [(300, 100), (300, 150), (400, 200), (450, 100)]
@@ -683,12 +505,6 @@ class TestGeometryImages(unittest.TestCase):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=5, background=Color(0.8))
 
-            # The rectangle function is a convenience function that adds a rectangle as a new the path.
-            # You can fill or stroke it as you wish.
-            rectangle(ctx, (1, 1), 1, 1.2)
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.fill()
-
             # Rectangle objects can be filled, stroked, filled and stroked.
             Rectangle(ctx).of_corner_size((3, 1), 1, 1.2).fill(Color(0, 0.5, 0))
             Rectangle(ctx).of_corner_size((1, 3), 1.2, 1).stroke(Color(0, 0.5, 0), 0.1)
@@ -705,12 +521,6 @@ class TestGeometryImages(unittest.TestCase):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=5, background=Color(0.8))
 
-            # The square function is a convenience function that adds a square as a new the path.
-            # You can fill or stroke it as you wish.
-            square(ctx, (1, 1), 1)
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.fill()
-
             # Square objects can be filled, stroked, filled and stroked.
             Square(ctx).of_corner_size((3, 1), 1).fill(Color(0, 0.5, 0))
             Square(ctx).of_corner_size((1, 3), 1).stroke(Color(0, 0.5, 0), 0.1)
@@ -726,12 +536,6 @@ class TestGeometryImages(unittest.TestCase):
     def test_triangle(self):
         def draw(ctx, width, height, frame_no, frame_count):
             setup(ctx, width, height, width=500, background=Color(0.8))
-
-            # The triangle function is a convenience function that adds a triangle as a new path.
-            # You can fill or stroke it as you wish.
-            triangle(ctx, (100, 100), (150, 50), (200, 150))
-            ctx.set_source_rgba(*Color(1, 0, 0))
-            ctx.fill()
 
             Triangle(ctx).of_corners((300, 100), (300, 150), (400, 200)).stroke(
                 Color("orange"), 10

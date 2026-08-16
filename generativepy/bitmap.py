@@ -115,13 +115,15 @@ def get_mode(channels):
 
 def get_background(channels):
     """
+    Returns a white color that us suitable for the specfied number of channels.
+
     `channels` is an int that specifies a colour space:
 
     * 1 - monochrome.
     * 3 - RGB
     * 4 - RGBA
 
-    The result can be passed as an argument to the `Color` construtor to craete a suitable colour for a white
+    The result can be passed as an argument to the `Color` constructor to create a suitable colour for a white
     background.
 
     For RGBA images, the background is set to transparent white.
@@ -251,7 +253,7 @@ def example_paint_function(image, pixel_width, pixel_height, frame_no, frame_cou
     This is an example paint function. It is a dummy function used to document the required parameters.
 
     Args:
-        image: PIL Image object - A drawing function object, see below.
+        image: PIL Image object. This is a open PIL Image object ready to be draw on, for example created by Image.new()
         pixel_width: int - The width of the image in pixels.
         pixel_height: int - The height of the image in pixels.
         frame_no: int - the number of the current frame. For single images this will always be 0. For animations this

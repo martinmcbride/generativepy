@@ -11,8 +11,8 @@ import numpy as np
 import copy
 from dataclasses import dataclass
 
-from generativepy.geometry import Text, Shape, FillParameters, StrokeParameters, FontParameters, Circle, Polygon, Line
-from generativepy.drawing import BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER
+from generativepy.geometry import (Text, Shape, FillParameters, StrokeParameters, FontParameters, Circle, Polygon, Line,
+                                   BUTT, FONT_WEIGHT_BOLD, FONT_SLANT_NORMAL, WINDING, SQUARE, MITER, RIGHT, TOP, BOTTOM, LEFT)
 from generativepy.color import Color
 from generativepy import drawing
 from generativepy.math import Vector as V
@@ -44,9 +44,7 @@ class AxesAppearance:
     axislines: any = dataclasses.field(default_factory=lambda: StrokeParameters(Color(0.2), line_width=2, cap=BUTT))
     featurescale: any = 1
     divisions: any = (1, 1)
-    subdivisions: any = False
-    subdivisionfactor: any = (1, 1)
-    text_height: any = 0
+    subdivisionfactor: any = None
     x_div_formatter: any = None
     y_div_formatter: any = None
     start: any = (0, 0)
@@ -158,7 +156,6 @@ class Axes:
         Returns:
             self
         '''
-        self.appearance.subdivisions = True
         self.appearance.subdivisionfactor = factor
         return self
 
@@ -303,7 +300,7 @@ class Axes:
             .get_size()
         self.clip()
         self._draw_background()
-        if self.appearance.subdivisions:
+        if self.appearance.subdivisionfactor:
             self._draw_subdivlines()
         self._draw_divlines()
         self.unclip()
@@ -358,7 +355,7 @@ class Axes:
 
         self.clip_x()
         tick_direction = -1 if self.appearance.x_axis_pos == AXIS_MAX else 1
-        tick_align = (drawing.RIGHT, drawing.BOTTOM) if self.appearance.x_axis_pos == AXIS_MAX else (drawing.RIGHT, drawing.TOP)
+        tick_align = (RIGHT, BOTTOM) if self.appearance.x_axis_pos == AXIS_MAX else (RIGHT, TOP)
         if self.appearance.x_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.x_axis_pos == AXIS_ZERO else self.appearance.start[1] if self.appearance.x_axis_pos == AXIS_MIN else self.appearance.start[1] + self.appearance.extent[1]
             line_params.apply(self.ctx)
@@ -383,7 +380,7 @@ class Axes:
 
         self.clip_y()
         tick_direction = -1 if self.appearance.y_axis_pos == AXIS_MAX else 1
-        tick_align = (drawing.LEFT, drawing.TOP) if self.appearance.y_axis_pos == AXIS_MAX else (drawing.RIGHT, drawing.TOP)
+        tick_align = (LEFT, TOP) if self.appearance.y_axis_pos == AXIS_MAX else (RIGHT, TOP)
         if self.appearance.y_axis_pos != AXIS_NONE:
             axis_line_pos = 0 if self.appearance.y_axis_pos == AXIS_ZERO else self.appearance.start[0] if self.appearance.y_axis_pos == AXIS_MIN else self.appearance.start[0] + self.appearance.extent[0]
             line_params.apply(self.ctx)
@@ -691,6 +688,12 @@ class Scatter:
         self.point_style = POINT_CIRCLE
         self.point_size = 4
         self.line_style = SCATTER_NO_LINE
+        self.points = ()
+
+    def of_points(self, points):
+        self.points = points
+        return self
+
 
     def with_line_style(self, style=SCATTER_NO_LINE, pattern=Color(0), line_width=1, dash=None, cap=SQUARE, join=MITER, miter_limit=None):
         """
@@ -731,7 +734,7 @@ class Scatter:
         self.fill = FillParameters(pattern, fill_rule)
         return self
 
-    def plot(self, x_values, y_values):
+    def plot(self):
         '''
         Plot a scatter chart of the sample values
 
@@ -744,14 +747,15 @@ class Scatter:
             self
         '''
 
-        points = [self.axes.transform_from_graph((x, y)) for x, y in zip(x_values, y_values)]
+        graph_points = [self.axes.transform_from_graph(p) for p in self.points]
         if self.line_style == SCATTER_CONNECTED:
-            Polygon(self.ctx).of_points(points).open().stroke(self.stroke_params)
+            Polygon(self.ctx).of_points(graph_points).open().stroke(self.stroke_params)
         if self.line_style == SCATTER_STALK:
+            x_values = [p[0] for p in self.points]
             bases = [self.axes.transform_from_graph((x, 0)) for x in x_values]
-            for p, b in zip(points, bases):
+            for p, b in zip(graph_points, bases):
                 Line(self.ctx).of_start_end(b, p).stroke(self.stroke_params)
-        for p in points:
+        for p in graph_points:
             Circle(self.ctx).of_center_radius(p, self.point_size).fill(self.fill.pattern, self.fill.fill_rule)
         return self
 

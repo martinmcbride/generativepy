@@ -222,14 +222,14 @@ class Color():
         """
 
         if len(args) == 1:
-            if args[0] in cssColors:
-                self.color = tuple([x/255 for x in cssColors[args[0]]]) + (1,)
+            if type(args[0]) == str and args[0].lower() in cssColors:
+                self.color = tuple([x/255 for x in cssColors[args[0].lower()]]) + (1,)
             else:
                 g = Color.clamp(args[0])
                 self.color = (g,)*3 + (1,)
         elif len(args) == 2:
-            if args[0] in cssColors:
-                self.color = tuple([x/255 for x in cssColors[args[0]]]) + (args[1],)
+            if type(args[0]) == str and args[0].lower() in cssColors:
+                self.color = tuple([x/255 for x in cssColors[args[0].lower()]]) + (args[1],)
             else:
                 g = Color.clamp(args[0])
                 a = Color.clamp(args[1])

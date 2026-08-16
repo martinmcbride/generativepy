@@ -1,10 +1,11 @@
 import unittest
 import math
-from generativepy.drawing import (setup, make_image, ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, BASELINE, FONT_WEIGHT_BOLD, )
+from generativepy.drawing import setup, make_image
 from image_test_helper import run_image_test
 from generativepy.color import Color
 from generativepy.graph import Axes, Plot, Scatter, SCATTER_CONNECTED, SCATTER_STALK, AxesAppearance, AXIS_NONE, AXIS_ZERO, AXIS_MIN, AXIS_MAX
-from generativepy.geometry import LinearGradient, FillParameters, FontParameters, StrokeParameters
+from generativepy.geometry import (LinearGradient, FillParameters, FontParameters, StrokeParameters,
+                                   ROUND, BUTT, FONT_SLANT_ITALIC, FONT_WEIGHT_NORMAL, FONT_WEIGHT_BOLD)
 
 """
 Test the graph module.
@@ -236,7 +237,6 @@ class TestGraphImages(unittest.TestCase):
             appearance = AxesAppearance(start=(-100, -1.1),
                                         extent=(500, 2.2),
                                         divisions=(90, 0.5),
-                                        subdivisions=True,
                                         subdivisionfactor=(2, 5),
                                         background=FillParameters(Color("wheat")),
                                         textcolor=FillParameters(Color("darkgreen")),
@@ -378,17 +378,14 @@ class TestGraphImages(unittest.TestCase):
             axes.draw()
 
             # Add various data
-            x1 = [1, 2, 3, 4, 5]
-            y1 = [2, 5, 4, 1, 3]
-            x2 = [1, 2, 3, 4, 5]
-            y2 = [6, 9, 8, 5, 7]
-            x3 = [4.5, 5.5, 6.5, 7.5, 8.5, 9.5]
-            y3 = [2, 5, 4, 1, 3]
+            p1 = [(1, 2), (2, 5), (3, 4), (4, 1), (5, 3)]
+            p2 = [(1, 6), (2, 9), (3, 8), (4, 5), (5, 7)]
+            p3 = [(4.5, 2), (5.5, 5), (6.5, 4), (7.5, 1), (8.5, 3)]
 
             axes.clip()
-            Scatter(axes).with_line_style(Color("red"), 4).with_point_style(6, pattern=Color("blue")).plot(x1, y1)
-            Scatter(axes).with_line_style(SCATTER_CONNECTED, Color("green"), 4).with_point_style(6, pattern=Color("magenta")).plot(x2, y2)
-            Scatter(axes).with_line_style(SCATTER_STALK, Color("yellow"), 4).with_point_style(6, pattern=Color("orange")).plot(x3, y3)
+            Scatter(axes).of_points(p1).with_line_style(Color("red"), 4).with_point_style(6, pattern=Color("blue")).plot()
+            Scatter(axes).of_points(p2).with_line_style(SCATTER_CONNECTED, Color("green"), 4).with_point_style(6, pattern=Color("magenta")).plot()
+            Scatter(axes).of_points(p3).with_line_style(SCATTER_STALK, Color("yellow"), 4).with_point_style(6, pattern=Color("orange")).plot()
             axes.unclip()
 
         def creator(file):

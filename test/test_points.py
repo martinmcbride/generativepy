@@ -1,8 +1,7 @@
 import unittest
 import math
 
-from generativepy.math import Matrix, Vector
-from generativepy.shape2d import Points
+from generativepy.math import Matrix, Vector, Points
 
 
 class TestPoints(unittest.TestCase):
