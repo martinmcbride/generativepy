@@ -2,22 +2,30 @@
 
 Generative art and graphing library for creating images and animations.
 
-## Latest version
+## Version 50.00
 
-* Fix minor bugs in formula rendering.
-* Add matplotlib module, create matplotlib graphs from genertativepy.
-* Add dot product to Vector class.
-* Add BookColorScheme, suitable for print and web.
-* Add axis positions (axes can be drawn on boundary or on axis).
-* Update for latest moviepy version.
+* Move to semantic versioning (Major.Minor) rather than date versioning (YY.MM) starting from 50.00
+* Make *AxesAppearance* fields consistent with *Axis* settings in graph module
+* Use *of_points* to define scatter charts in graph module
+* Remove deprecated market classes and geometry functions in geometry module
+* Case insensitive CSS names in color module
+* Move geometry related constants from drawing module to geometry module
+* Merge shape2d module into math module
+* Remove povray and moderngl modules (geometry3d and drawing 3d) to separate project, genpy3d
+* Fix minor bugs in formula rendering
+* Add matplotlib module, create matplotlib graphs from genertativepy
+* Add dot product to Vector class
+* Add BookColorScheme, suitable for print and web
+* Add axis positions (axes can be drawn on boundary or on axis)
+* Update for latest moviepy version
 
-## Version 4.3 notes (listed as V24.11 on pypi.org)
+## Version 24.11
  
 * Fix bug is extents for `of_xy_function`.
 * Axes.transform_from_graph can accept a point or a sequence of points.
 * Allow axes labels to be positioned around edges of graph if required. 
 
-## Version 4.2 notes (listed as V24.04 on pypi.org)
+## Version 24.04
 
 3D drawing is likely to change in a future release. The rest of the library is reasonably stable. 
 
@@ -38,14 +46,13 @@ create images and videos by writing simple Python scripts.
 
 The library requires:
 
-* [pycairo](https://pycairo.readthedocs.io/en/latest/index.html).
-* NumPy.
-* Pillow.
-* easy_vector.
-* moderngl (only required for 3D imaging).
+* Pycairo
+* NumPy
+* Pillow
 * MoviePy
-* Command line application gifsicle (only needed for GIF creation).
-* Commandline applications latex and divpng
+* ImageIO
+* Command line application gifsicle (only needed for GIF creation)
+* Commandline applications latex and divpng (for formula formatting)
 
 Main functionality:
 
@@ -57,16 +64,13 @@ Main functionality:
 * A graphing library for plotting 2D functions.
 * MovieBuilder supports creating video files from separate scenes.
 * Latex formula rendering
-* 3D geometry module using moderngl.
-* Math modules for vectors, matrices and abstract shapes. 
+* Math module for vectors, matrices and abstract shapes. 
 
 ## Website
 
-Visit [pythoninformer.com](http://www.pythoninformer.com/generative-art/) for details:
+Visit [graphicmaths.com](http://www.graphicmaths.com/) for details:
 
-* [generativepy reference](http://www.pythoninformer.com/generative-art/generativepy/).
-* [generativepy tutorials](http://www.pythoninformer.com/generative-art/generativepy-tutorial/).
-
-There are also some art examples in the Generative Art section of [my blog](https://martinmcbride.org/).
+* [generativepy API reference](https://graphicmaths.com/generativepy/generativepy-api/).
+* [generativepy tutorials](https://graphicmaths.com/generativepy/generativepy-book/color/).
 
 For detailed information of pycairo see the [Computer graphics in Python](https://leanpub.com/computergraphicsinpython) ebook.
