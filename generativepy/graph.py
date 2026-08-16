@@ -44,9 +44,7 @@ class AxesAppearance:
     axislines: any = dataclasses.field(default_factory=lambda: StrokeParameters(Color(0.2), line_width=2, cap=BUTT))
     featurescale: any = 1
     divisions: any = (1, 1)
-    subdivisions: any = False
-    subdivisionfactor: any = (1, 1)
-    text_height: any = 0
+    subdivisionfactor: any = None
     x_div_formatter: any = None
     y_div_formatter: any = None
     start: any = (0, 0)
@@ -158,7 +156,6 @@ class Axes:
         Returns:
             self
         '''
-        self.appearance.subdivisions = True
         self.appearance.subdivisionfactor = factor
         return self
 
@@ -303,7 +300,7 @@ class Axes:
             .get_size()
         self.clip()
         self._draw_background()
-        if self.appearance.subdivisions:
+        if self.appearance.subdivisionfactor:
             self._draw_subdivlines()
         self._draw_divlines()
         self.unclip()

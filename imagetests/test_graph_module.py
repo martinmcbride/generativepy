@@ -237,7 +237,6 @@ class TestGraphImages(unittest.TestCase):
             appearance = AxesAppearance(start=(-100, -1.1),
                                         extent=(500, 2.2),
                                         divisions=(90, 0.5),
-                                        subdivisions=True,
                                         subdivisionfactor=(2, 5),
                                         background=FillParameters(Color("wheat")),
                                         textcolor=FillParameters(Color("darkgreen")),
