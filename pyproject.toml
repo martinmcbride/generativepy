@@ -1,0 +1,12 @@
+[project]
+name = "generativepy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "moviepy>=1.0.3",
+    "numpy>=2.5.2",
+    "pillow>=12.3.0",
+    "pycairo>=1.29.1",
+]
