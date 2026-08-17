@@ -12,10 +12,11 @@ into complete movies.
 
 import numpy as np
 from PIL import Image
+from moviepy.video.compositing.concatenate import concatenate_videoclips
+
 from generativepy.utils import temp_file
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 from moviepy.video.VideoClip import VideoClip
-from moviepy.video.compositing.CompositeVideoClip import concatenate_videoclips
 import subprocess as sp
 import pathlib
 import logging
