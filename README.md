@@ -50,7 +50,6 @@ The library requires:
 * NumPy
 * Pillow
 * MoviePy
-* ImageIO
 * Command line application gifsicle (only needed for GIF creation)
 * Commandline applications latex and divpng (for formula formatting)
 
