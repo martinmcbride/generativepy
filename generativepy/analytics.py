@@ -23,10 +23,11 @@ as greyscale data, or just the output from a fractal algorithm. That would be an
 They can be used with multichannel data, such as RGB data, an array with shape `(height, width, 3)`. However in that case it would produce one value for all
 the R, G amd B values combined.
 """
+import npt
 import numpy as np
 
 
-def print_stats(array, title='stats'):
+def print_stats(array: np.ndarray, title: str = 'stats'):
     """
     Prints the statistics for a NumPy array.
 
@@ -48,7 +49,7 @@ def print_stats(array, title='stats'):
     print('Median:', np.median(array))
 
 
-def print_histogram(array, title='histogram', bins=10):
+def print_histogram(array: np.ndarray, title: str ='histogram', bins: int = 10):
     """
    Prints the histogram for a NumPy array
 
