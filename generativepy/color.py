@@ -31,8 +31,13 @@ The `color` module also contains:
 * Several reusable colour schemes.
 """
 
+from __future__ import annotations
+
 import colorsys
 import itertools
+from collections.abc import Sequence
+
+from typing import Self
 
 cssColors = {
     "indianred":(205,92,92),
@@ -192,7 +197,7 @@ class Color():
     All numerical input values are clamped in the range 0.0 to 1.0 (values less than 0.0 are replaced with 0.0, values greater than 1.0 are replaced with 1.0).
     """
 
-    def __init__(self, *args):
+    def __init__(self, *args: int | float | str) -> None:
         """
         A color object always contains four values, `r`, `g`, `b` and `a`. Each value can have a value between
         0.0 and 1.0. Out of range values are automatically clamped.
@@ -228,7 +233,7 @@ class Color():
                 g = Color.clamp(args[0])
                 self.color = (g,)*3 + (1,)
         elif len(args) == 2:
-            if type(args[0]) == str and args[0].lower() in cssColors:
+            if isinstance(args[0], str) and isinstance(args[1], (int, float)) and args[0].lower() in cssColors:
                 self.color = tuple([x/255 for x in cssColors[args[0].lower()]]) + (args[1],)
             else:
                 g = Color.clamp(args[0])
@@ -242,7 +247,7 @@ class Color():
             raise ValueError("Color takes 1, 2, 3 or 4 arguments")
 
     @staticmethod
-    def of_hsl(h, s, l):
+    def of_hsl(h: float| int, s: float| int, l: float| int) -> Color:
         """
         Static method to create an HSL colour.
 
@@ -262,7 +267,7 @@ class Color():
         Args:
             h: number - Hue of colour.
             s: number - Saturation of colour.
-            v: number - Value (lightness) of colour.
+            l: number - Value (lightness) of colour.
 
         Returns:
             A `Color` object.
@@ -274,7 +279,7 @@ class Color():
         return Color(r, g, b)
 
     @staticmethod
-    def of_hsla(h, s, l, a):
+    def of_hsla(h: float | int, s: float | int, l: float | int, a: float | int) -> Color:
         """
         Static method to create a transparent HSL colour.
 
@@ -297,108 +302,108 @@ class Color():
         return Color(r, g, b, a)
 
     @property
-    def rgb(self):
+    def rgb(self) -> tuple:
         """
         Read-only property returns RGB values as a tuple of floats. Each value is in range 0.0 to 1.0.
         """
         return tuple(self.color[:3])
 
     @property
-    def rgba(self):
+    def rgba(self) -> tuple:
         """
         Read-only property returns RGBA values as a tuple of floats. Each value is in range 0.0 to 1.0.
         """
         return tuple(self.color)
 
     @property
-    def r(self):
+    def r(self) ->  int | float:
         """
         Read-only property returns the red value of the colour as a float in range 0.0 to 1.0.
         """
         return self.color[0]
 
-    def with_r(self, newval):
+    def with_r(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its red value set to `newval`
         """
         newval = Color.clamp(newval)
         return Color(newval, self.color[1], self.color[2], self.color[3])
 
-    def with_r_factor(self, factor):
+    def with_r_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its red value multiplied by `factor`
         """
         return Color(self.color[0]*factor, self.color[1], self.color[2], self.color[3])
 
     @property
-    def g(self):
+    def g(self) ->  int | float:
         """
         Read-only property returns green value of the colour as a float in range 0.0 to 1.0.
         """
         return self.color[1]
 
-    def with_g(self, newval):
+    def with_g(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its green value set to `newval`
         """
         newval = Color.clamp(newval)
         return Color(self.color[0], newval, self.color[2], self.color[3])
 
-    def with_g_factor(self, factor):
+    def with_g_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its green value multiplied by `factor`
         """
         return Color(self.color[0], self.color[1]*factor, self.color[2], self.color[3])
 
     @property
-    def b(self):
+    def b(self) ->  int | float:
         """
         Read-only property returns blue value of the colour as a float in range 0.0 to 1.0.
         """
         return self.color[2]
 
-    def with_b(self, newval):
+    def with_b(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its blue value set to `newval`
         """
         newval = Color.clamp(newval)
         return Color(self.color[0], self.color[1], newval, self.color[3])
 
-    def with_b_factor(self, factor):
+    def with_b_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its blue value multiplied by `factor`
         """
         return Color(self.color[0], self.color[1], self.color[2]*factor, self.color[3])
 
     @property
-    def a(self):
+    def a(self) ->  int | float:
         """
         Read-only property returns the alpha value of the colour as a float in range 0.0 to 1.0.
         """
         return self.color[3]
 
-    def with_a(self, newval):
+    def with_a(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its alpha value set to `newval`
         """
         newval = Color.clamp(newval)
         return Color(self.color[0], self.color[1], self.color[2], newval)
 
-    def with_a_factor(self, factor):
+    def with_a_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its alpha value multiplied by `factor`
         """
         return Color(self.color[0], self.color[1], self.color[2], self.color[3]*factor)
 
     @property
-    def h(self):
+    def h(self) ->  int | float:
         """
         Read-only property returns the h value of the colour as a float in range 0.0 to 1.0.
         """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return h
 
-    def with_h(self, newval):
+    def with_h(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its h value set to `newval`
         """
@@ -407,7 +412,7 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(newval, l, s)
         return Color(r, g, b, self.color[3])
 
-    def with_h_factor(self, factor):
+    def with_h_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its h value multiplied by `factor`
         """
@@ -416,14 +421,14 @@ class Color():
         return Color(r, g, b, self.color[3])
 
     @property
-    def s(self):
+    def s(self) ->  int | float:
         """
         Read-only property returns the s value of the colour as a float in range 0.0 to 1.0.
         """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return s
 
-    def with_s(self, newval):
+    def with_s(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its s value set to `newval`
         """
@@ -432,7 +437,7 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(h, l, newval)
         return Color(r, g, b, self.color[3])
 
-    def with_s_factor(self, factor):
+    def with_s_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its s value multiplied by `factor`
         """
@@ -441,14 +446,14 @@ class Color():
         return Color(r, g, b, self.color[3])
 
     @property
-    def l(self):
+    def l(self) ->  int | float:
         """
         Read-only property returns the l value of the colour as a float in range 0.0 to 1.0.
         """
         h, l, s = colorsys.rgb_to_hls(self.color[0], self.color[1], self.color[2])
         return l
 
-    def with_l(self, newval):
+    def with_l(self, newval: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its l value set to `newval`
         """
@@ -457,7 +462,7 @@ class Color():
         r, g, b = colorsys.hls_to_rgb(h, newval, s)
         return Color(r, g, b, self.color[3])
 
-    def with_l_factor(self, factor):
+    def with_l_factor(self, factor: float | int) -> Color:
         """
         Read-only property returns a new `Color` object with its l value multiplied by `factor`
         """
@@ -466,48 +471,48 @@ class Color():
         return Color(r, g, b, self.color[3])
 
     @property
-    def dark3(self):
+    def dark3(self) -> Color:
         """
         Read-only property returns a new `Color` object that is a much darker version of the current colout.
         """
         return self.with_l_factor(0.3)
 
     @property
-    def dark2(self):
+    def dark2(self) -> Color:
         """
         Read-only property returns a new `Color` object that is a darker version of the current colout.
         """
         return self.with_l_factor(0.5)
 
     @property
-    def dark1(self):
+    def dark1(self) -> Color:
         """
         Read-only property returns a new `Color` object that is a slightly darker version of the current colout.
         """
         return self.with_l_factor(0.75)
 
     @property
-    def light3(self):
+    def light3(self) -> Color:
         """
         Read-only property returns a new `Color` object that is a much lighter version of the current colout.
         """
         return self.with_l_factor(2.5)
 
     @property
-    def light2(self):
+    def light2(self) -> Color:
         """
         Read-only property returns a new `Color` object that is a lighter version of the current colout.
         """
         return self.with_l_factor(1.9)
 
     @property
-    def light1(self):
+    def light1(self) -> Color:
         """
         Read-only property returns a new `Color` object that is a slightly lighter version of the current colout.
         """
         return self.with_l_factor(1.4)
 
-    def lerp(self, other, factor):
+    def lerp(self, other: Self, factor: float | int) -> Color:
         """
         Creates a new `Color` object that is part way between the current colour and the `other` colour. `factor` controls
         the mixture, eg:
@@ -532,7 +537,7 @@ class Color():
         col = [x*(1-factor) + y*factor for x, y in zip(col1, col2)]
         return Color(*col)
 
-    def as_rgbstr(self):
+    def as_rgbstr(self) -> str:
         """
         Converts current colour into a string format.
 
@@ -543,7 +548,7 @@ class Color():
                                         int(self.color[1] * 255),
                                         int(self.color[2] * 255))
 
-    def as_rgb_bytes(self):
+    def as_rgb_bytes(self) -> tuple:
         """
         Converts current colour into a tuple.
 
@@ -554,7 +559,7 @@ class Color():
                 int(self.color[1] * 255),
                 int(self.color[2] * 255))
 
-    def as_rgba_bytes(self):
+    def as_rgba_bytes(self) -> tuple:
         """
         Converts current colour into a tuple including alpha.
 
@@ -567,24 +572,22 @@ class Color():
                 int(self.color[3] * 255))
 
     @staticmethod
-    def clamp(v):
-        try:
-            v = min(1, max(0, v)) #Clamp v between 0 and 1
-        except Exception as e:
-            raise ValueError('Numerical value required') from e
-        return v
+    def clamp(v: float | int | str) -> float | int:
+        if isinstance(v, int) or isinstance(v, float):
+            return min(1, max(0, v)) #Clamp v between 0 and 1
+        raise ValueError('Numerical value required')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return 'rgba' + str(self.color)
 
-    def __getitem__(self, i):
+    def __getitem__(self, i: int) -> float | int:
         if i < 4:
             return self.color[i]
         else:
             raise IndexError()
 
 
-def make_colormap(length, colors, bands=None):
+def make_colormap(length: int, colors: tuple, bands: Sequence[int] = ()) -> list:
     """
     A colormap is a list of varying colors. It can be used to map a set of integers onto a list of colours.
 
@@ -619,7 +622,7 @@ def make_colormap(length, colors, bands=None):
 
     current_colour = 0
     band_index = 0
-    colormap = [None]*length
+    colormap: list[tuple[int, int]] = [(0, 0)]*length
     band_size = []
     for i in range(length):
         while band_breakpoints[current_colour] <= i:
@@ -642,7 +645,7 @@ class ArtisticColorScheme:
     An example colour scheme suitable for a white background,
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._RED = Color(0.941, 0.234, 0.125)
         self._BLUE = Color(0.250, 0.336, 0.629)
         self._GREEN = Color(0.250, 0.629, 0.336)
@@ -658,55 +661,55 @@ class ArtisticColorScheme:
         self._WHITE = Color(1)
 
     @property
-    def RED(self):
+    def RED(self) -> Color:
         return self._RED
 
     @property
-    def BLUE(self):
+    def BLUE(self) -> Color:
         return self._BLUE
 
     @property
-    def GREEN(self):
+    def GREEN(self) -> Color:
         return self._GREEN
 
     @property
-    def YELLOW(self):
+    def YELLOW(self) -> Color:
         return self._YELLOW
 
     @property
-    def MAGENTA(self):
+    def MAGENTA(self) -> Color:
         return self._MAGENTA
 
     @property
-    def ORANGE(self):
+    def ORANGE(self) -> Color:
         return self._ORANGE
 
     @property
-    def CYAN(self):
+    def CYAN(self) -> Color:
         return self._CYAN
 
     @property
-    def STEEL(self):
+    def STEEL(self) -> Color:
         return self._STEEL
 
     @property
-    def CREAM(self):
+    def CREAM(self) -> Color:
         return self._CREAM
 
     @property
-    def LIME(self):
+    def LIME(self) -> Color:
         return self._LIME
 
     @property
-    def BLACK(self):
+    def BLACK(self) -> Color:
         return self._BLACK
 
     @property
-    def GREY(self):
+    def GREY(self) -> Color:
         return self._GREY
 
     @property
-    def WHITE(self):
+    def WHITE(self) -> Color:
         return self._WHITE
 
 class DarkColorScheme:
@@ -714,7 +717,7 @@ class DarkColorScheme:
     An example colour scheme suitable for a dark grey background, such as the `BACKGROUND` colour below.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._BACKGROUND = Color(0.2)
         self._RED = Color("firebrick")
         self._GREEN = Color("mediumseagreen")
@@ -728,47 +731,47 @@ class DarkColorScheme:
         self._ORANGE = Color("orangered")
 
     @property
-    def BACKGROUND(self):
+    def BACKGROUND(self) -> Color:
         return self._BACKGROUND
 
     @property
-    def RED(self):
+    def RED(self) -> Color:
         return self._RED
 
     @property
-    def GREEN(self):
+    def GREEN(self) -> Color:
         return self._GREEN
 
     @property
-    def BLUE(self):
+    def BLUE(self) -> Color:
         return self._BLUE
 
     @property
-    def WHITE(self):
+    def WHITE(self) -> Color:
         return self._WHITE
 
     @property
-    def GREY(self):
+    def GREY(self) -> Color:
         return self._GREY
 
     @property
-    def BLACK(self):
+    def BLACK(self) -> Color:
         return self._BLACK
 
     @property
-    def YELLOW(self):
+    def YELLOW(self) -> Color:
         return self._YELLOW
 
     @property
-    def CYAN(self):
+    def CYAN(self) -> Color:
         return self._CYAN
 
     @property
-    def MAGENTA(self):
+    def MAGENTA(self) -> Color:
         return self._MAGENTA
 
     @property
-    def ORANGE(self):
+    def ORANGE(self) -> Color:
         return self._ORANGE
 
 class BookColorScheme:
@@ -778,7 +781,7 @@ class BookColorScheme:
     filling shapes
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._BACKGROUND = Color(1)
         self._WHITE = Color(1)
         self._GREY = Color(0.5)
@@ -803,73 +806,73 @@ class BookColorScheme:
         self._ORANGEFILL = Color.of_hsl(0.5/6, 0.8, 0.75)
 
     @property
-    def BACKGROUND(self):
+    def BACKGROUND(self) -> Color:
         return self._BACKGROUND
 
     @property
-    def WHITE(self):
+    def WHITE(self) -> Color:
         return self._WHITE
 
     @property
-    def GREY(self):
+    def GREY(self) -> Color:
         return self._GREY
 
     @property
-    def BLACK(self):
+    def BLACK(self) -> Color:
         return self._BLACK
 
     @property
-    def RED(self):
+    def RED(self) -> Color:
         return self._RED
 
     @property
-    def GREEN(self):
+    def GREEN(self) -> Color:
         return self._GREEN
 
     @property
-    def BLUE(self):
+    def BLUE(self) -> Color:
         return self._BLUE
 
     @property
-    def CYAN(self):
+    def CYAN(self) -> Color:
         return self._CYAN
 
     @property
-    def MAGENTA(self):
+    def MAGENTA(self) -> Color:
         return self._MAGENTA
 
     @property
-    def YELLOW(self):
+    def YELLOW(self) -> Color:
         return self._YELLOW
 
     @property
-    def ORANGE(self):
+    def ORANGE(self) -> Color:
         return self._ORANGE
     
     @property
-    def REDFILL(self):
+    def REDFILL(self) -> Color:
         return self._REDFILL
 
     @property
-    def GREENFILL(self):
+    def GREENFILL(self) -> Color:
         return self._GREENFILL
 
     @property
-    def BLUEFILL(self):
+    def BLUEFILL(self) -> Color:
         return self._BLUEFILL
 
     @property
-    def CYANFILL(self):
+    def CYANFILL(self) -> Color:
         return self._CYANFILL
 
     @property
-    def MAGENTAFILL(self):
+    def MAGENTAFILL(self) -> Color:
         return self._MAGENTAFILL
 
     @property
-    def YELLOWFILL(self):
+    def YELLOWFILL(self) -> Color:
         return self._YELLOWFILL
 
     @property
-    def ORANGEFILL(self):
+    def ORANGEFILL(self) -> Color:
         return self._ORANGEFILL
