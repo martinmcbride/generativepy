@@ -3,6 +3,7 @@
 # Copyright (C) 2020, Martin McBride
 # License: MIT
 
+from __future__ import annotations
 import numpy as np
 from generativepy.movie import save_frame, save_frames
 from generativepy.color import make_colormap

@@ -16,6 +16,7 @@ supported.
 general affine transformations.
 * `Turtle` provides a simple implementation of turtle graphics.
 """
+from __future__ import annotations
 import itertools
 import cairo
 import math

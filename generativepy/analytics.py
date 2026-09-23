@@ -23,6 +23,7 @@ as greyscale data, or just the output from a fractal algorithm. That would be an
 They can be used with multichannel data, such as RGB data, an array with shape `(height, width, 3)`. However in that case it would produce one value for all
 the R, G amd B values combined.
 """
+from __future__ import annotations
 import numpy as np
 
 

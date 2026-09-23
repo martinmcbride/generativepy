@@ -5,6 +5,7 @@
 """
 The matplotlib module uses the matplotlib library to create 3D plots
 """
+from __future__ import annotations
 import dataclasses
 import math
 from dataclasses import dataclass

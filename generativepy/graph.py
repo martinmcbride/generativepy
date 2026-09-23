@@ -2,6 +2,7 @@
 # Created: 2019-06-04
 # Copyright (C) 2018, Martin McBride
 # License: MIT
+from __future__ import annotations
 import dataclasses
 import itertools
 

@@ -11,6 +11,7 @@ possible to use the `Transform` class to apply general transforms to the formula
 
 The image will be tightly cropped to include just the marked pixels, with no border.
 """
+from __future__ import annotations
 import subprocess
 from collections.abc import Sequence
 

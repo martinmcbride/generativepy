@@ -3,6 +3,7 @@
 # Copyright (C) 2020, Martin McBride
 # License: MIT
 
+from __future__ import annotations
 import imageio
 import subprocess
 

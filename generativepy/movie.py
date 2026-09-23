@@ -10,6 +10,7 @@ The movie module provides functionality to create video clips (or "scenes"), inc
 into complete movies.
 """
 
+from __future__ import annotations
 import numpy as np
 from PIL import Image
 from moviepy import concatenate_videoclips
