@@ -3,11 +3,15 @@
 # Copyright (C) 2020, Martin McBride
 # License: MIT
 
+from __future__ import annotations
+
+import collections
 import sys
 import tempfile
 import os.path
+import numpy as np
 
-def correct_pycairo_byte_order(array, channels):
+def correct_pycairo_byte_order(array: np.ndarray, channels: int) -> np.ndarray:
     """
     If byte ordering is little endian, bitmap data from Pycairo needs swapping
     Convert a numpy array from BGR/BGRA ordering to RGB/RGBA.
@@ -29,7 +33,7 @@ def correct_pycairo_byte_order(array, channels):
 
     return array
 
-def temp_file(*names):
+def temp_file(*names: str) -> str:
     """
     Create a temporary file name path within the system temp folder.
     If *name has one element, return <temp>/name[0]

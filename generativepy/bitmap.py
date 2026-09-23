@@ -14,8 +14,14 @@ generativepy actually uses the Pillow library, which is a fork of PIL. That is b
 whereas PIL is not. The Pillow library is compatible, and is still imported using the name PIL. We will refer to is as
 PIL in the documentation.
 """
+from __future__ import annotations
+
+from typing import Any
+
 from PIL import Image
 import numpy as np
+from collections.abc import Callable, Generator
+
 
 class Scaler:
     """
@@ -28,7 +34,7 @@ class Scaler:
     The `Scaler` class provides this functionality. You can create a scaler object with the dimensions of the image and the
     required user space. The scaler object can then be used to convert coordinates from one space to another.
     """
-    def __init__(self, pixel_width, pixel_height, width=None, height=None, startx=0, starty=0):
+    def __init__(self, pixel_width: int | float, pixel_height: int | float, width: int | float=0, height: int | float=0, startx: int | float=0, starty: int | float=0):
         """
         The `Scaler` object is created using the image size in device space (`pixel_width`, `pixel_height`), and the
         user space size and origin (`width`, `height`, `startx`, `starty`). It can be used convert an (x, y) point
@@ -61,7 +67,7 @@ class Scaler:
         elif not width:
             self.width = self.height * pixel_width / pixel_height
 
-    def device_to_user(self, device_x, device_y):
+    def device_to_user(self, device_x: int | float, device_y: int | float) -> tuple:
         """
         Converts a device coordinate to user space.
 
@@ -76,7 +82,7 @@ class Scaler:
         user_y = device_y * self.height / self.pixel_height + self.starty
         return user_x, user_y
 
-    def user_to_device(self, user_x, user_y):
+    def user_to_device(self, user_x: int | float, user_y: int | float) -> tuple:
         """
         Converts a user coordinate to device space.
 
@@ -91,7 +97,7 @@ class Scaler:
         device_y = int((user_y - self.starty) * self.pixel_height / self.height)
         return device_x, device_y
 
-def get_mode(channels):
+def get_mode(channels: int) -> str:
     """
     Convert the number of channels into a PIL mode string.
 
@@ -113,7 +119,7 @@ def get_mode(channels):
         mode = 'RGB'
     return mode
 
-def get_background(channels):
+def get_background(channels: int) -> str | tuple:
     """
     Returns a white color that us suitable for the specfied number of channels.
 
@@ -136,14 +142,13 @@ def get_background(channels):
     **Usage**
     """
     if channels == 1:
-        color = 'white'
+        return 'white'
     elif channels == 4:
-        color = (255, 255, 255, 0)
+        return (255, 255, 255, 0)
     else:
-        color = 'white'
-    return color
+        return 'white'
 
-def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
+def make_bitmap(outfile: str, paint: Callable[..., None], pixel_width: int, pixel_height: int, channels: int=3) -> None:
     """
     Used to create a single PNG image.
 
@@ -166,7 +171,7 @@ def make_bitmap(outfile, paint, pixel_width, pixel_height, channels=3):
     paint(image, pixel_width, pixel_height, 0, 1)
     image.save(outfile + '.png')
 
-def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
+def make_bitmaps(outfile: str, paint: Callable[..., None], pixel_width: int, pixel_height: int, count: int, channels: int=3) -> None:
     """
     Used to create a sequence of PNG images. These can be combined into an animated GIF or video. This is similar to
     `make_bitmap` except it creates `count` files instead of just one.
@@ -196,7 +201,7 @@ def make_bitmaps(outfile, paint, pixel_width, pixel_height, count, channels=3):
         paint(image, pixel_width, pixel_height, i, count)
         image.save(outfile + str(i).zfill(8) + '.png')
 
-def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
+def make_bitmap_frame(paint: Callable[..., None], pixel_width: int, pixel_height: int, channels: int=3) -> np.ndarray:
     """
     Used to create a single image as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, channels).
 
@@ -219,7 +224,7 @@ def make_bitmap_frame(paint, pixel_width, pixel_height, channels=3):
     frame = np.copy(np.asarray(image))
     return frame
 
-def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
+def make_bitmap_frames(paint: Callable[..., None], pixel_width: int, pixel_height: int, count: int, channels: int=3) -> Generator[np.ndarray, None, None]:
     """
     Used to create a sequence of frames. These can be combined into an animated GIF or video. This is similar to
     `make_bitmap_frame` except it creates `count` frames instead of just one.
@@ -248,7 +253,7 @@ def make_bitmap_frames(paint, pixel_width, pixel_height, count, channels=3):
         frame = np.copy(np.asarray(image))
         yield frame
 
-def example_paint_function(image, pixel_width, pixel_height, frame_no, frame_count):
+def example_paint_function(image: Any, pixel_width: int, pixel_height: int, frame_no: int, frame_count: int) -> None:
     """
     This is an example paint function. It is a dummy function used to document the required parameters.
 
