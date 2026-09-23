@@ -12,12 +12,17 @@ possible to use the `Transform` class to apply general transforms to the formula
 The image will be tightly cropped to include just the marked pixels, with no border.
 """
 import subprocess
+from collections.abc import Sequence
+
 from PIL import Image
 import numpy as np
 import random
 import os
 
-def _create_tex(formula, packages):
+from generativepy.color import Color
+
+
+def _create_tex(formula: str, packages: Sequence | None) -> str:
     """
     Create tex from the formula and any optional packages.
     Return latex string
@@ -31,7 +36,7 @@ def _create_tex(formula, packages):
 
     return "\n".join(tex_elements)
 
-def _crop(inname, outname, color):
+def _crop(inname: str, outname: str, color: Color) -> tuple:
     """
     Crop the image and colour it in a flat colour. The alpha channel is left unchanged.
 
@@ -80,9 +85,9 @@ def _crop(inname, outname, color):
     new_image.save(filename)
     return filename, image_size
 
-def _remove_ignore_errors(filename):
+def _remove_ignore_errors(filename: str) -> None:
     """
-    Remove a file but ignore errors. We shouldn;t fail just because a temp file didn't get deleted.
+    Remove a file but ignore errors. We shouldn't fail just because a temp file didn't get deleted.
 
     Args:
         filename: str - the filename.
@@ -93,7 +98,7 @@ def _remove_ignore_errors(filename):
         pass
 
 
-def rasterise_formula(name, formula, color, dpi=600, packages=None):
+def rasterise_formula(name:str, formula: str, color: Color, dpi: int |float=600, packages: Sequence | None=None) -> tuple[str, int]:
     """
     Convert a latex formula into a PNG image. The PNG image will be tightly cropped, with a transparent background and
     text in the selected colour.
