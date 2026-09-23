@@ -10,13 +10,19 @@ The module is based on the Pycairo library. This provides many vector drawing me
 However, it is often more convenient to use the `geometry` module of generativepy, which provides higher level versions
 of most of the primitive drawing functions.
 """
+from __future__ import annotations
+
+from typing import Any
+from collections.abc import Callable, Generator
 
 import cairo
 import generativepy.utils
 import numpy as np
 
+from generativepy.color import Color
 
-def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, starty=0, background=None, flip=False):
+
+def setup(ctx: Any, pixel_width: int | float, pixel_height: int | float, width: int | float | None=None, height: int | float | None=None, startx: int | float=0, starty: int | float=0, background: Color | None=None, flip: bool=False) -> None:
     """
     This function performs a scaling to set the drawing coordinates. This is optional, but in generative art you
     will often be using functions that work at a particular scale. It is very useful to be able to set your drawing
@@ -37,12 +43,13 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
                     mathematical drawing.
     """
 
-    if not height and not width:
-        width = pixel_width
-        height = pixel_height
-    elif not height:
-        height = width * pixel_height / pixel_width
-    elif not width:
+    if height is None:
+        if width is None:
+            width = pixel_width
+            height = pixel_height
+        else:
+            height = width * pixel_height / pixel_width
+    elif width is None:
         width = height * pixel_width / pixel_height
 
     if flip:
@@ -53,12 +60,12 @@ def setup(ctx, pixel_width, pixel_height, width=None, height=None, startx=0, sta
     ctx.translate(-startx, -starty)
 
     if background:
-        ctx.set_source_rgba(*background)
+        ctx.set_source_rgba(*background.rgba)
         ctx.paint()
 
 
 
-def make_image(outfile, draw, width, height, channels=3):
+def make_image(outfile: str, draw: Callable[..., None], width: int, height: int, channels: int=3) -> None:
     """
     Creates a Pycairo drawing context object, then calls the user supplied `draw` function to draw on the
     context. It then stores the image as a PNG file.
@@ -82,7 +89,7 @@ def make_image(outfile, draw, width, height, channels=3):
     surface.write_to_png(outfile + '.png')
 
 
-def make_images(outfile, draw, width, height, count, channels=3):
+def make_images(outfile:str, draw: Callable[..., None], width: int, height: int, count: int, channels: int=3) -> None:
     """
     Used to create a sequence of PNG images. These can be combined into an animated GIF or video. This is similar to
     `make_image` except it creates `count` files instead of just one.
@@ -115,7 +122,7 @@ def make_images(outfile, draw, width, height, count, channels=3):
         surface.write_to_png(outfile + str(i).zfill(8) + '.png')
 
 
-def make_image_frames(draw, width, height, count, channels=3):
+def make_image_frames(draw: Callable[..., None], width: int, height: int, count: int, channels: int=3) -> Generator[np.ndarray, None, None]:
     """
     Used to create a single image as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, channels).
 
@@ -147,7 +154,7 @@ def make_image_frames(draw, width, height, count, channels=3):
         a = generativepy.utils.correct_pycairo_byte_order(a, channels)
         yield a
 
-def make_image_frame(draw, width, height, channels=3):
+def make_image_frame(draw: Callable[..., None], width: int, height: int, channels: int=3) -> np.ndarray:
     """
     Used to create a single image as a frame. A frame is a NumPy array with shape (pixel_height, pixel_width, channels).
 
@@ -179,7 +186,7 @@ def make_image_frame(draw, width, height, channels=3):
     return a
 
 
-def make_svg(outfile, draw, width, height):
+def make_svg(outfile: str, draw: Callable[..., None], width: int, height: int) -> None:
     """
     Used to create a single SVG image. This function is similar to `make_image` except that it returns an SVG (vector
     image) instead of a PNG (bitmap image).
@@ -203,7 +210,7 @@ def make_svg(outfile, draw, width, height):
     draw(ctx, width, height, 0, 1)
     ctx.show_page()
 
-def example_pycairo_draw_function(ctx, pixel_width, pixel_height, frame_no, frame_count):
+def example_pycairo_draw_function(ctx: Any, pixel_width: int | float, pixel_height: int | float, frame_no: int, frame_count: int) -> None:
     """
     This is an example draw function for use with `make_image` and similar functions. It is a dummy function used to document the required parameters.
 
