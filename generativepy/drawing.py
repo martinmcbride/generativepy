@@ -22,7 +22,7 @@ import numpy as np
 from generativepy.color import Color
 
 
-def setup(ctx: Any, pixel_width: int | float, pixel_height: int | float, width: int | float | None=None, height: int | float | None=None, startx: int | float=0, starty: int | float=0, background: Color | None=None, flip: bool=False) -> None:
+def setup(ctx: Any, pixel_width: gpNumber, pixel_height: gpNumber, width: gpNumber | None=None, height: gpNumber | None=None, startx: gpNumber=0, starty: gpNumber=0, background: Color | None=None, flip: bool=False) -> None:
     """
     This function performs a scaling to set the drawing coordinates. This is optional, but in generative art you
     will often be using functions that work at a particular scale. It is very useful to be able to set your drawing
@@ -210,7 +210,7 @@ def make_svg(outfile: str, draw: Callable[..., None], width: int, height: int) -
     draw(ctx, width, height, 0, 1)
     ctx.show_page()
 
-def example_pycairo_draw_function(ctx: Any, pixel_width: int | float, pixel_height: int | float, frame_no: int, frame_count: int) -> None:
+def example_pycairo_draw_function(ctx: Any, pixel_width: gpNumber, pixel_height: gpNumber, frame_no: int, frame_count: int) -> None:
     """
     This is an example draw function for use with `make_image` and similar functions. It is a dummy function used to document the required parameters.
 

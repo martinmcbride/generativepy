@@ -30,8 +30,6 @@ The `color` module also contains:
 * The `make_colormap` function that can be used to create a color map.
 * Several reusable colour schemes.
 """
-
-from __future__ import annotations
 from generativepy.gptypes import gpNumber
 
 import colorsys
