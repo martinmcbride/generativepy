@@ -15,9 +15,8 @@ whereas PIL is not. The Pillow library is compatible, and is still imported usin
 PIL in the documentation.
 """
 from __future__ import annotations
-
-from typing import Any
 from generativepy.gptypes import gpNumber
+from typing import Any
 
 from PIL import Image
 import numpy as np
