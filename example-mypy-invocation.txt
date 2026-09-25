@@ -1,0 +1,1 @@
+python -m mypy --disallow-untyped-defs generativepy/bitmap.py

@@ -17,6 +17,7 @@ PIL in the documentation.
 from __future__ import annotations
 
 from typing import Any
+from generativepy.gptypes import gpNumber
 
 from PIL import Image
 import numpy as np
@@ -34,7 +35,7 @@ class Scaler:
     The `Scaler` class provides this functionality. You can create a scaler object with the dimensions of the image and the
     required user space. The scaler object can then be used to convert coordinates from one space to another.
     """
-    def __init__(self, pixel_width: int | float, pixel_height: int | float, width: int | float=0, height: int | float=0, startx: int | float=0, starty: int | float=0):
+    def __init__(self, pixel_width: gpNumber, pixel_height: gpNumber, width: gpNumber=0, height: gpNumber=0, startx: gpNumber=0, starty: gpNumber=0):
         """
         The `Scaler` object is created using the image size in device space (`pixel_width`, `pixel_height`), and the
         user space size and origin (`width`, `height`, `startx`, `starty`). It can be used convert an (x, y) point
@@ -67,7 +68,7 @@ class Scaler:
         elif not width:
             self.width = self.height * pixel_width / pixel_height
 
-    def device_to_user(self, device_x: int | float, device_y: int | float) -> tuple:
+    def device_to_user(self, device_x: gpNumber, device_y: gpNumber) -> tuple:
         """
         Converts a device coordinate to user space.
 
@@ -82,7 +83,7 @@ class Scaler:
         user_y = device_y * self.height / self.pixel_height + self.starty
         return user_x, user_y
 
-    def user_to_device(self, user_x: int | float, user_y: int | float) -> tuple:
+    def user_to_device(self, user_x: gpNumber, user_y: gpNumber) -> tuple:
         """
         Converts a user coordinate to device space.
 
